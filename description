@@ -1,0 +1,13 @@
+Name: Buchberger
+Title: Proof of Buchberger's algorithm
+Author: Laurent Thery
+Author: Henrik Persson
+Institution: Inria Sophia-Antipolis
+Institution: Chalmers University
+Date: 1998
+Description: A machine-checked implementation of Buchberger's.
+             It computes the Grobner basis associated to a
+             polynomial ideal.
+
+Keywords: Grobner basis, polynomial ideal, Buchberger's algorithm
+
