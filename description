@@ -1,8 +1,8 @@
 Name: Buchberger
 Title: Proof of Buchberger's algorithm
-Author: Laurent Thery
+Author: Laurent Théry
 Author: Henrik Persson
-Institution: Inria Sophia-Antipolis
+Institution: INRIA Sophia-Antipolis
 Institution: Chalmers University
 Date: 1998
 Description: A machine-checked implementation of Buchberger's.
