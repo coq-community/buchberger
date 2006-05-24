@@ -1,3 +1,6 @@
+(* This code is copyrighted by its authors; it is distributed under  *)
+(* the terms of the LGPL license (see LICENSE and description files) *)
+
  Load "hComb".
 
 Notation zerop1 := (zerop A A0 eqA n ltM) (only parsing).

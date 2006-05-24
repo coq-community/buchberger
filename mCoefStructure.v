@@ -1,3 +1,6 @@
+(* This code is copyrighted by its authors; it is distributed under  *)
+(* the terms of the LGPL license (see LICENSE and description files) *)
+
  Hint Resolve (eqA_ref _ _ _ _ _ _ _ _ _ cs).
 Hint Resolve (plusA_eqA_comp _ _ _ _ _ _ _ _ _ cs).
 Hint Resolve (multA_eqA_comp _ _ _ _ _ _ _ _ _ cs).

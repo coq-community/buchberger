@@ -1,3 +1,6 @@
+(* This code is copyrighted by its authors; it is distributed under  *)
+(* the terms of the LGPL license (see LICENSE and description files) *)
+
  Load "hTerm".
 Notation pOO := (pO A n) (only parsing).
 Notation canonical1 := (canonical A0 eqA ltM) (only parsing).

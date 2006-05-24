@@ -1,3 +1,6 @@
+(* This code is copyrighted by its authors; it is distributed under  *)
+(* the terms of the LGPL license (see LICENSE and description files) *)
+
 Require Import Relation_Definitions.
 
 Record OrderStructure (A : Set) (M1 : A) (ltM : A -> A -> Prop)
