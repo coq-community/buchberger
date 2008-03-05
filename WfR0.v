@@ -59,12 +59,11 @@ intros x0; case x0; simpl in |- *.
 intros o H'6 H'7; elim H'7; auto.
 intros a1 l0 o H'6 H'7 H'8.
 cut (~ zeroP (A:=A) A0 eqA (n:=n) a1); [ intros nZa1 | idtac ].
-specialize 
- 1H'4
+apply 
+ H'4
    with
      (q := spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec
-             a0 a1 nZa1 l l0); intros H'9; apply H'9; 
- clear H'9; auto.
+             a0 a1 nZa1 l l0); auto.
 change
   (reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec P
      (pX a0 l)
