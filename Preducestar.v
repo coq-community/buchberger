@@ -166,7 +166,7 @@ cut (~ zeroP (A:=A) A0 eqA (n:=n) a);
  [ intros Z0 | apply canonical_nzeroP with (ltM := ltM) (p := l) ]; 
  auto.
 lapply (selectdivf a);
- [ intros H'1; specialize  1H'1 with (Q := Q); intros H'2; case H'2 | idtac ];
+ [ intros H'1; case (H'1 Q) | idtac ];
  auto; intros Div1.
 case Div1.
 intros x1; case x1.

@@ -540,8 +540,7 @@ intros c1 H'6; discriminate.
 intros a b p0 q0 H'2 H'3 H'4 c0.
 cut (canonical A0 eqA ltM p0);
  [ intro | apply canonical_imp_canonical with (a := a); auto ].
-specialize  1H'3 with (c := H); intros H4.
-case H4; intros r; case r.
+case (H'3 H); intros r; case r.
 intros x1 H'6 H'7.
 cut (canonical A0 eqA ltM (pX b x1)); [ intros Z | idtac ].
 exists (mks A A0 eqA n ltM (pX b x1) Z); simpl in |- *; auto.

@@ -735,8 +735,8 @@ Lemma irreducible_inv_px_l :
 unfold irreducible in |- *.
 intros Q a p H' H'0 q; red in |- *; intros H'1.
 inversion_clear H'1.
-specialize 
- 1H'0
+apply 
+ H'0
    with
      (q := spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec
              a b nZb p q0); auto.
@@ -756,7 +756,7 @@ Theorem irreducible_eqp_com :
  canonical A0 eqA ltM p -> eqP A eqA n p q -> irreducible Q q.
 unfold irreducible in |- *.
 intros Q p q H' H'0 H'1 q0; red in |- *; intros H'2.
-specialize  1H' with (q := q0); intros H'3; apply H'3; clear H'3; auto.
+apply H' with (q := q0); auto.
 apply reduce_eqp_com with (p := q) (q := q0); auto.
 apply eqp_imp_canonical with (1 := cs) (p := p); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.

@@ -587,13 +587,13 @@ red in |- *; red in |- *.
 intros q0; intros H'0; auto.
 cut (~ zeroP (A:=A) A0 eqA (n:=n) (unit (mks A A0 eqA n ltM x0 c)));
  [ intros nZd | idtac ]; auto.
-specialize 
- 1H0
+apply
+ H0
    with
      (q := mults (A:=A) multA (n:=n)
              (divTerm (A:=A) (A0:=A0) (eqA:=eqA) divA (n:=n) 
                 (T1 A1 n) (b:=unit (mks A A0 eqA n ltM x0 c)) nZd) q0);
- intros H'1; apply H'1; clear H'1; auto.
+ auto.
 apply reduce_mults_invf with (1 := cs); auto.
 apply unit_T1; auto.
 apply unit_nZ; auto.
