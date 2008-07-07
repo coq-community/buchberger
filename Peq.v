@@ -227,7 +227,7 @@ intros pq; pattern pq in |- *;
 intros pq; case pq; simpl in |- *; clear pq.
 intros p; case p; clear p.
 intros q; case q; clear q.
-intros H'; left; auto.
+intros H'; left; constructor.
 intros b q H'; right; red in |- *; intros H'0; inversion H'0.
 intros a p q; case q; clear q.
 intros H'; right; red in |- *; intros H'0; inversion H'0.
