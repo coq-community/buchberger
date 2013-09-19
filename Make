@@ -1,4 +1,5 @@
 -R . Buchberger
+Relation_Operators_compat.v
 Bar.v
 BuchAux.v
 BuchRed.v

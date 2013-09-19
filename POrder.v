@@ -7,6 +7,7 @@ Require Import Inverse_Image.
 Require Import Inclusion.
 Require Import List.
 Require Import Relation_Operators.
+Require Import Relation_Operators_compat.
 Require Import Monomials.
 Require Import Term.
 Require Import CoefStructure.

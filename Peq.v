@@ -74,7 +74,7 @@ Theorem canonicalp1 :
  forall a,
  ~ zeroP (A:=A) A0 eqA (n:=n) a -> canonical A0 eqA ltM (pX a (pO A n)).
 intros a H; split; simpl in |- *; auto.
-red in |- *; simpl in |- *; apply Relation_Operators.d_one.
+red in |- *; simpl in |- *; apply Relation_Operators_compat.d_one.
 Qed.
 Hint Resolve canonicalp1 canonical0.
  

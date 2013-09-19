@@ -8,6 +8,7 @@ Require Import Inverse_Image.
 Require Import Wf_nat.
 Require Import Relation_Definitions.
 Require Import Relation_Operators.
+Require Import Relation_Operators_compat.
 Require Import Lexicographic_Product.
 Require Import LetP.
 Require Export WfR0.
