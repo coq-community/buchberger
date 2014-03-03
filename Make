@@ -27,7 +27,6 @@ POrder.v
 Pplus.v
 Preduceplus.v
 Preducestar.v
-Preducestar.v
 Preduce.v
 Pspminus.v
 Pspoly.v
