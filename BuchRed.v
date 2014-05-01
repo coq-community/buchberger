@@ -6,6 +6,9 @@ Require Export Pcrit.
 Require Export Buch.
 Require Export Fred.
 Require Import Buch.
+
+Local Unset Injection On Proofs.
+
 Section BuchRed.
 Load "hCoefStructure".
 Load "hOrderStructure".

@@ -3,6 +3,9 @@
 
 Require Export Pspoly.
 Require Export LetP.
+
+Local Unset Injection On Proofs.
+
 Section Pcomb.
 Load "hCoefStructure".
 Load "hOrderStructure".
