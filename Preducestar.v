@@ -9,6 +9,7 @@
                                                                            
   ****************************************************************************)
 Require Export Preduceplus.
+Unset Standard Proposition Elimination Names.
 Section Preducestar.
 Load "hCoefStructure".
 Load "hOrderStructure".
