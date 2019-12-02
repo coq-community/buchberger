@@ -1215,10 +1215,10 @@ exact wf_Fl.
 Qed.
  
 Definition PtoS :
-  list (poly A0 eqA ltM) * list (poly A0 eqA ltM) -> sigS FPset.
+  list (poly A0 eqA ltM) * list (poly A0 eqA ltM) -> sigT FPset.
 intros H'; case H'.
 intros P1 P2.
-exact (existS FPset P1 P2).
+exact (existT FPset P1 P2).
 Defined.
  
 Definition RL (x y : list (poly A0 eqA ltM) * list (poly A0 eqA ltM)) :
