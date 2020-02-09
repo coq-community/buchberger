@@ -45,7 +45,7 @@ Definition minuspp :
   {a : list (Term A n) | minusP (fst l) (snd l) a}.
 intros l; pattern l in |- *.
 apply
- well_founded_induction
+ well_founded_induction_type
   with (A := (list (Term A n) * list (Term A n))%type) (R := lessP A n); 
  auto.
 apply wf_lessP; auto.

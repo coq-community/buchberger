@@ -46,12 +46,12 @@ list (Term A n) -> list (Term A n) -> list (Term A n) -> Prop :=
       plusP (pX a1 l1) l2 l3 -> plusP (pX a1 l1) (pX a2 l2) (pX a2 l3).
 Hint Resolve nillu1 nillu2 mainu1 mainu2a mainu2b mainu3 : core.
  
-Definition projsig1 (A : Set) (P : A -> Prop) (H : sig P) :=
+Definition projsig1 (A : Type) (P : A -> Prop) (H : sig P) :=
   let (a, _) return A := H in a.
  
 Definition plusp : forall l, {a : _ | plusP (fst l) (snd l) a}.
 intros l; pattern l in |- *.
-apply well_founded_induction with (R := lessP A n); auto.
+apply well_founded_induction_type with (R := lessP A n); auto.
 apply wf_lessP; auto.
 intros x; case x; intros p q; simpl in |- *.
 case p; clear p.

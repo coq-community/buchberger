@@ -60,7 +60,7 @@ apply Cb_trans with (b := a) (1 := cs); auto.
 Qed.
  
 Theorem in_incl :
- forall (A : Set) (p q : list A) (a b : A), incl p q -> In a p -> In a q.
+ forall (A : Type) (p q : list A) (a b : A), incl p q -> In a p -> In a q.
 auto.
 Qed.
  
@@ -93,7 +93,7 @@ apply divp_ppc; auto.
 Qed.
 (* Now we are ready!! We start with the definition of genCpC *)
  
-Inductive cpRes : Set :=
+Inductive cpRes : Type :=
   | Keep : forall P : list (poly A0 eqA ltM), cpRes
   | DontKeep : forall P : list (poly A0 eqA ltM), cpRes.
  
@@ -523,7 +523,7 @@ Definition genPcPf0 :
   forall (i : poly A0 eqA ltM) (aP R : list (poly A0 eqA ltM)),
   {Q : list (poly A0 eqA ltM) | genPcP i aP R Q}.
 intros i aP; pattern aP in |- *.
-apply well_founded_induction with (A := list (poly A0 eqA ltM)) (R := Tl);
+apply well_founded_induction_type with (A := list (poly A0 eqA ltM)) (R := Tl);
  clear aP; auto.
 try exact wf_Tl.
 intros aP; case aP.
@@ -1235,7 +1235,7 @@ Definition pbuchf :
   {R : list (poly A0 eqA ltM) | OBuch (fst PQ) (snd PQ) R}.
 intros pq; pattern pq in |- *.
 apply
- well_founded_induction
+ well_founded_induction_type
   with
     (A := (list (poly A0 eqA ltM) * list (poly A0 eqA ltM))%type)
     (R := RL).

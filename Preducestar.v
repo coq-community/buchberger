@@ -153,7 +153,7 @@ Definition Reducef :
   {q : poly A0 eqA ltM |
   reducestar Q (s2p A A0 eqA n ltM p) (s2p A A0 eqA n ltM q)}.
 intros Q p; pattern p in |- *.
-apply well_founded_induction with (1 := sltp_wf _ A0 eqA _ ltM os).
+apply well_founded_induction_type with (1 := sltp_wf _ A0 eqA _ ltM os).
 intros x; case x.
 intros x0; case x0.
 intros o H'; simpl in |- *.
