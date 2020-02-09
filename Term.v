@@ -14,10 +14,10 @@ Require Import moreCoefStructure.
 Require Import OrderStructure.
 Require Import Monomials.
 Section Term.
-Load "hCoefStructure".
-Load "mCoefStructure".
-Load "hOrderStructure".
-Load "mOrderStructure".
+Load hCoefStructure.
+Load mCoefStructure.
+Load hOrderStructure.
+Load mOrderStructure.
  
 Definition M1 := zero_mon n.
  
@@ -67,7 +67,7 @@ Set Implicit Arguments.
 Unset Strict Implicit.
  
 Definition eqT (a b : Term) : Prop := T2M a = T2M b.
-Hint Unfold eqT.
+Hint Unfold eqT : core.
 Set Strict Implicit.
 Unset Implicit Arguments.
  
@@ -202,8 +202,7 @@ Theorem eqTerm_plusTerm_comp :
 intros a b c d; case a; case b; case c; case d; simpl in |- *; auto.
 intuition.
 Qed.
-Hint Resolve eqTerm_plusTerm_comp.
-
+Hint Resolve eqTerm_plusTerm_comp : core.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -279,8 +278,7 @@ intros a1 m1 a2 m2 a3 m3 a4 m4; intros H1; case H1; intros H2 H3 H4; case H4;
  intros H5 H6; split; auto.
 rewrite H3; rewrite H6; auto.
 Qed.
-Hint Resolve eqTerm_multTerm_comp.
- 
+Hint Resolve eqTerm_multTerm_comp : core.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -333,7 +331,7 @@ apply zeroP_comp_eqTerm with (a := invTerm (invTerm a)); auto.
 apply zeroP_invTerm_zeroP; auto.
 apply eqTerm_sym; apply invTerm_invol; auto.
 Qed.
-Hint Resolve nZero_invTerm_nZero.
+Hint Resolve nZero_invTerm_nZero : core.
 Set Implicit Arguments.
 Unset Strict Implicit.
  
@@ -377,8 +375,8 @@ Theorem nZero_invTerm_T1 : ~ zeroP (invTerm T1).
 apply nZero_invTerm_nZero; auto.
 exact T1_nz.
 Qed.
-Hint Resolve nZero_invTerm_T1.
- 
+Hint Resolve nZero_invTerm_T1 : core.
+
 Theorem mult_invTerm_com :
  forall a b : Term, eqTerm (multTerm (invTerm a) b) (invTerm (multTerm a b)).
 intros a b; case a; case b; simpl in |- *; auto.
@@ -547,8 +545,8 @@ apply eqTerm_multTerm_comp; auto.
 apply eqTerm_sym; apply eqTerm_minusTerm_plusTerm_invTerm; auto.
 apply eqTerm_refl; auto.
 Qed.
-Hint Resolve multTerm_minusTerm_dist_l.
- 
+Hint Resolve multTerm_minusTerm_dist_l : core.
+
 Theorem nzeroP_multTerm :
  forall a b : Term, ~ zeroP a -> ~ zeroP b -> ~ zeroP (multTerm a b).
 intros a b H' H'0; red in |- *; intros H'1;

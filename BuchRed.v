@@ -7,12 +7,10 @@ Require Export Buch.
 Require Export Fred.
 Require Import Buch.
 
-Local Unset Injection On Proofs.
-
 Section BuchRed.
-Load "hCoefStructure".
-Load "hOrderStructure".
-Load "hBuch".
+Load hCoefStructure.
+Load hOrderStructure.
+Load hBuch.
  
 Theorem Cb_addEnd_cons :
  forall (L : list (poly A0 eqA ltM)) (p q : poly A0 eqA ltM),
@@ -620,7 +618,7 @@ apply
             ltM_dec os p L); auto.
 apply Cb_nf.
 Qed.
-Hint Resolve zerop_nf_cb.
+Hint Resolve zerop_nf_cb : core.
  
 Definition redacc :
   list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> list (poly A0 eqA ltM).

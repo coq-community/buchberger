@@ -9,11 +9,10 @@
                                                                            
   ****************************************************************************)
 Require Export Preduceplus.
-Unset Standard Proposition Elimination Names.
 Section Preducestar.
-Load "hCoefStructure".
-Load "hOrderStructure".
-Load "hReduceplus".
+Load hCoefStructure.
+Load hOrderStructure.
+Load hReduceplus.
  
 Inductive reducestar (Q : list (poly A0 eqA ltM)) :
 list (Term A n) -> list (Term A n) -> Prop :=
@@ -301,7 +300,7 @@ Theorem reducestar_irreducible :
  irreducible A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q q.
 intros Q p q H'; inversion H'; auto.
 Qed.
-Hint Resolve reducestar_reduceplus.
+Hint Resolve reducestar_reduceplus : core.
  
 Theorem reducestar_inv :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),

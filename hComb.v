@@ -1,7 +1,7 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
- Load "hSpoly".
+ Load hSpoly.
 
 Notation CombLinear1 :=
   (CombLinear A A0 eqA plusA multA eqA_dec n ltM ltM_dec) 

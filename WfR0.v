@@ -15,9 +15,9 @@ Require Import Dickson.
 Require Import Monomials.
 Require Export BuchAux.
 Section thRO.
-Load "hCoefStructure".
-Load "hOrderStructure".
-Load "hBuchAux".
+Load hCoefStructure.
+Load hOrderStructure.
+Load hBuchAux.
  
 Definition get_mon : poly A0 eqA ltM -> mon n.
 intros sp; case sp.
@@ -149,7 +149,7 @@ intros H'3; cut (ex (fun b : poly A0 eqA ltM => g = get_mon b /\ In b bs)).
 intros H'4; elim H'4; intros b E; elim E; intros H'5 H'6; rewrite H'5;
  clear E H'4; auto.
 apply get_is_correct; auto.
-apply in_or_app; apply or_intror; apply in_rev; auto.
+apply in_or_app; apply or_intror; apply in_rev; rewrite rev_involutive; auto.
 apply map_in; auto.
 Qed.
  

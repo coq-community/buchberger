@@ -3,8 +3,8 @@
 
 Require Export CoefStructure.
 Section mCoef.
-Load "hCoefStructure".
-Load "mCoefStructure".
+Load hCoefStructure.
+Load mCoefStructure.
  
 Let eqA_trans := eqA_trans _ _ _ _ _ _ _ _ _ cs.
  
@@ -78,7 +78,7 @@ Qed.
 Theorem multA_A1_r : forall a : A, eqA (multA a A1) a.
 intros a; apply eqA_trans with (y := multA A1 a); auto.
 Qed.
-Hint Resolve multA_A1_r.
+Hint Resolve multA_A1_r : core.
  
 Theorem multA_invA_com_l :
  forall a b : A, eqA (multA (invA a) b) (invA (multA a b)).
@@ -104,14 +104,14 @@ apply eqA_trans with (y := plusA (multA (invA a) b) A0); auto.
 apply plusA_eqA_comp with (1 := cs); auto.
 apply multA_dist_r.
 Qed.
-Hint Resolve multA_invA_com_l.
+Hint Resolve multA_invA_com_l : core.
  
 Theorem multA_invA_com_r :
  forall a b : A, eqA (multA a (invA b)) (invA (multA a b)).
 intros a b; apply eqA_trans with (y := multA (invA b) a); auto.
 apply eqA_trans with (y := invA (multA b a)); auto.
 Qed.
-Hint Resolve multA_invA_com_r.
+Hint Resolve multA_invA_com_r : core.
  
 Theorem divA_multA_comp_l :
  forall (a b c : A) (nZc : ~ eqA c A0),
@@ -120,8 +120,8 @@ intros a b c nZc; apply eqA_trans with (y := divA (multA b a) c nZc); auto.
 apply eqA_trans with (y := multA (divA b c nZc) a); auto.
 apply divA_multA_comp_r with (1 := cs); auto.
 Qed.
-Hint Resolve divA_multA_comp_l.
- 
+Hint Resolve divA_multA_comp_l : core.
+
 Theorem invA_is_invA1 : forall a : A, eqA (invA a) (multA (invA A1) a).
 intros a; apply eqA_trans with (y := plusA (invA a) A0); auto.
 apply eqA_trans with (y := plusA (invA a) (multA A0 a)); auto.
@@ -149,7 +149,7 @@ intros a nZa; apply eqA_trans with (y := divA (multA A0 a) a nZa).
 apply divA_eqA_comp with (1 := cs); auto.
 apply eqA_trans with (y := multA A0 (divA a a nZa)); auto.
 Qed.
-Hint Resolve divA_A0_l.
+Hint Resolve divA_A0_l : core.
  
 Theorem A_sep : forall a b : A, eqA (multA a b) A0 -> eqA a A0 \/ eqA b A0.
 intros a b H'; case (eqA_dec a A0); auto; case (eqA_dec b A0); auto.
@@ -160,15 +160,15 @@ apply eqA_trans with (y := divA (multA a b) b nZb); auto.
 apply eqA_sym; apply divA_multA_comp_r with (1 := cs); auto.
 apply eqA_trans with (y := divA A0 b nZb); auto.
 Qed.
-Hint Resolve A_sep.
- 
+Hint Resolve A_sep : core.
+
 Theorem divA_A1 : forall (a : A) (nZa : ~ eqA a A0), eqA (divA a a nZa) A1.
 intros a nZa; apply eqA_trans with (y := divA (multA A1 a) a nZa); auto.
 apply eqA_trans with (y := multA (divA A1 a nZa) a); auto.
 apply divA_multA_comp_r with (1 := cs); auto.
 apply eqA_sym; apply divA_is_multA with (1 := cs); auto.
 Qed.
-Hint Resolve divA_A1.
+Hint Resolve divA_A1 : core.
  
 Theorem divA_nZ :
  forall a b : A,
@@ -178,5 +178,5 @@ case H'; apply eqA_trans with (y := multA (divA b a nZa) a); auto.
 apply divA_is_multA with (1 := cs); auto.
 apply eqA_trans with (y := multA A0 a); auto.
 Qed.
-Hint Resolve divA_nZ.
+Hint Resolve divA_nZ : core.
 End mCoef.

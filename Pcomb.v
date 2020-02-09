@@ -4,12 +4,10 @@
 Require Export Pspoly.
 Require Export LetP.
 
-Local Unset Injection On Proofs.
-
 Section Pcomb.
-Load "hCoefStructure".
-Load "hOrderStructure".
-Load "hSpoly".
+Load hCoefStructure.
+Load hOrderStructure.
+Load hSpoly.
  
 Inductive CombLinear (Q : list (poly A0 eqA ltM)) :
 list (Term A n) -> Prop :=
@@ -22,7 +20,7 @@ list (Term A n) -> Prop :=
       eqP A eqA n s
         (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
            (mults (A:=A) multA (n:=n) a q) p) -> CombLinear Q s.
-Hint Resolve CombLinear_0 CombLinear_1.
+Hint Resolve CombLinear_0 CombLinear_1 : core.
  
 Theorem CombLinear_canonical :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
@@ -58,7 +56,7 @@ apply eqp_imp_canonical with (p := q0) (1 := cs); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply inPolySet_imp_canonical with (L := Q); auto.
 Qed.
-Hint Resolve CombLinear_canonical.
+Hint Resolve CombLinear_canonical : core.
  
 Theorem CombLinear_pluspf :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
@@ -108,7 +106,7 @@ apply
     (1 := cs); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
-Hint Resolve CombLinear_pluspf.
+Hint Resolve CombLinear_pluspf : core.
  
 Theorem CombLinear_mults1 :
  forall (Q : list (poly A0 eqA ltM)) (a : Term A n) (p : list (Term A n)),
@@ -141,7 +139,7 @@ apply
             (mults (A:=A) multA (n:=n) a p0)); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
-Hint Resolve CombLinear_mults1.
+Hint Resolve CombLinear_mults1 : core.
  
 Theorem CombLinear_minuspf :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
@@ -164,7 +162,7 @@ apply
                q)); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
-Hint Resolve CombLinear_minuspf.
+Hint Resolve CombLinear_minuspf : core.
  
 Theorem CombLinear_id :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
@@ -184,7 +182,7 @@ apply
   with (y := mults (A:=A) multA (n:=n) (T1 A1 n) p); 
  auto.
 Qed.
-Hint Resolve CombLinear_id.
+Hint Resolve CombLinear_id : core.
  
 Theorem CombLinear_spoly :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n))

@@ -10,9 +10,9 @@
   ****************************************************************************)
 Require Export Preduce.
 Section Preduceplus.
-Load "hCoefStructure".
-Load "hOrderStructure".
-Load "hReduce".
+Load hCoefStructure.
+Load hOrderStructure.
+Load hReduce.
  
 Inductive reduceplus (Q : list (poly A0 eqA ltM)) :
 list (Term A n) -> list (Term A n) -> Prop :=
@@ -22,7 +22,7 @@ list (Term A n) -> list (Term A n) -> Prop :=
       forall x y z : list (Term A n),
       reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q x y ->
       reduceplus Q y z -> reduceplus Q x z.
-Hint Resolve Rstar_0.
+Hint Resolve Rstar_0 : core.
  
 Theorem reduceplus_eqp_com :
  forall (Q : list (poly A0 eqA ltM)) (p q r s : list (Term A n)),
@@ -104,7 +104,7 @@ apply canonical_imp_canonical with (a := a); auto.
 apply (canonical_pX_ltP A A0 eqA); auto.
 apply eqp_imp_canonical with (1 := cs) (p := pX a x); auto.
 Qed.
-Hint Resolve reduceplus_skip.
+Hint Resolve reduceplus_skip : core.
  
 Theorem reduce_imp_reduceplus :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
@@ -113,7 +113,7 @@ Theorem reduce_imp_reduceplus :
 intros Q p q H'.
 apply Rstar_n with (y := q); auto.
 Qed.
-Hint Resolve reduce_imp_reduceplus.
+Hint Resolve reduce_imp_reduceplus : core.
  
 Lemma pO_reduceplus :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),

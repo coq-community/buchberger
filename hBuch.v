@@ -1,7 +1,7 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
- Load "hBuchAux".
+ Load hBuchAux.
 
 Notation unit1 := (unit A A0 A1 eqA divA n ltM) (only parsing).
 Notation buch1 :=

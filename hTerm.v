@@ -1,7 +1,7 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
- Hint Resolve (fun a n => eqTerm_refl _ _ _ _ _ _ _ _ _ cs a n).
+Hint Resolve (fun a n => eqTerm_refl _ _ _ _ _ _ _ _ _ cs a n) : core.
 
 Notation Term1 := (Term A n) (only parsing).
 Notation eqTerm1 := (eqTerm (A:=A) eqA (n:=n)) (only parsing).
@@ -17,19 +17,19 @@ Notation multTerm1 := (multTerm (A:=A) multA (n:=n)) (only parsing).
 Notation invTerm1 := (invTerm (A:=A) invA (n:=n)) (only parsing).
 
 
-Hint Resolve (multTerm_assoc _ _ _ _ _ _ _ _ _ cs).
-Hint Resolve (multTerm_com _ _ _ _ _ _ _ _ _ cs).
-Hint Resolve (eqTerm_plusTerm_comp _ _ _ _ _ _ _ _ _ cs).
-Hint Resolve (eqTerm_multTerm_comp _ _ _ _ _ _ _ _ _ cs).
-Hint Resolve (eqTerm_invTerm_comp _ _ _ _ _ _ _ _ _ cs).
-Hint Resolve (T1_nz _ _ _ _ _ _ _ _ _ cs n).
-Hint Resolve (nZero_invTerm_nZero _ _ _ _ _ _ _ _ _ cs).
-Hint Resolve (zeroP_multTerm_l _ _ _ _ _ _ _ _ _ cs).
-Hint Resolve (zeroP_multTerm_r _ _ _ _ _ _ _ _ _ cs).
-Hint Resolve (nzeroP_multTerm _ _ _ _ _ _ _ _ _ cs). 
-Hint Resolve (T1_multTerm_l _ _ _ _ _ _ _ _ _ cs n).
-Hint Resolve (T1_multTerm_r _ _ _ _ _ _ _ _ _ cs n).
-Hint Resolve (invTerm_invol _ _ _ _ _ _ _ _ _ cs n).
-Hint Resolve (zeroP_minusTerm _ _ _ _ _ _ _ _ _ cs n).
+Hint Resolve (multTerm_assoc _ _ _ _ _ _ _ _ _ cs) : core.
+Hint Resolve (multTerm_com _ _ _ _ _ _ _ _ _ cs) : core.
+Hint Resolve (eqTerm_plusTerm_comp _ _ _ _ _ _ _ _ _ cs) : core.
+Hint Resolve (eqTerm_multTerm_comp _ _ _ _ _ _ _ _ _ cs) : core.
+Hint Resolve (eqTerm_invTerm_comp _ _ _ _ _ _ _ _ _ cs) : core.
+Hint Resolve (T1_nz _ _ _ _ _ _ _ _ _ cs n) : core.
+Hint Resolve (nZero_invTerm_nZero _ _ _ _ _ _ _ _ _ cs) : core.
+Hint Resolve (zeroP_multTerm_l _ _ _ _ _ _ _ _ _ cs) : core.
+Hint Resolve (zeroP_multTerm_r _ _ _ _ _ _ _ _ _ cs) : core.
+Hint Resolve (nzeroP_multTerm _ _ _ _ _ _ _ _ _ cs) : core. 
+Hint Resolve (T1_multTerm_l _ _ _ _ _ _ _ _ _ cs n) : core.
+Hint Resolve (T1_multTerm_r _ _ _ _ _ _ _ _ _ cs n) : core.
+Hint Resolve (invTerm_invol _ _ _ _ _ _ _ _ _ cs n) : core.
+Hint Resolve (zeroP_minusTerm _ _ _ _ _ _ _ _ _ cs n) : core.
 
-Hint Resolve multTerm_eqT invTerm_eqT.
+Hint Resolve multTerm_eqT invTerm_eqT : core.

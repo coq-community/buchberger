@@ -1,1 +1,13 @@
-sin_num.ml*
+*~
+sin_num.ml
+sin_num.mli
+Makefile.coq
+Makefile.coq.conf
+.Makefile.coq.d
+*.aux
+*.glob
+*.vo
+*.vio
+*.vos
+*.vok
+*.v.d
