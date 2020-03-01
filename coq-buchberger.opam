@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "palmskog@gmail.com"
+version: "dev"
+
+homepage: "https://github.com/palmskog/buchberger"
+dev-repo: "git+https://github.com/palmskog/buchberger.git"
+bug-reports: "https://github.com/palmskog/buchberger/issues"
+license: "LGPL-2.1-only"
+
+synopsis: "Coq proof of the correctness of Buchberger's algorithm"
+description: """
+A machine-checked implementation of Buchberger's algorithm,
+which computes the Gröbner basis associated with a polynomial ideal."""
+
+build: [make "-j%{jobs}%"]
+install: [make "install"]
+depends: [
+  "coq" {(>= "8.7" & < "8.12~") | (= "dev")}
+]
+
+tags: [
+  "category:Mathematics/Algebra"
+  "category:Miscellaneous/Extracted Programs/Combinatorics"
+  "keyword:Gröbner basis"
+  "keyword:polynomial ideal"
+  "keyword:Buchberger's algorithm"
+  "logpath:Buchberger"
+]
+authors: [
+  "Laurent Théry"
+  "Henrik Persson"
+]
