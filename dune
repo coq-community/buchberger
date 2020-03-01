@@ -1,0 +1,5 @@
+(coq.theory
+ (name Buchberger)
+ (package coq-buchberger)
+ (synopsis "Coq proof of the correctness of Buchberger's algorithm")
+ (modules :standard \ Extract mCoefStructure mOrderStructure hBuchAux hBuch hCoefStructure hComb hEq hMinus hMults hMult hOrderStructure hOrder hPlus hReduceplus hReducestar hReduce hSpminus hSpoly hTerm hWfRO))
