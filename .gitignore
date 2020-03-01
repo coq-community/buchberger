@@ -4,6 +4,7 @@ sin_num.mli
 Makefile.coq
 Makefile.coq.conf
 .Makefile.coq.d
+.coqdeps.d
 *.aux
 *.glob
 *.vo
