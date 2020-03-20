@@ -4,11 +4,11 @@
 Require Import List.
 Require Import Bar.
 Section OpenIndGoodRel.
-Variable A : Set.
+Variable A : Type.
 Variable lt R : Rel A.
 Variable wflt : well_founded lt.
 
-Inductive Min : list A -> Set :=
+Inductive Min : list A -> Type :=
   | nmin : Min nil
   | cmin :
       forall (a : A) (l : list A),
@@ -19,9 +19,12 @@ Lemma OpenInd :
  forall xs : list A,
  Min xs ->
  (forall a : A, Min (a :: xs) -> GRBar A R (a :: xs)) -> GRBar A R xs.
+Proof.
 intros; red in |- *.
 apply Ind; auto.
 intros a; elim (wflt a); auto.
-intros x H' H'0; red in H0; auto.
+intros x H' H'0.
+apply X0.
+apply cmin; auto.
 Qed.
 End OpenIndGoodRel.

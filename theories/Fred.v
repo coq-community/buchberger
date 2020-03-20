@@ -14,7 +14,7 @@ Require Import LetP.
 Require Import Relation_Definitions.
 
 Section Reduce.
-Variable poly : Set.
+Variable poly : Type.
 Variable cb : list poly -> poly -> Prop.
 Variable divp : poly -> poly -> Prop.
 Variable reduce : list poly -> poly -> poly -> Prop.
@@ -79,12 +79,14 @@ Hypothesis
 
 Theorem zerop_nf_cb :
  forall (L : list poly) (p : poly), zerop (nf L p) -> cb L p.
+Proof.
 intros L p H'.
 apply zerop_elim_cb with (p := nf L p); auto.
 Qed.
 Hint Resolve zerop_nf_cb : core.
 
 Definition redacc : list poly -> list poly -> list poly.
+Proof.
 intros H'; elim H'.
 intros L; exact (nil (A:=poly)).
 intros a p Rec Acc.
@@ -101,6 +103,7 @@ Hint Resolve incl_refl incl_tl incl_appr incl_appl incl_cons incl_app
 Theorem redacc_cb :
  forall (L1 L2 : list poly) (p : poly),
  In p (redacc L1 L2) -> cb (L1 ++ L2) p.
+Proof.
 intros L1; elim L1; auto.
 simpl in |- *; auto.
 simpl in |- *; unfold LetP in |- *; intros a l H' L2 p.
@@ -117,6 +120,7 @@ apply incl_app; auto with datatypes.
 Qed.
 
 Theorem red_cb : forall (L : list poly) (p : poly), In p (red L) -> cb L p.
+Proof.
 unfold red in |- *.
 intros L p H'.
 generalize (redacc_cb L nil); simpl in |- *; auto.
@@ -125,6 +129,7 @@ Qed.
 
 Theorem cb_redacc :
  forall (L1 L2 : list poly) (p : poly), In p L1 -> cb (redacc L1 L2 ++ L2) p.
+Proof.
 intros L1; elim L1; simpl in |- *; auto.
 intros L2 p H'; elim H'; auto.
 unfold LetP in |- *.
@@ -156,6 +161,7 @@ apply
 Qed.
 
 Theorem cb_red : forall (L : list poly) (p : poly), In p L -> cb (red L) p.
+Proof.
 intros L p H'.
 lapply (cb_redacc L nil p); [ intros H'3; generalize H'3 | idtac ];
  simpl in |- *; auto.
@@ -164,6 +170,7 @@ Qed.
 
 Theorem cb_red_cb1 :
  forall (p : poly) (L : list poly), cb L p -> cb (red L) p.
+Proof.
 intros p L H'.
 apply cb_compo with (L1 := L); auto.
 intros q H'0.
@@ -172,11 +179,13 @@ Qed.
 
 Theorem cb_red_cb2 :
  forall (p : poly) (L : list poly), cb (red L) p -> cb L p.
+Proof.
 intros p L H'.
 apply cb_compo with (L1 := red L); auto.
 intros q H'0.
 apply red_cb; auto.
 Qed.
+
 Hypothesis
   nf_div_zero1 :
     forall (p : poly) (L : list poly),
@@ -188,6 +197,7 @@ Theorem redacc_divp :
  ~ zerop p ->
  In p (L1 ++ L2) ->
  exists q : poly, In q (redacc L1 L2 ++ L2) /\ divp p q /\ ~ zerop q.
+Proof.
 intros L1; elim L1; simpl in |- *; auto.
 intros L2 p H' H'0; exists p; split; auto.
 unfold LetP in |- *.
@@ -254,6 +264,7 @@ Theorem red_divp :
  forall (L : list poly) (p : poly),
  In p L ->
  ~ zerop p -> exists q : poly, In q (red L) /\ divp p q /\ ~ zerop q.
+Proof.
 intros L p H' H'0.
 lapply (redacc_divp L nil p); auto.
 simpl in |- *; auto.
@@ -262,6 +273,7 @@ rewrite <- app_nil_end; auto.
 Qed.
 
 Theorem red_grobner : forall L : list poly, grobner L -> grobner (red L).
+Proof.
 intros L H'.
 apply def_grobner; auto.
 intros p H'0.
