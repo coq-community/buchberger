@@ -6,9 +6,9 @@ Require Export Pcrit.
 Require Export Fred.
 Require Import moreCoefStructure.
 Section BuchAux.
-Load "hCoefStructure".
-Load "hOrderStructure".
-Load "hComb".
+Load hCoefStructure.
+Load hOrderStructure.
+Load hComb.
  
 Definition red (a : poly A0 eqA ltM) (P : list (poly A0 eqA ltM)) :=
   reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec P
@@ -309,7 +309,7 @@ Theorem divp_nzeropr : forall a b : poly A0 eqA ltM, divp a b -> ~ zerop b.
 intros a b; (case a; case b).
 intros x c0 x0 c1; generalize c0 c1; case x; case x0; simpl in |- *; auto.
 Qed.
-Hint Resolve pO_irreducible.
+Hint Resolve pO_irreducible : core.
  
 Theorem reducetopO_pO :
  forall Q : list (poly A0 eqA ltM),
@@ -318,7 +318,7 @@ Theorem reducetopO_pO :
 intros Q; apply reducestar0; auto.
 apply Rstar_0; auto.
 Qed.
-Hint Resolve reducetopO_pO.
+Hint Resolve reducetopO_pO : core.
  
 Theorem zerop_red_spoly_l :
  forall a b : poly A0 eqA ltM,
@@ -547,7 +547,7 @@ apply multA_eqA_comp with (1 := cs); auto.
 apply (eqA_ref _ _ _ _ _ _ _ _ _ cs); auto.
 apply multA_A0_l with (1 := cs); auto.
 Qed.
-Hint Resolve divA_nZ.
+Hint Resolve divA_nZ : core.
  
 Theorem unit_nZ :
  forall p : poly A0 eqA ltM, ~ zeroP (A:=A) A0 eqA (n:=n) (unit p).
@@ -677,7 +677,7 @@ Theorem canonical_s2p :
  forall x : poly A0 eqA ltM, canonical A0 eqA ltM (s2p A A0 eqA n ltM x).
 intros x; case x; auto.
 Qed.
-Hint Resolve canonical_s2p.
+Hint Resolve canonical_s2p : core.
  
 Theorem nf_Cb :
  forall (a : poly A0 eqA ltM) (aP : list (poly A0 eqA ltM)),

@@ -3,6 +3,7 @@
 
 (* Require *)
 Require Export List.
+Require Import Arith.
 Require Import Inclusion.
 Require Import Inverse_Image.
 Require Import Wf_nat.
@@ -12,11 +13,12 @@ Require Import Relation_Operators_compat.
 Require Import Lexicographic_Product.
 Require Import LetP.
 Require Export WfR0.
+
 Section Buch.
-Load "hCoefStructure".
-Load "hOrderStructure".
-Load "hWfRO".
- 
+Load hCoefStructure.
+Load hOrderStructure.
+Load hWfRO.
+
 Inductive stable :
 list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> Prop :=
     stable0 :
@@ -28,7 +30,7 @@ list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> Prop :=
        Cb A A0 eqA plusA multA eqA_dec n ltM ltM_dec a Q ->
        Cb A A0 eqA plusA multA eqA_dec n ltM ltM_dec a P) -> 
       stable P Q.
-Hint Resolve stable0.
+Hint Resolve stable0 : core.
  
 Theorem stable_refl : forall Q : list (poly A0 eqA ltM), stable Q Q.
 auto.
@@ -44,7 +46,7 @@ Theorem stable_sym :
  forall Q R : list (poly A0 eqA ltM), stable R Q -> stable Q R.
 intros Q R H'; elim H'; auto.
 Qed.
-Hint Resolve (Cb_in _ _ _ _ _ _ _ _ _ cs eqA_dec _ _ ltM_dec os).
+Hint Resolve (Cb_in _ _ _ _ _ _ _ _ _ cs eqA_dec _ _ ltM_dec os) : core.
  
 Theorem Cb_stable :
  forall (a : poly A0 eqA ltM) (Q : list (poly A0 eqA ltM)),
@@ -56,7 +58,7 @@ apply Cb_trans with (b := a) (1 := cs); auto.
 Qed.
  
 Theorem in_incl :
- forall (A : Set) (p q : list A) (a b : A), incl p q -> In a p -> In a q.
+ forall (A : Type) (p q : list A) (a b : A), incl p q -> In a p -> In a q.
 auto.
 Qed.
  
@@ -89,7 +91,7 @@ apply divp_ppc; auto.
 Qed.
 (* Now we are ready!! We start with the definition of genCpC *)
  
-Inductive cpRes : Set :=
+Inductive cpRes : Type :=
   | Keep : forall P : list (poly A0 eqA ltM), cpRes
   | DontKeep : forall P : list (poly A0 eqA ltM), cpRes.
  
@@ -221,7 +223,6 @@ generalize lt_wf; auto.
 Qed.
  
 Scheme Sdep := Induction for prod Sort Prop.
-Require Import Arith.
  
 Theorem slice_Tl :
  forall (a ia : poly A0 eqA ltM) (L : list (poly A0 eqA ltM)),
@@ -267,7 +268,7 @@ list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> Prop :=
       forall (L L1 L2 L3 : list _) (a i : poly A0 eqA ltM),
       slice i a L1 = DontKeep L2 ->
       genPcP i L2 L L3 -> genPcP i (a :: L1) L L3.
-Hint Resolve genPcP0.
+Hint Resolve genPcP0 : core.
  
 Theorem genPcP_spolyp1 :
  forall (i : poly A0 eqA ltM) (L L1 L2 : list _),
@@ -299,8 +300,8 @@ elim (H'1 a0);
 left; exists b; split; [ right | idtac ]; auto.
 generalize (slicef_incl i0 a L3); unfold slicef in |- *; rewrite H'; auto.
 Qed.
-Hint Resolve (addEnd_id2 A A0 eqA n ltM).
-Hint Resolve (addEnd_id1 A A0 eqA n ltM).
+Hint Resolve (addEnd_id2 A A0 eqA n ltM) : core.
+Hint Resolve (addEnd_id1 A A0 eqA n ltM) : core.
  
 Theorem genPcP_incl :
  forall (i : poly A0 eqA ltM) (L L1 L2 : list _),
@@ -520,7 +521,7 @@ Definition genPcPf0 :
   forall (i : poly A0 eqA ltM) (aP R : list (poly A0 eqA ltM)),
   {Q : list (poly A0 eqA ltM) | genPcP i aP R Q}.
 intros i aP; pattern aP in |- *.
-apply well_founded_induction with (A := list (poly A0 eqA ltM)) (R := Tl);
+apply well_founded_induction_type with (A := list (poly A0 eqA ltM)) (R := Tl);
  clear aP; auto.
 try exact wf_Tl.
 intros aP; case aP.
@@ -574,7 +575,7 @@ intros a aL Q; unfold genPcPf in |- *; case (genPcPf0 a aL Q).
 intros x H'.
 apply genPcP_incl with (i := a) (L1 := aL); auto.
 Qed.
-Hint Resolve genPcPf_incl.
+Hint Resolve genPcPf_incl : core.
  
 Theorem spolyp_addEnd_genPcPf :
  forall (aP R Q : list (poly A0 eqA ltM)) (a b : poly A0 eqA ltM),
@@ -642,8 +643,8 @@ list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> Prop :=
       BuchAux.zerop A A0 eqA n ltM
         (nf A A0 A1 eqA plusA invA minusA multA divA cs eqA_dec n ltM ltM_dec
            os a aP) -> OBuch aP (a :: Q) R.
-Hint Resolve OBuch0 OBuch2.
-Hint Resolve incl_refl incl_tl.
+Hint Resolve OBuch0 OBuch2 : core.
+Hint Resolve incl_refl incl_tl : core.
  
 Theorem incl_addEnd1 :
  forall (a : poly A0 eqA ltM) (L1 L2 : list (poly A0 eqA ltM)),
@@ -778,7 +779,7 @@ list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> Prop :=
       divp A A0 eqA multA divA n ltM
         (ppcp A A0 A1 eqA plusA invA minusA multA divA cs n ltM a b) c ->
       redIn a b P Q R.
-Hint Resolve redIn1 redIn0.
+Hint Resolve redIn1 redIn0 : core.
  
 Remark lem_redIn_nil :
  forall (aP Q R : list (poly A0 eqA ltM)) (a b : poly A0 eqA ltM),
@@ -930,8 +931,7 @@ Theorem redln_cons_gen :
 intros aP R Q a b c H' H'0 H'1 H'2.
 apply lem_redln_cons_gen with (Q := c :: Q); auto.
 Qed.
-Hint Resolve redln_cons_gen.
-Require Import Relation_Operators.
+Hint Resolve redln_cons_gen : core.
  
 Theorem red_gen_in :
  forall (a : poly A0 eqA ltM) (aP R Q : list (poly A0 eqA ltM)),
@@ -1188,7 +1188,6 @@ intros a0 b0 H'3 H'4.
 apply genOCp_redln; auto.
 apply ObuchPincl with (Q := genOCPf P); auto.
 Qed.
-Require Import Lexicographic_Product.
  
 Let FPset (A : list (poly A0 eqA ltM)) := list (poly A0 eqA ltM).
  
@@ -1215,10 +1214,10 @@ exact wf_Fl.
 Qed.
  
 Definition PtoS :
-  list (poly A0 eqA ltM) * list (poly A0 eqA ltM) -> sigS FPset.
+  list (poly A0 eqA ltM) * list (poly A0 eqA ltM) -> sigT FPset.
 intros H'; case H'.
 intros P1 P2.
-exact (existS FPset P1 P2).
+exact (existT FPset P1 P2).
 Defined.
  
 Definition RL (x y : list (poly A0 eqA ltM) * list (poly A0 eqA ltM)) :
@@ -1234,7 +1233,7 @@ Definition pbuchf :
   {R : list (poly A0 eqA ltM) | OBuch (fst PQ) (snd PQ) R}.
 intros pq; pattern pq in |- *.
 apply
- well_founded_induction
+ well_founded_induction_type
   with
     (A := (list (poly A0 eqA ltM) * list (poly A0 eqA ltM))%type)
     (R := RL).

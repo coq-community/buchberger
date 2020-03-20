@@ -9,11 +9,15 @@
           Laurent Thery 	                                             
                                                                            
 ****************************************************************************)
-Section Monomials.
 Require Import Arith.
 Require Import Compare.
 Require Import Compare_dec.
 Require Import Peano_dec.
+Require Import Relation_Definitions.
+Require Import Eqdep.
+Require Import Max.
+
+Section Monomials.
 
 Inductive mon : nat -> Set :=
   | n_0 : mon 0
@@ -137,7 +141,7 @@ Inductive mdiv : forall d : nat, mon d -> mon d -> Prop :=
   | mdiv_cons :
       forall (d : nat) (v v' : mon d) (n n' : nat),
       n <= n' -> mdiv d v v' -> mdiv (S d) (c_n d n v) (c_n d n' v').
-Hint Resolve mdiv_nil mdiv_cons.
+Hint Resolve mdiv_nil mdiv_cons : core.
 
 Lemma mdiv_proj :
  forall (d : nat) (m m' : mon (S d)),
@@ -146,8 +150,7 @@ Lemma mdiv_proj :
 intros d m m' H' H'0; rewrite <- (proj_ok d m); rewrite <- (proj_ok d m');
  auto.
 Qed.
-Require Import Relation_Definitions.
-Require Import Eqdep.
+
 (*
 		Division is transitive.
 *)
@@ -216,7 +219,7 @@ Qed.
 Theorem mon_0 : forall a : mon 0, a = n_0.
 intros a; generalize (is_nil_id 0 a); simpl in |- *; auto.
 Qed.
-Hint Resolve mon_0.
+Hint Resolve mon_0 : core.
 
 Theorem eqmon_dec : forall (d : nat) (x y : mon d), {x = y} + {x <> y}.
 intros d; elim d; auto.
@@ -325,7 +328,6 @@ rewrite <- (le_plus_minus (pmon1 (S n) b) (pmon1 (S n) a)); auto.
 rewrite H4; auto.
 try exact (proj_ok n a).
 Qed.
-Require Import Max.
 
 Definition ppcm_mon : forall d : nat, mon d -> mon d -> mon d.
 intros d; elim d.

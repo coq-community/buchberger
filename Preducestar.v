@@ -9,11 +9,10 @@
                                                                            
   ****************************************************************************)
 Require Export Preduceplus.
-Unset Standard Proposition Elimination Names.
 Section Preducestar.
-Load "hCoefStructure".
-Load "hOrderStructure".
-Load "hReduceplus".
+Load hCoefStructure.
+Load hOrderStructure.
+Load hReduceplus.
  
 Inductive reducestar (Q : list (poly A0 eqA ltM)) :
 list (Term A n) -> list (Term A n) -> Prop :=
@@ -154,7 +153,7 @@ Definition Reducef :
   {q : poly A0 eqA ltM |
   reducestar Q (s2p A A0 eqA n ltM p) (s2p A A0 eqA n ltM q)}.
 intros Q p; pattern p in |- *.
-apply well_founded_induction with (1 := sltp_wf _ A0 eqA _ ltM os).
+apply well_founded_induction_type with (1 := sltp_wf _ A0 eqA _ ltM os).
 intros x; case x.
 intros x0; case x0.
 intros o H'; simpl in |- *.
@@ -301,7 +300,7 @@ Theorem reducestar_irreducible :
  irreducible A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q q.
 intros Q p q H'; inversion H'; auto.
 Qed.
-Hint Resolve reducestar_reduceplus.
+Hint Resolve reducestar_reduceplus : core.
  
 Theorem reducestar_inv :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),

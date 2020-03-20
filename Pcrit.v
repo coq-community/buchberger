@@ -4,10 +4,10 @@
 Require Export Pspoly.
 Require Export Pmult.
 Section crit.
-Load "hCoefStructure".
-Load "hOrderStructure".
-Load "hSpoly".
-Load "hMult".
+Load hCoefStructure.
+Load hOrderStructure.
+Load hSpoly.
+Load hMult.
  
 Definition Rminus :
   forall (a : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a),
@@ -156,8 +156,8 @@ intros a p; elim p; clear p.
 exact True.
 intros b p Rec; exact (divP A A0 eqA multA divA n b a /\ Rec).
 Defined.
-Hint Resolve divP_inv3.
-Hint Resolve divP_inv3.
+Hint Resolve divP_inv3 : core.
+Hint Resolve divP_inv3 : core.
  
 Definition divpf :
   forall (a : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a),
@@ -184,7 +184,7 @@ apply (canonical_nzeroP A A0 eqA n ltM) with (p := l); auto.
 apply H'; auto.
 apply canonical_imp_canonical with (a := a0); auto.
 Qed.
-Hint Resolve divpf_canonical.
+Hint Resolve divpf_canonical : core.
  
 Theorem divPp_divpf :
  forall (a : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a)
@@ -262,7 +262,7 @@ cut (~ zeroP (A:=A) A0 eqA (n:=n) a);
  [ idtac | apply canonical_nzeroP with (ltM := ltM) (p := l) ]; 
  auto.
 Qed.
-Hint Resolve canonical_Rminus.
+Hint Resolve canonical_Rminus : core.
  
 Theorem Rminus_in :
  forall (r p q : list (Term A n)) (a b : Term A n)
@@ -357,7 +357,7 @@ cut (canonical A0 eqA ltM l);
 cut (~ zeroP (A:=A) A0 eqA (n:=n) a0); auto.
 apply canonical_nzeroP with (ltM := ltM) (p := l); auto.
 Qed.
-Hint Resolve canonical_Dmult.
+Hint Resolve canonical_Dmult : core.
  
 Theorem divp_is_multTerm :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b),

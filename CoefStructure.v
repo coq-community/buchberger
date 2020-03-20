@@ -3,7 +3,7 @@
 
 Require Import Relation_Definitions.
 
-Record CoefStructure (A : Set) (A0 A1 : A) (eqA : A -> A -> Prop)
+Record CoefStructure (A : Type) (A0 A1 : A) (eqA : A -> A -> Prop)
   (plusA : A -> A -> A) (invA : A -> A) (minusA multA : A -> A -> A)
   (divA : A -> forall b : A, ~ eqA b A0 -> A) : Prop := mkCoefStructure
   {A1_diff_A0 : ~ eqA A1 A0;

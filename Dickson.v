@@ -6,6 +6,8 @@ Require Import Bar.
 Require Import OpenIndGoodRel.
 Require Import Lt.
 Require Import Wf_nat.
+Require Import Inverse_Image.
+Require Import Monomials.
 
 Definition DecRel (A : Set) (R : Rel A) :=
   forall x y : A, {R x y} + {~ R x y}.
@@ -49,7 +51,6 @@ Definition MinD :=
   Min (A * B) (fun p q : A * B => lt (fst p) (fst q)) (ProdRel A B leq R).
 
 Definition prod_lt (a b : A * B) := lt (fst a) (fst b).
-Require Import Inverse_Image.
 
 Lemma WFlem1 : well_founded prod_lt.
 unfold prod_lt in |- *; apply wf_inverse_image with (B := A); auto.
@@ -128,7 +129,6 @@ Qed.
 End Dickson.
 
 (* Now we transfer this result to another  representation: *)
-Require Import Monomials.
 
 Lemma leq2le : forall a b : nat, leq nat lt a b -> a <= b.
 intros.

@@ -19,10 +19,11 @@ Require Export POrder.
 Require Export Monomials.
 Require Export Term.
 Require Export List.
+
 Section Peq.
-Load "hCoefStructure".
-Load "hOrderStructure".
-Load "hOrder".
+Load hCoefStructure.
+Load hOrderStructure.
+Load hOrder.
  
 Definition size := length (A:=Term A n).
  
@@ -31,7 +32,7 @@ Definition sizel m := match m with
                       end.
  
 Definition lessP m1 m2 := sizel m1 < sizel m2.
-Hint Unfold lessP.
+Hint Unfold lessP : core.
  
 Lemma wf_lessP : well_founded lessP.
 red in |- *.
@@ -46,18 +47,18 @@ intros y H'1; apply H'.
 unfold lessP in H'1.
 apply lt_le_trans with (sizel a); auto with arith.
 Qed.
-Hint Resolve wf_lessP.
+Hint Resolve wf_lessP : core.
  
 Theorem pX_inj :
  forall (n1 n2 : Term A n) l1 l2, n1 = n2 -> l1 = l2 -> pX n1 l1 = pX n2 l2.
 intros n1 n2 l1 l2 H' H'0; rewrite H'0; rewrite H'; auto.
 Qed.
-Hint Resolve pX_inj.
+Hint Resolve pX_inj : core.
  
 Lemma pX_invl : forall (a b : Term A n) p q, pX a p = pX b q -> a = b.
 intros a b p q H'; inversion H'; auto.
 Qed.
-Hint Unfold pX.
+Hint Unfold pX : core.
  
 Lemma pX_invr : forall p q (a b : Term A n), pX a p = pX b q -> p = q.
 unfold pX, pX in |- *.
@@ -76,15 +77,15 @@ Theorem canonicalp1 :
 intros a H; split; simpl in |- *; auto.
 red in |- *; simpl in |- *; apply Relation_Operators_compat.d_one.
 Qed.
-Hint Resolve canonicalp1 canonical0.
+Hint Resolve canonicalp1 canonical0 : core.
  
 Inductive eqP : list (Term A n) -> list (Term A n) -> Prop :=
   | eqP0 : eqP (pO A n) (pO A n)
   | eqpP1 :
       forall ma mb p q,
       eqTerm (A:=A) eqA (n:=n) ma mb -> eqP p q -> eqP (pX ma p) (pX mb q).
-Hint Resolve eqP0 eqpP1.
- 
+Hint Resolve eqP0 eqpP1 : core.
+
 Theorem eqp_refl : reflexive _ eqP.
 red in |- *.
 intros x; elim x; auto.
@@ -130,8 +131,8 @@ intros H4; inversion_clear H4.
 change (eqP (pX a l) (pX mb0 q0)) in |- *; apply eqpP1; eauto.
 apply (eqTerm_trans _ _ _ _ _ _ _ _ _ cs n) with (y := mb); auto.
 Qed.
-Hint Resolve eqp_refl.
- 
+Hint Resolve eqp_refl : core.
+
 Let eqTerm_imp_eqT := eqTerm_imp_eqT A eqA n.
  
 Theorem ltP_refl_pX :
@@ -215,7 +216,7 @@ intros p H' a H'0; apply Acc_intro.
 intros y H'1; apply H'.
 unfold lessP in H'1; apply lt_le_trans with (sizel3 a); auto with arith.
 Qed.
-Hint Resolve wf_lessP3.
+Hint Resolve wf_lessP3 : core.
 Set Implicit Arguments.
 Unset Strict Implicit.
  

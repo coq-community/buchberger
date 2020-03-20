@@ -1,0 +1,2 @@
+clean::
+	$(HIDE)rm -f sin_num.ml sin_num.mli

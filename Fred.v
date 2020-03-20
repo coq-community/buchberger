@@ -9,9 +9,12 @@
           Laurent Thery April 98 (revised Mai 98)                          
                                                                            
 ****************************************************************************)
+Require Import List.
+Require Import LetP.
+Require Import Relation_Definitions.
+
 Section Reduce.
 Variable poly : Set.
-Require Import List.
 Variable cb : list poly -> poly -> Prop.
 Variable divp : poly -> poly -> Prop.
 Variable reduce : list poly -> poly -> poly -> Prop.
@@ -21,7 +24,6 @@ Variable grobner : list poly -> Prop.
 Variable zero : poly.
 Variable zerop : poly -> Prop.
 Variable zerop_dec : forall p : poly, {zerop p} + {~ zerop p}.
-Require Import LetP.
 Hypothesis cb_id : forall (L : list poly) (p : poly), In p L -> cb L p.
 Hypothesis cb_zerop : forall (L : list poly) (p : poly), zerop p -> cb L p.
 Hypothesis
@@ -68,7 +70,6 @@ Hypothesis
      In r1 L1 -> ~ zerop r1 -> exists r2 : poly, In r2 L2 /\ divp r1 r2) ->
     forall q : poly, reduce L1 p q -> exists r : poly, reduce L2 p r.
 Hypothesis divp_id : forall p : poly, divp p p.
-Require Import Relation_Definitions.
 Hypothesis divp_trans : transitive poly divp.
 Hypothesis
   nf_div_zero :
@@ -81,7 +82,7 @@ Theorem zerop_nf_cb :
 intros L p H'.
 apply zerop_elim_cb with (p := nf L p); auto.
 Qed.
-Hint Resolve zerop_nf_cb.
+Hint Resolve zerop_nf_cb : core.
 
 Definition redacc : list poly -> list poly -> list poly.
 intros H'; elim H'.
@@ -95,7 +96,7 @@ Defined.
 
 Definition red (L : list poly) : list poly := redacc L nil.
 Hint Resolve incl_refl incl_tl incl_appr incl_appl incl_cons incl_app
-  in_or_app.
+  in_or_app : core.
 
 Theorem redacc_cb :
  forall (L1 L2 : list poly) (p : poly),

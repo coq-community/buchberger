@@ -16,11 +16,11 @@ Require Import Monomials.
 Require Import Term.
 Require Import List.
 Section DivTerm.
-Load "hCoefStructure".
-Load "mCoefStructure".
-Load "hOrderStructure".
-Load "mOrderStructure".
-Load "hTerm".
+Load hCoefStructure.
+Load mCoefStructure.
+Load hOrderStructure.
+Load mOrderStructure.
+Load hTerm.
 Set Implicit Arguments.
 Unset Strict Implicit.
  
@@ -157,7 +157,7 @@ case H'1; intros H'2 H'5; clear H'1.
 split; auto.
 rewrite H'5; rewrite H'4; auto.
 Qed.
-Hint Resolve eqTerm_divTerm_comp.
+Hint Resolve eqTerm_divTerm_comp : core.
  
 Theorem divTerm_multTerm_l :
  forall (a b c : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a),
@@ -189,7 +189,7 @@ rewrite (mult_mon_com n m1 m).
 rewrite mult_mon_assoc.
 rewrite mult_div_com; auto.
 Qed.
-Hint Resolve divTerm_multTerm_l divTerm_multTerm_r.
+Hint Resolve divTerm_multTerm_l divTerm_multTerm_r : core.
  
 Theorem div_is_T1 :
  forall (a : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a),
@@ -199,8 +199,8 @@ intros a0 m nZa; split; auto.
 apply divA_A1 with (1 := cs).
 unfold M1 in |- *; apply mult_div_id; auto.
 Qed.
-Hint Resolve div_is_T1.
- 
+Hint Resolve div_is_T1 : core.
+
 Theorem divTerm_nZ :
  forall a b : Term A n,
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
@@ -404,8 +404,8 @@ apply
   with (y := multTerm (A:=A) multA (n:=n) (divTerm a nZb0) b); 
  auto.
 Qed.
-Hint Resolve divP_inv1 divP_inv2 divP_inv3.
- 
+Hint Resolve divP_inv1 divP_inv2 divP_inv3 : core.
+
 Theorem divP_plusTerm :
  forall a b c : Term A n,
  divP a c ->
@@ -438,8 +438,8 @@ apply eqTerm_multTerm_comp with (1 := cs); auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply eqT_divTerm_plusTerm; auto.
 Qed.
-Hint Resolve divP_plusTerm.
- 
+Hint Resolve divP_plusTerm : core.
+
 Theorem divP_invTerm_l :
  forall a b : Term A n, divP a b -> divP (invTerm (A:=A) invA (n:=n) a) b.
 intros a b H'; inversion H'; auto.
@@ -461,8 +461,8 @@ apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n);
 apply eqTerm_multTerm_comp with (1 := cs); auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); apply divTerm_invTerm_l; auto.
 Qed.
-Hint Resolve divP_invTerm_l.
- 
+Hint Resolve divP_invTerm_l : core.
+
 Theorem divP_invTerm_r :
  forall a b : Term A n, divP a b -> divP a (invTerm (A:=A) invA (n:=n) b).
 intros a b H'; inversion H'.
@@ -500,9 +500,9 @@ apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n);
 apply eqTerm_multTerm_comp with (1 := cs); auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); apply divTerm_invTerm_r; auto.
 Qed.
-Hint Resolve divTerm_nZ.
-Hint Resolve divP_invTerm_r.
- 
+Hint Resolve divTerm_nZ : core.
+Hint Resolve divP_invTerm_r : core.
+
 Theorem divTerm_multTerml :
  forall a b : Term A n,
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
@@ -546,8 +546,8 @@ apply
 apply eqTerm_multTerm_comp with (1 := cs); auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); apply divTerm_multTerm_l; auto.
 Qed.
-Hint Resolve divTerm_multTermr divTerm_multTerml.
- 
+Hint Resolve divTerm_multTermr divTerm_multTerml : core.
+
 Theorem divP_trans : transitive (Term A n) divP.
 red in |- *; intros a b c H' H'0.
 cut (~ zeroP (A:=A) A0 eqA (n:=n) c); [ intros nZc | auto ].
@@ -584,15 +584,15 @@ apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n);
  auto.
 apply divP_inv2 with (a := a); auto.
 Qed.
-Hint Resolve divP_trans.
- 
+Hint Resolve divP_trans : core.
+
 Theorem divP_nZero :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b),
  divP a b -> ~ zeroP (A:=A) A0 eqA (n:=n) (divTerm a nZb).
 intros a b nZb H'; inversion H'; auto.
 Qed.
-Hint Resolve divP_nZero.
- 
+Hint Resolve divP_nZero : core.
+
 Theorem divP_eqTerm_comp :
  forall a b c : Term A n,
  divP a c -> eqTerm (A:=A) eqA (n:=n) a b -> divP b c.
@@ -625,15 +625,15 @@ Theorem divP_on_eqT_eqT :
  eqT a b -> eqT (divTerm a nZb) (T1 A1 n).
 intros a b H nZb H0; apply divTerm_on_eqT_eqT; auto.
 Qed.
-Hint Resolve divP_on_eqT divP_on_eqT_eqT.
- 
+Hint Resolve divP_on_eqT divP_on_eqT_eqT : core.
+
 Inductive ppcm (p q : Term A n) : Term A n -> Prop :=
     ppcm0 :
       forall s : Term A n,
       (forall r : Term A n, divP r p -> divP r q -> divP r s) ->
       divP s p -> divP s q -> ppcm p q s.
-Hint Resolve ppcm0.
- 
+Hint Resolve ppcm0 : core.
+
 Theorem ppc_is_ppcm :
  forall a b : Term A n,
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
@@ -660,8 +660,8 @@ Theorem ppc_multTerm_divP :
 intros a b H' H'0.
 elim ppc_is_ppcm; auto.
 Qed.
-Hint Resolve ppc_multTerm_divP.
- 
+Hint Resolve ppc_multTerm_divP : core.
+
 Theorem divP_comp :
  forall a b c d : Term A n,
  divP a c ->
@@ -701,8 +701,8 @@ Theorem divP_multTerm_r :
 intros a b c H' H'0 H'1.
 apply divP_comp with (a := multTerm (A:=A) multA (n:=n) a b) (c := b); auto.
 Qed.
-Hint Resolve divP_multTerm_r divP_multTerm_l.
- 
+Hint Resolve divP_multTerm_r divP_multTerm_l : core.
+
 Theorem divP_ppcl :
  forall a b : Term A n,
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
@@ -724,8 +724,8 @@ lapply (ppc_is_ppcm a b);
  auto; auto.
 inversion H'4; auto.
 Qed.
-Hint Resolve divP_ppcl divP_ppcr.
- 
+Hint Resolve divP_ppcl divP_ppcr : core.
+
 Theorem divTerm_compo :
  forall (a b c : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
    (nZc : ~ zeroP (A:=A) A0 eqA (n:=n) c),
@@ -740,8 +740,8 @@ apply
   with (y := divTerm (multTerm (A:=A) multA (n:=n) (divTerm a nZb) b) nZc);
  auto.
 Qed.
-Hint Resolve divTerm_compo.
- 
+Hint Resolve divTerm_compo : core.
+
 Theorem divP_comp_ppc0 :
  forall (a b : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a)
    (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
@@ -886,8 +886,8 @@ apply divP_eqT with (a := multTerm (A:=A) multA (n:=n) (divTerm a nZb) b);
  auto.
 apply (eqT_sym A n); auto.
 Qed.
-Hint Resolve eqT_nzero_divP.
- 
+Hint Resolve eqT_nzero_divP : core.
+
 Theorem eqT_nzero_eqT_divP :
  forall (a b c : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b),
  eqT c (multTerm (A:=A) multA (n:=n) (divTerm c nZb) b) ->
@@ -903,5 +903,5 @@ apply multTerm_eqT; auto.
 apply eqT_divTerm; auto; apply (eqT_refl A n); auto.
 apply (eqT_refl A n); auto.
 Qed.
-Hint Resolve eqT_nzero_eqT_divP.
+Hint Resolve eqT_nzero_eqT_divP : core.
 End DivTerm.

@@ -1,5 +1,7 @@
 -R . Buchberger
 
+-arg -w -arg -extraction-opaque-accessed
+
 Relation_Operators_compat.v
 Bar.v
 BuchAux.v

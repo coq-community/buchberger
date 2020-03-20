@@ -11,9 +11,9 @@
    definition of smult*)
 Require Export Pmults.
 Section Pmult.
-Load "hCoefStructure".
-Load "hOrderStructure".
-Load "hMults".
+Load hCoefStructure.
+Load hOrderStructure.
+Load hMults.
  
 Fixpoint multpf (p : list (Term A n)) : list (Term A n) -> list (Term A n) :=
   fun q : list (Term A n) =>
@@ -36,7 +36,7 @@ apply canonical_nzeroP with (ltM := ltM) (p := l); auto.
 apply H'; auto.
 apply canonical_imp_canonical with (a := a); auto.
 Qed.
-Hint Resolve canonical_multpf.
+Hint Resolve canonical_multpf : core.
  
 Theorem pluspf_pX :
  forall (p : list (Term A n)) (a : Term A n),

@@ -3,10 +3,11 @@
 
 Require Export Pmults.
 Require Import Arith.
+Require Import LetP.
 Section Pminus.
-Load "hCoefStructure".
-Load "hOrderStructure".
-Load "hMults".
+Load hCoefStructure.
+Load hOrderStructure.
+Load hMults.
  
 Inductive minusP :
 list (Term A n) -> list (Term A n) -> list (Term A n) -> Prop :=
@@ -37,15 +38,14 @@ list (Term A n) -> list (Term A n) -> list (Term A n) -> Prop :=
       ltT ltM a1 a2 ->
       minusP (pX a1 l1) l2 l3 ->
       minusP (pX a1 l1) (pX a2 l2) (pX (invTerm (A:=A) invA (n:=n) a2) l3).
-Hint Resolve mnillu1 mnillu2 mmainu1 mmainu2a mmainu2b mmainu3.
-Require Import LetP.
+Hint Resolve mnillu1 mnillu2 mmainu1 mmainu2a mmainu2b mmainu3 : core.
  
 Definition minuspp :
   forall l : list (Term A n) * list (Term A n),
   {a : list (Term A n) | minusP (fst l) (snd l) a}.
 intros l; pattern l in |- *.
 apply
- well_founded_induction
+ well_founded_induction_type
   with (A := (list (Term A n) * list (Term A n))%type) (R := lessP A n); 
  auto.
 apply wf_lessP; auto.
@@ -137,7 +137,7 @@ apply (eqT_trans A n) with (1 := eq1); auto.
 apply (eqT_sym A n); apply plusTerm_eqT2; auto.
 apply (eqT_trans A n) with (1 := H'); auto.
 Qed.
-Hint Unfold minuspf.
+Hint Unfold minuspf : core.
  
 Theorem minusTerm_zeroP_r :
  forall a b : Term A n,
@@ -170,7 +170,7 @@ apply zeroP_plusTermr with (1 := cs); auto.
 apply (eqT_trans A n) with (y := b); auto.
 apply zeroP_invTerm_zeroP with (1 := cs); auto.
 Qed.
-Hint Resolve minusTerm_zeroP minusTerm_zeroP_r.
+Hint Resolve minusTerm_zeroP minusTerm_zeroP_r : core.
  
 Theorem minusP_pO_is_eqP :
  forall p q r : list (Term A n),
@@ -305,7 +305,7 @@ Theorem minuspf_is_minusP :
 intros l1 l2; try assumption.
 unfold minuspf in |- *; case (minuspp (pair l1 l2)); simpl in |- *; auto.
 Qed.
-Hint Resolve minuspf_is_minusP.
+Hint Resolve minuspf_is_minusP : core.
  
 Theorem minuspf_pO_is_eqP :
  forall p q : list (Term A n),
@@ -437,7 +437,7 @@ apply (eqT_trans A n) with (y := multTerm (A:=A) multA (n:=n) (T1 A1 n) b);
 apply (T1_eqT A A1 eqA); auto.
 Qed.
 Hint Resolve invTerm_eqT_comp invTerm_T1_eqT_comp
-  multTerm_invTerm_T1_eqT_comp.
+  multTerm_invTerm_T1_eqT_comp : core.
  
 Lemma minusP_is_plusP_mults :
  forall p q r : list (Term A n),
@@ -593,7 +593,7 @@ Theorem minuspf_is_pluspf_mults :
 intros p q; try assumption.
 apply minusP_is_plusP_mults with (p := p) (q := q); auto.
 Qed.
-Hint Resolve minuspf_is_pluspf_mults.
+Hint Resolve minuspf_is_pluspf_mults : core.
  
 Theorem pO_minusP_inv1 :
  forall p q : list (Term A n),
@@ -734,8 +734,8 @@ Theorem minuspf_inv3b :
 intros a b p q H' Z; try assumption.
 rewrite (minusP_inv3b a b p q (minuspf (pX a p) (pX b q))); auto.
 Qed.
-Hint Resolve pluspf_inv1 pluspf_inv2 pluspf_inv3a pluspf_inv3b.
-Hint Resolve minuspf_inv1 minuspf_inv2 minuspf_inv3a minuspf_inv3b.
+Hint Resolve pluspf_inv1 pluspf_inv2 pluspf_inv3a pluspf_inv3b : core.
+Hint Resolve minuspf_inv1 minuspf_inv2 minuspf_inv3a minuspf_inv3b : core.
  
 Theorem minuspf_comp :
  forall p q r s : list (Term A n),
@@ -818,8 +818,8 @@ apply
                (mults (A:=A) multA (n:=n) a q))); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
-Hint Resolve mults_dist_minuspf.
- 
+Hint Resolve mults_dist_minuspf : core.
+
 Theorem minuspf_pO_refl :
  forall p : list (Term A n), eqP A eqA n (minuspf p (pO A n)) p.
 intros p;
@@ -832,8 +832,8 @@ intros p;
                 (invTerm (A:=A) invA (n:=n) (T1 A1 n)) 
                 (pO A n))); auto; simpl in |- *; auto.
 Qed.
-Hint Resolve minuspf_pO_refl.
- 
+Hint Resolve minuspf_pO_refl : core.
+
 Theorem minuspf_pOmults :
  forall p : list (Term A n),
  eqP A eqA n (minuspf (pO A n) p)
@@ -848,8 +848,8 @@ intros p;
                 (invTerm (A:=A) invA (n:=n) (T1 A1 n)) p)); 
  auto; simpl in |- *; auto.
 Qed.
-Hint Resolve minuspf_pOmults.
- 
+Hint Resolve minuspf_pOmults : core.
+
 Theorem mults_pO :
  forall (p : list (Term A n)) (a b : Term A n),
  eqT a b ->
@@ -930,8 +930,8 @@ apply canonical_pluspf; auto.
 apply canonical_imp_canonical with (a := a); auto.
 apply canonical_imp_canonical with (a := a); auto.
 Qed.
-Hint Resolve order_pluspf.
- 
+Hint Resolve order_pluspf : core.
+
 Theorem order_minuspf :
  forall (l1 l2 : list (Term A n)) (a : Term A n),
  canonical A0 eqA ltM (pX a l1) ->
@@ -1053,8 +1053,8 @@ apply (eqp_trans _ _ _ _ _ _ _ _ _ cs n) with (y := minuspf p q); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n).
 apply minuspf_inv3a; auto.
 Qed.
-Hint Resolve canonical_minuspf.
- 
+Hint Resolve canonical_minuspf : core.
+
 Theorem pluspf_minuspf_id :
  forall p q : list (Term A n),
  canonical A0 eqA ltM p ->
@@ -1209,8 +1209,8 @@ change
 rewrite <- (minuspf_inv2_eq a0 a l q); auto.
 apply (canonical_pX_order A A0 eqA) with (l := l); auto.
 Qed.
-Hint Resolve inv_prop.
- 
+Hint Resolve inv_prop : core.
+
 Theorem invTerm_T1_multTerm_T1 :
  eqTerm (A:=A) eqA (n:=n)
    (multTerm (A:=A) multA (n:=n) (invTerm (A:=A) invA (n:=n) (T1 A1 n))
@@ -1233,8 +1233,8 @@ apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); apply T1_multTerm_l with (1 := cs);
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); apply invTerm_invol with (1 := cs);
  auto.
 Qed.
-Hint Resolve invTerm_T1_multTerm_T1.
- 
+Hint Resolve invTerm_T1_multTerm_T1 : core.
+
 Theorem pluspf_is_minuspf :
  forall p q : list (Term A n),
  canonical A0 eqA ltM p ->

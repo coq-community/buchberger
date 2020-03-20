@@ -13,7 +13,7 @@ Inductive Min : list A -> Set :=
   | cmin :
       forall (a : A) (l : list A),
       Min l -> (forall y : A, lt y a -> GRBar A R (y :: l)) -> Min (a :: l).
-Hint Resolve nmin cmin.
+Hint Resolve nmin cmin : core.
 
 Lemma OpenInd :
  forall xs : list A,
