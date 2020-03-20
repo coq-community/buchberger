@@ -3,6 +3,7 @@
 
 (* Require *)
 Require Export List.
+Require Import Arith.
 Require Import Inclusion.
 Require Import Inverse_Image.
 Require Import Wf_nat.
@@ -12,9 +13,6 @@ Require Import Relation_Operators_compat.
 Require Import Lexicographic_Product.
 Require Import LetP.
 Require Export WfR0.
-Require Import Arith.
-Require Import Relation_Operators.
-Require Import Lexicographic_Product.
 
 Section Buch.
 Load hCoefStructure.
