@@ -33,7 +33,7 @@ opam-file-maintainer: palmskog@gmail.com
 opam-file-version: dev
 
 license:
-  fullname: GNU Lesser General Public License v2.1
+  fullname: GNU Lesser General Public License v2.1 or later
   identifier: LGPL-2.1-or-later
 
 supported_coq_versions:

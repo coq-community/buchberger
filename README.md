@@ -30,7 +30,7 @@ Also includes a constructive proof of Dickson's lemma.
   - Henrik Persson (initial)
 - Coq-community maintainer(s):
   - Karl Palmskog ([**@palmskog**](https://github.com/palmskog))
-- License: [GNU Lesser General Public License v2.1](LICENSE)
+- License: [GNU Lesser General Public License v2.1 or later](LICENSE)
 - Compatible Coq versions: 8.7 or later
 - Additional dependencies: none
 - Coq namespace: `Buchberger`
