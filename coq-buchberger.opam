@@ -2,15 +2,16 @@ opam-version: "2.0"
 maintainer: "palmskog@gmail.com"
 version: "dev"
 
-homepage: "https://github.com/palmskog/buchberger"
-dev-repo: "git+https://github.com/palmskog/buchberger.git"
-bug-reports: "https://github.com/palmskog/buchberger/issues"
-license: "LGPL-2.1-only"
+homepage: "https://github.com/coq-community/buchberger"
+dev-repo: "git+https://github.com/coq-community/buchberger.git"
+bug-reports: "https://github.com/coq-community/buchberger/issues"
+license: "LGPL-2.1-or-later"
 
-synopsis: "Coq proof of the correctness of Buchberger's algorithm"
+synopsis: "Verified implementation of Buchberger's algorithm for computing Gröbner bases in Coq"
 description: """
-A machine-checked implementation of Buchberger's algorithm,
-which computes the Gröbner basis associated with a polynomial ideal."""
+A verified implementation of Buchberger's algorithm in Coq,
+which computes the Gröbner basis associated with a polynomial ideal.
+Also includes a constructive proof of Dickson's lemma."""
 
 build: [make "-j%{jobs}%"]
 install: [make "install"]

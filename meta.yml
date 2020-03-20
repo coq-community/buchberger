@@ -1,16 +1,17 @@
 ---
 fullname: Buchberger
 shortname: buchberger
-organization: palmskog
-community: false
+organization: coq-community
+community: true
 travis: true
 coqdoc: false
 
-synopsis: Coq proof of the correctness of Buchberger's algorithm
+synopsis: Verified implementation of Buchberger's algorithm for computing Gröbner bases in Coq
 
 description: |-
-  A machine-checked implementation of Buchberger's algorithm,
+  A verified implementation of Buchberger's algorithm in Coq,
   which computes the Gröbner basis associated with a polynomial ideal.
+  Also includes a constructive proof of Dickson's lemma.
 
 publications:
 - pub_url: https://link.springer.com/article/10.1023/A:1026518331905
@@ -23,13 +24,17 @@ authors:
 - name: Henrik Persson
   initial: true
 
+maintainers:
+- name: Karl Palmskog
+  nickname: palmskog
+
 opam-file-maintainer: palmskog@gmail.com
 
 opam-file-version: dev
 
 license:
   fullname: GNU Lesser General Public License v2.1
-  identifier: LGPL-2.1-only
+  identifier: LGPL-2.1-or-later
 
 supported_coq_versions:
   text: 8.7 or later
@@ -64,11 +69,13 @@ documentation: |-
 
   It is composed of:
   - A proof of correctness of the algorithm as described in
-  A machine checked implementation of Buchberger's algorithm, JAR, January 2001.
+  [A machine checked implementation of Buchberger's algorithm][jar-url], JAR, January 2001.
   - An implementation of the algorithm. With respect to the paper,
   terms are not abstracted but built directly from coef and monomials.
   - A constructive proof of Dickson's lemma due to Henrik Persson.
-  
-  In `Extract.v`, it is explained how the extracted code found in
+
+  In the file `Extract.v`, it is explained how the extracted code found in
   `sin_num.ml` can be used to compute Gröbner bases.
+
+  [jar-url]: https://link.springer.com/article/10.1023/A:1026518331905
 ---

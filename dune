@@ -1,5 +1,5 @@
 (coq.theory
  (name Buchberger)
  (package coq-buchberger)
- (synopsis "Coq proof of the correctness of Buchberger's algorithm")
+ (synopsis "Verified implementation of Buchberger's algorithm for computing Gröbner bases in Coq")
  (modules :standard \ Extract mCoefStructure mOrderStructure hBuchAux hBuch hCoefStructure hComb hEq hMinus hMults hMult hOrderStructure hOrder hPlus hReduceplus hReducestar hReduce hSpminus hSpoly hTerm hWfRO))
