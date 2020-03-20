@@ -3,7 +3,7 @@
 
 Require Import Relation_Definitions.
 
-Record OrderStructure (A : Set) (M1 : A) (ltM : A -> A -> Prop)
+Record OrderStructure (A : Type) (M1 : A) (ltM : A -> A -> Prop)
   (plusM : A -> A -> A) : Prop := mkOrderStructure
   {M1_min : forall x : A, ~ ltM x M1;
    ltM_nonrefl : forall x : A, ~ ltM x x;

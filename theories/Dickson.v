@@ -9,12 +9,12 @@ Require Import Wf_nat.
 Require Import Inverse_Image.
 Require Import Monomials.
 
-Definition DecRel (A : Set) (R : Rel A) :=
+Definition DecRel (A : Type) (R : Rel A) :=
   forall x y : A, {R x y} + {~ R x y}.
 (* A computational double induction rule *)
 
 Theorem nat_double_ind_set :
- forall R : nat -> nat -> Set,
+ forall R : nat -> nat -> Type,
  (forall n : nat, R 0 n) ->
  (forall n : nat, R (S n) 0) ->
  (forall n m : nat, R n m -> R (S n) (S m)) -> forall n m : nat, R n m.
@@ -23,18 +23,20 @@ simple induction n; simple induction m; auto.
 Qed.
 
 Lemma dec_lt : DecRel nat lt.
+Proof.
 red in |- *; intros; pattern x, y in |- *.
 apply nat_double_ind_set; auto with arith.
 intros n; case n; auto with arith.
 intros n m H'; case H'; auto with arith.
 Qed.
 
-Definition NegRel (A : Set) (R : Rel A) (x y : A) := ~ R x y.
+Definition NegRel (A : Type) (R : Rel A) (x y : A) := ~ R x y.
 
-Definition ProdRel (A B : Set) (R : Rel A) (S : Rel B) 
+Definition ProdRel (A B : Type) (R : Rel A) (S : Rel B)
   (x y : A * B) := R (fst x) (fst y) /\ S (snd x) (snd y).
+
 Section Dickson.
-Variable A B : Set.
+Variable A B : Type.
 Variable lt : Rel A.
 Variable R : Rel B.
 Variable wfgt : well_founded lt.
@@ -53,12 +55,14 @@ Definition MinD :=
 Definition prod_lt (a b : A * B) := lt (fst a) (fst b).
 
 Lemma WFlem1 : well_founded prod_lt.
+Proof.
 unfold prod_lt in |- *; apply wf_inverse_image with (B := A); auto.
 Qed.
 
 Lemma lem0 :
  forall (l : list (A * B)) (a : A * B),
  ExistsL B (fun x : B => R x (snd a)) (sndL l) -> MinD l -> GBarlR (a :: l).
+Proof.
 intros l; elim l; simpl in |- *; auto.
 intros a H' H'0; inversion H'.
 intros a l0 H' a0 H'0 H'1; inversion H'0.
@@ -71,7 +75,6 @@ red in |- *; red in |- *; apply Base.
 apply FoundG.
 apply FoundE.
 unfold ProdRel in |- *; split; auto.
-simpl in H0; simpl in H1; simpl in H.
 change (GBarlR ((a0 :: nil) ++ (a :: nil) ++ l0)) in |- *; auto.
 red in |- *; apply monGRBar; simpl in |- *; auto.
 inversion H'1; simpl in |- *; auto.
@@ -81,6 +84,7 @@ Qed.
 Lemma lem1aux :
  forall l : list B,
  GoodR B R l -> forall us : list (A * B), l = sndL us -> MinD us -> GBarlR us.
+Proof.
 intros l; elim l; auto.
 intros H'; inversion H'.
 intros a l0 H' H'0; inversion H'0; auto.
@@ -88,7 +92,7 @@ intros us; elim us; simpl in |- *; auto.
 intros; discriminate.
 intros a1 l2 H'1 H'2 H'3; inversion H'2.
 apply lem0; auto.
-rewrite <- H3; rewrite <- H4; auto.
+rewrite <- H2; rewrite <- H3; auto.
 inversion H'3; auto.
 intros us; elim us; unfold sndL in |- *; simpl in |- *; auto.
 intros; discriminate.
@@ -101,6 +105,7 @@ Qed.
 
 Lemma lem1 :
  forall us : list (A * B), GoodR B R (sndL us) -> MinD us -> GBarlR us.
+Proof.
 intros us H' H'0.
 apply lem1aux with (l := sndL us); auto.
 Qed.
@@ -109,6 +114,7 @@ Lemma keylem :
  forall bs : list B,
  GRBar B R bs ->
  forall us : list (A * B), bs = sndL us -> MinD us -> GBarlR us.
+Proof.
 intros bs H'; elim H'; auto.
 intros l H'0 us H'1 H'2.
 apply lem1; auto.
@@ -122,6 +128,7 @@ rewrite H'2; auto.
 Qed.
 
 Lemma keylem_cor : WR (A * B) (ProdRel A B leq R).
+Proof.
 red in |- *; apply keylem with (bs := nil (A:=B)); auto.
 red in |- *; auto.
 apply nmin; auto.
@@ -131,6 +138,7 @@ End Dickson.
 (* Now we transfer this result to another  representation: *)
 
 Lemma leq2le : forall a b : nat, leq nat lt a b -> a <= b.
+Proof.
 intros.
 case (le_or_lt a b).
 auto.
@@ -148,21 +156,25 @@ Definition jj : forall d : nat, mon d :=
      end).
 
 Theorem jjProp1 : forall (d : nat) (m : mon d), d = 0 -> m = jj d.
+Proof.
 intros d m; elim m.
 simpl in |- *; auto.
 intros d0 n m0 H' H'0; inversion H'0.
 Qed.
 
 Theorem jjProp2 : jj 0 = n_0.
+Proof.
 simpl in |- *; auto.
 Qed.
 
 Theorem monO_n0 : forall m : mon 0, m = n_0.
+Proof.
 intros m; rewrite <- jjProp2.
 apply jjProp1; auto.
 Qed.
 
 Lemma zRV_WR : WR (mon 0) (mdiv 0).
+Proof.
 red in |- *; red in |- *; apply Ind.
 intros a; apply Ind.
 intros a0; rewrite (monO_n0 a); rewrite (monO_n0 a0).
@@ -180,6 +192,7 @@ Definition monLift (n : nat) (p : nat * mon n) :=
 Lemma monLift_lem :
  forall (n0 : nat) (b : mon (S n0)) (x : nat) (m : mon n0),
  b = c_n n0 x m -> {a : nat * mon n0 | b = monLift n0 a}.
+Proof.
 intros.
 rewrite H.
 exists (x, m).
@@ -188,14 +201,15 @@ auto.
 Qed.
 
 Lemma dicksonL : forall n : nat, WR (mon n) (mdiv n).
+Proof.
 intro.
 unfold WR in |- *.
 elim n.
 apply zRV_WR.
 intros.
 cut (WR (nat * mon n0) (ProdRel nat (mon n0) (leq nat lt) (mdiv n0)));
- [ intros | exact (keylem_cor nat (mon n0) lt (mdiv n0) lt_wf dec_lt H) ].
-unfold WR in H0.
+ [ intros | exact (keylem_cor nat (mon n0) lt (mdiv n0) lt_wf dec_lt X) ].
+unfold WR in X0.
 change (GRBar (mon (S n0)) (mdiv (S n0)) (map (monLift n0) nil)) in |- *.
 apply subRelGRBar with (R := ProdRel nat (mon n0) (leq nat lt) (mdiv n0));
  auto.
