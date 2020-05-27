@@ -9,8 +9,8 @@
 (*                                                                           *)
 (*****************************************************************************)
 
-Require Import LexiOrder.
-Require Import BuchRed.
+Require Import Buchberger.LexiOrder.
+Require Import Buchberger.BuchRed.
 Require Extraction.
 
 Extraction

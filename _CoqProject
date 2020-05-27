@@ -10,7 +10,6 @@ theories/Buch.v
 theories/CoefStructure.v
 theories/Dickson.v
 theories/DivTerm.v
-theories/Extract.v
 theories/Fred.v
 theories/LetP.v
 theories/LexiOrder.v
@@ -34,3 +33,4 @@ theories/Pspminus.v
 theories/Pspoly.v
 theories/Term.v
 theories/WfR0.v
+src/Extract.v
