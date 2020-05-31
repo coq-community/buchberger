@@ -13,9 +13,9 @@ A verified implementation of Buchberger's algorithm in Coq,
 which computes the Gröbner basis associated with a polynomial ideal.
 Also includes a constructive proof of Dickson's lemma."""
 
-build: [make "-j%{jobs}%"]
-install: [make "install"]
+build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
+  "dune" {>= "2.5"}
   "coq" {(>= "8.7" & < "8.12~") | (= "dev")}
 ]
 
