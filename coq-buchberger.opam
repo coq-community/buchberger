@@ -7,13 +7,13 @@ dev-repo: "git+https://github.com/coq-community/buchberger.git"
 bug-reports: "https://github.com/coq-community/buchberger/issues"
 license: "LGPL-2.1-or-later"
 
-synopsis: "Verified implementation of Buchberger's algorithm for computing Gröbner bases in Coq"
+synopsis: "Verified implementation in Coq of Buchberger's algorithm for computing Gröbner bases"
 description: """
 A verified implementation of Buchberger's algorithm in Coq,
 which computes the Gröbner basis associated with a polynomial ideal.
 Also includes a constructive proof of Dickson's lemma."""
 
-build: [make "-j%{jobs}%"]
+build: [make "-j%{jobs}%" ]
 install: [make "install"]
 depends: [
   "coq" {(>= "8.7" & < "8.13~") | (= "dev")}

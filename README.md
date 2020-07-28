@@ -36,6 +36,7 @@ Also includes a constructive proof of Dickson's lemma.
 - Coq namespace: `Buchberger`
 - Related publication(s):
   - [A machine checked implementation of Buchberger's algorithm](https://link.springer.com/article/10.1023/A:1026518331905) doi:[10.1023/A:1026518331905](https://doi.org/10.1023/A:1026518331905)
+  - [An Integrated Development of Buchberger's Algorithm in Coq](https://hal.inria.fr/inria-00072316/) 
 
 ## Building and installation instructions
 
@@ -52,7 +53,7 @@ To instead build and install manually, do:
 ``` shell
 git clone https://github.com/coq-community/buchberger.git
 cd buchberger
-make   # or make -j <number-of-cores-on-your-machine>
+make   # or make -j <number-of-cores-on-your-machine> 
 make install
 ```
 
@@ -60,15 +61,22 @@ make install
 ## Documentation
 
 This project contains a Coq formalization of Buchberger's algorithm.
-
 It is composed of:
 - A proof of correctness of the algorithm as described in
-[A machine checked implementation of Buchberger's algorithm][jar-url], JAR, January 2001.
+ [A machine checked implementation of Buchberger's algorithm][jar-url],
+ Journal of Automated Reasoning, January 2001.
 - An implementation of the algorithm. With respect to the paper,
-terms are not abstracted but built directly from coef and monomials.
+  terms are not abstracted but built directly from coef and monomials.
 - A constructive proof of Dickson's lemma due to Henrik Persson.
 
 In the file `Extract.v`, it is explained how the extracted code found in
 `sin_num.ml` can be used to compute Gröbner bases.
 
+## Related work
+
+An alternative formalization of Gröbner bases in Coq using the SSReflect
+proof language and the Mathematical Components library is available
+[elsewhere][grobner-url].
+
 [jar-url]: https://link.springer.com/article/10.1023/A:1026518331905
+[grobner-url]: https://github.com/thery/grobner
