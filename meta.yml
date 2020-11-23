@@ -3,7 +3,7 @@ fullname: Buchberger
 shortname: buchberger
 organization: coq-community
 community: true
-travis: true
+action: true
 coqdoc: false
 
 synopsis: Verified implementation in Coq of Buchberger's algorithm for computing Gröbner bases
@@ -44,15 +44,15 @@ supported_coq_versions:
 
 tested_coq_nix_versions:
 - version_or_url: https://github.com/coq/coq-on-cachix/tarball/master
-- version_or_url: '8.12'
-- version_or_url: '8.11'
-- version_or_url: '8.10'
-- version_or_url: '8.9'
-- version_or_url: '8.8'
-- version_or_url: '8.7'
 
 tested_coq_opam_versions:
 - version: dev
+- version: '8.12'
+- version: '8.11'
+- version: '8.10'
+- version: '8.9'
+- version: '8.8'
+- version: '8.7'
 
 namespace: Buchberger
 
