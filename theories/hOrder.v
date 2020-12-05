@@ -7,9 +7,9 @@ Notation canonical1 := (canonical A0 eqA ltM) (only parsing).
 Notation ltP1 := (ltP (A:=A) (n:=n) ltM) (only parsing).
 Notation poly1 := (poly A0 eqA ltM) (only parsing).
 
-Hint Resolve (ltPO (A:=A) (n:=n) ltM) : core.
-Hint Resolve (ltP_hd (A:=A) (n:=n) (ltM:=ltM)) : core.
-Hint Resolve (ltP_tl (A:=A) (n:=n) (ltM:=ltM)) : core.
-Hint Resolve (canonical0 A A0 eqA n ltM) : core.
-Hint Resolve (canonical_cons A A0 eqA n ltM) : core.
+Local Hint Resolve (ltPO (A:=A) (n:=n) ltM) : core.
+Local Hint Resolve (ltP_hd (A:=A) (n:=n) (ltM:=ltM)) : core.
+Local Hint Resolve (ltP_tl (A:=A) (n:=n) (ltM:=ltM)) : core.
+Local Hint Resolve (canonical0 A A0 eqA n ltM) : core.
+Local Hint Resolve (canonical_cons A A0 eqA n ltM) : core.
 

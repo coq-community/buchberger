@@ -36,8 +36,8 @@ apply canonical_nzeroP with (ltM := ltM) (p := l); auto.
 apply H'; auto.
 apply canonical_imp_canonical with (a := a); auto.
 Qed.
-Hint Resolve canonical_multpf : core.
- 
+Local Hint Resolve canonical_multpf : core.
+
 Theorem pluspf_pX :
  forall (p : list (Term A n)) (a : Term A n),
  canonical A0 eqA ltM (pX a p) ->

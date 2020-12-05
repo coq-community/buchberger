@@ -26,9 +26,9 @@ exact (pX (multTerm (A:=A) multA (n:=n) a b) p'1).
 Defined.
 Set Strict Implicit.
 Unset Implicit Arguments.
-Hint Resolve multTerm_eqT : core.
-Hint Resolve invTerm_eqT : core.
-Hint Resolve T1_is_min_ltT : core.
+Local Hint Resolve multTerm_eqT : core.
+Local Hint Resolve invTerm_eqT : core.
+Local Hint Resolve T1_is_min_ltT : core.
  
 Lemma mults_order_l :
  forall l m1 m2,
@@ -355,7 +355,7 @@ Theorem multlm_comp_canonical :
 intros p a b H' H'0; generalize (canonical_mults b (pX a p)); simpl in |- *;
  auto.
 Qed.
-Hint Resolve multlm_comp_canonical : core.
+Local Hint Resolve multlm_comp_canonical : core.
  
 Let ffst := fst (A:=list (Term A n)) (B:=list (Term A n)).
  
@@ -611,7 +611,7 @@ apply
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n);
  apply multTerm_plusTerm_dist_r with (1 := cs); auto.
 Qed.
-Hint Resolve mults_dist_pluspf : core.
+Local Hint Resolve mults_dist_pluspf : core.
 
 Definition smults : Term A n -> poly A0 eqA ltM -> poly A0 eqA ltM.
 intros a sp1.

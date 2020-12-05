@@ -53,7 +53,7 @@ apply (eqT_trans A n) with (y := multTerm (A:=A) multA (n:=n) (T1 A1 n) b);
 apply (eqT_sym A n); auto.
 apply (eqT_sym A n); apply (eqTerm_imp_eqT A eqA); auto.
 Qed.
-Hint Resolve divP_is_not_order : core.
+Local Hint Resolve divP_is_not_order : core.
  
 Theorem divP_ltT_comp :
  forall (a b : Term A n) (p : list (Term A n)),
@@ -123,7 +123,7 @@ Theorem canonical_spminusf :
 unfold spminusf in |- *.
 intros a b nZb p q H' H'0 H'1; apply canonical_minuspf with (1 := cs); auto.
 Qed.
-Hint Resolve canonical_spminusf : core.
+Local Hint Resolve canonical_spminusf : core.
  
 Theorem spminusf_extend :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
@@ -173,7 +173,7 @@ intros a b nZb p q H' H'0 H'1; apply canonical_spminusf; auto.
 apply canonical_imp_canonical with (a := a); auto.
 apply canonical_imp_canonical with (a := b); auto.
 Qed.
-Hint Resolve canonical_spminusf_full : core.
+Local Hint Resolve canonical_spminusf_full : core.
  
 Theorem canonical_spminusf_full_t :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
@@ -198,7 +198,7 @@ change
  in |- *; auto.
 apply (eqT_sym A n); apply (eqTerm_imp_eqT A eqA n); auto.
 Qed.
-Hint Resolve canonical_spminusf_full_t : core.
+Local Hint Resolve canonical_spminusf_full_t : core.
  
 Theorem spminusf_pluspf :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
@@ -264,7 +264,7 @@ apply
  auto.
 apply eqp_pluspf_com with (1 := cs); auto.
 Qed.
-Hint Resolve spminusf_pluspf : core.
+Local Hint Resolve spminusf_pluspf : core.
  
 Theorem eqptail_spminusf_com :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
@@ -309,7 +309,7 @@ apply eqTerm_spminusf_com; auto.
 apply eqptail_spminusf_com; auto.
 apply divP_eqTerm_comp with (1 := cs) (a := a); auto.
 Qed.
-Hint Resolve eqTerm_spminusf_com eqp_spminusf_com eqp_spminusf_com : core.
+Local Hint Resolve eqTerm_spminusf_com eqp_spminusf_com eqp_spminusf_com : core.
  
 Theorem spminusf_minuspf :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
@@ -577,7 +577,7 @@ apply
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n);
  apply mults_dist_minuspf with (1 := cs); auto.
 Qed.
-Hint Resolve spminusf_plusTerm spminusf_multTerm : core.
+Local Hint Resolve spminusf_plusTerm spminusf_multTerm : core.
  
 Theorem spminusf_minusTerm_l :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
@@ -733,7 +733,7 @@ apply divP_eqTerm_comp with (a := invTerm (A:=A) invA (n:=n) a) (1 := cs);
 apply eqTerm_spminusf_com; auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
-Hint Resolve spminusf_minusTerm_r : core.
+Local Hint Resolve spminusf_minusTerm_r : core.
  
 Theorem spminusf_plusTerm_r :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
@@ -762,7 +762,7 @@ apply
             (spminusf a b nZb q r) p); [ auto | idtac ].
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
-Hint Resolve spminusf_plusTerm_r : core.
+Local Hint Resolve spminusf_plusTerm_r : core.
  
 Theorem divP_minusTerm_comp :
  forall a b c : Term A n,
@@ -784,7 +784,7 @@ apply
  auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
-Hint Resolve divP_minusTerm_comp : core.
+Local Hint Resolve divP_minusTerm_comp : core.
  
 Theorem spminusf_minusTerm :
  forall (a b c : Term A n) (nZc : ~ zeroP (A:=A) A0 eqA (n:=n) c)
@@ -1216,7 +1216,7 @@ apply
 apply divTerm_invTerm_l with (1 := cs); auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
-Hint Resolve spminusf_minusTerm : core.
+Local Hint Resolve spminusf_minusTerm : core.
  
 Theorem spminusf_plusTerm_z :
  forall (a b c : Term A n) (nZc : ~ zeroP (A:=A) A0 eqA (n:=n) c)
@@ -1522,8 +1522,8 @@ apply (eqTerm_imp_eqT A eqA); auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply divTerm_invTerm_l with (1 := cs); auto.
 Qed.
-Hint Resolve spminusf_minusTerm : core.
- 
+Local Hint Resolve spminusf_minusTerm : core.
+
 Theorem ltP_divP_pX :
  forall (a b : Term A n) (p q : list (Term A n)),
  canonical A0 eqA ltM (pX a p) ->

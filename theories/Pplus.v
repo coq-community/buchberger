@@ -44,7 +44,7 @@ list (Term A n) -> list (Term A n) -> list (Term A n) -> Prop :=
       forall a1 a2 l1 l2 l3,
       ltT ltM a1 a2 ->
       plusP (pX a1 l1) l2 l3 -> plusP (pX a1 l1) (pX a2 l2) (pX a2 l3).
-Hint Resolve nillu1 nillu2 mainu1 mainu2a mainu2b mainu3 : core.
+Local Hint Resolve nillu1 nillu2 mainu1 mainu2a mainu2b mainu3 : core.
  
 Definition projsig1 (A : Type) (P : A -> Prop) (H : sig P) :=
   let (a, _) return A := H in a.
@@ -90,7 +90,7 @@ Set Implicit Arguments.
 Unset Strict Implicit.
  
 Definition pluspf l1 l2 := projsig1 _ _ (plusp (l1, l2)).
-Hint Unfold projsig1 pluspf : core.
+Local Hint Unfold projsig1 pluspf : core.
 Set Strict Implicit.
 Unset Implicit Arguments.
  
@@ -221,7 +221,7 @@ Theorem pluspf_is_plusP : forall l1 l2, plusP l1 l2 (pluspf l1 l2).
 intros l1 l2; try assumption.
 unfold pluspf in |- *; case (plusp (l1, l2)); simpl in |- *; auto.
 Qed.
-Hint Resolve pluspf_is_plusP : core.
+Local Hint Resolve pluspf_is_plusP : core.
  
 Theorem order_plusP :
  forall l1 l2 l3 a,
@@ -299,14 +299,14 @@ intros p; elim p.
 intros q H'; inversion H'; auto.
 intros a l H' q H'0; inversion H'0; auto.
 Qed.
-Hint Resolve eqp_refl : core.
+Local Hint Resolve eqp_refl : core.
  
 Theorem pO_plusP_inv2 : forall p q, plusP p (pO A n) q -> p = q.
 intros p; elim p.
 intros q H'; inversion H'; auto.
 intros a l H' q H'0; inversion H'0; auto.
 Qed.
-Hint Resolve eqp_refl : core.
+Local Hint Resolve eqp_refl : core.
  
 Theorem plusP_decomp :
  forall a p,
@@ -408,7 +408,7 @@ Theorem pluspf_inv3b :
 intros a b p q H' Z; try assumption.
 rewrite (plusP_inv3b a b p q (pluspf (pX a p) (pX b q))); auto.
 Qed.
-Hint Resolve pluspf_inv1 pluspf_inv2 pluspf_inv3a pluspf_inv3b : core.
+Local Hint Resolve pluspf_inv1 pluspf_inv2 pluspf_inv3a pluspf_inv3b : core.
  
 Theorem plusP_com :
  forall p q r s, plusP p q r -> plusP q p s -> eqP A eqA n r s.
@@ -450,14 +450,14 @@ Qed.
 Theorem plusP_zero_pOr : forall p q, plusP p (pO A n) q -> eqP A eqA n p q.
 intros p q H'; inversion H'; auto.
 Qed.
-Hint Resolve plusP_zero_pOl plusP_zero_pOr : core.
-Hint Resolve eqp_trans : core.
+Local Hint Resolve plusP_zero_pOl plusP_zero_pOr : core.
+Local Hint Resolve eqp_trans : core.
  
 Theorem plusP_uniq_eqP :
  forall p q r s, plusP p q r -> plusP p q s -> eqP A eqA n r s.
 intros p q r s H' H'0; rewrite (uniq_plusp (p, q) r s); auto.
 Qed.
-Hint Resolve plusP_uniq_eqP : core.
+Local Hint Resolve plusP_uniq_eqP : core.
  
 Theorem pO_pluspf_inv1 : forall p, p = pluspf (pO A n) p.
 intros p.
@@ -549,7 +549,7 @@ Qed.
 Theorem p0_pluspf_r : forall p, eqP A eqA n (pluspf p (pO A n)) p.
 intros p; rewrite <- pO_pluspf_inv2; auto.
 Qed.
-Hint Resolve p0_pluspf_l p0_pluspf_r : core.
+Local Hint Resolve p0_pluspf_l p0_pluspf_r : core.
  
 Theorem plusTerm_is_pX :
  forall (a : Term A n) (p : list (Term A n)),
@@ -566,7 +566,7 @@ change
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); apply pluspf_inv1; auto.
 apply (canonical_pX_order A A0 eqA) with (l := l); auto.
 Qed.
-Hint Resolve plusTerm_is_pX : core.
+Local Hint Resolve plusTerm_is_pX : core.
  
 Theorem pluspf3_assoc :
  forall l,
@@ -1063,7 +1063,7 @@ Theorem pluspf_assoc :
 intros p q r H' H'0 H'1.
 apply pluspf3_assoc with (l := (p, (q, r))); auto.
 Qed.
-Hint Resolve pluspf_assoc : core.
+Local Hint Resolve pluspf_assoc : core.
  
 Theorem eqp_pluspf_com_l :
  forall p q r,
@@ -1243,10 +1243,10 @@ apply (eqp_trans _ _ _ _ _ _ _ _ _ cs n) with (y := pluspf r q); auto.
 apply eqp_pluspf_com_l; auto.
 apply eqp_pluspf_com_r; auto.
 Qed.
-Hint Resolve eqp_pluspf_com : core.
+Local Hint Resolve eqp_pluspf_com : core.
 Set Implicit Arguments.
 Unset Strict Implicit.
- 
+
 Definition splus : poly A0 eqA ltM -> poly A0 eqA ltM -> poly A0 eqA ltM.
 intros sp1 sp2.
 case sp1; case sp2.

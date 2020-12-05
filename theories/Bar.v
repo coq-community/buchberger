@@ -11,14 +11,14 @@ Inductive ExistsL (A : Type) (P : Pred A) : list A -> Type :=
   | FoundE : forall (a : A) (l : list A), P a -> ExistsL A P (a :: l)
   | SearchE :
       forall (a : A) (l : list A), ExistsL A P l -> ExistsL A P (a :: l).
-Hint Resolve FoundE SearchE : core.
+Global Hint Resolve FoundE SearchE : core.
 
 Lemma monExistsL1 :
  forall (A : Type) (P : Pred A) (xs bs : list A),
  ExistsL A P bs -> ExistsL A P (xs ++ bs).
 intros A P xs; elim xs; simpl in |- *; auto.
 Qed.
-Hint Resolve monExistsL1 : core.
+Global Hint Resolve monExistsL1 : core.
 
 Lemma monExistsL :
  forall (A : Type) (P : Pred A) (xs bs cs : list A),
@@ -27,14 +27,14 @@ Proof.
 intros A P xs; elim xs; simpl in |- *; auto.
 intros a l H' bs cs H'0; inversion H'0; auto.
 Qed.
-Hint Resolve monExistsL : core.
+Global Hint Resolve monExistsL : core.
 
 Inductive GoodR (A : Type) (R : Rel A) : list A -> Type :=
   | FoundG :
       forall (a : A) (l : list A),
       ExistsL A (fun x : A => R x a) l -> GoodR A R (a :: l)
   | SearchG : forall (a : A) (l : list A), GoodR A R l -> GoodR A R (a :: l).
-Hint Resolve FoundG SearchG : core.
+Global Hint Resolve FoundG SearchG : core.
 
 Lemma monGoodR1 :
  forall (A : Type) (R : Rel A) (xs bs : list A),
@@ -42,7 +42,7 @@ Lemma monGoodR1 :
 Proof.
 intros A R xs; elim xs; simpl in |- *; auto.
 Qed.
-Hint Resolve monGoodR1 : core.
+Global Hint Resolve monGoodR1 : core.
 
 Lemma monGoodR :
  forall (A : Type) (R : Rel A) (xs bs cs : list A),
@@ -51,7 +51,7 @@ Proof.
 intros A R xs bs cs; elim xs; simpl in |- *; auto.
 intros a l H' H'0; inversion H'0; simpl in |- *; auto.
 Qed.
-Hint Resolve monGoodR : core.
+Global Hint Resolve monGoodR : core.
 
 Lemma subPredExistsL :
  forall (A B : Type) (P : Pred A) (S : Pred B) (f : A -> B),
@@ -74,12 +74,12 @@ Qed.
 Inductive Bar (A : Type) (P : list A -> Type) : list A -> Type :=
   | Base : forall l : list A, P l -> Bar A P l
   | Ind : forall l : list A, (forall a : A, Bar A P (a :: l)) -> Bar A P l.
-Hint Resolve Base Ind : core.
+Global Hint Resolve Base Ind : core.
 
 Definition GRBar (A : Type) (R : Rel A) := Bar A (GoodR A R).
 
 Definition WR (A : Type) (R : Rel A) := GRBar A R nil.
-Hint Unfold GRBar WR : core.
+Global Hint Unfold GRBar WR : core.
 
 Lemma subRelGRBar :
  forall (A B : Type) (R : Rel A) (S : Rel B) (f : A -> B),
@@ -102,7 +102,7 @@ Lemma consGRBar :
  GRBar A R l -> forall a : A, GRBar A R (a :: l).
 intros A R l H'; elim H'; auto.
 Qed.
-Hint Resolve consGRBar : core.
+Global Hint Resolve consGRBar : core.
 
 Lemma nilGRBar :
  forall (A : Type) (R : Rel A),
@@ -132,7 +132,7 @@ Proof.
 intros A R xs bs cs H'.
 apply monGRBarAux with (l := xs ++ cs); auto.
 Qed.
-Hint Resolve monGRBar : core.
+Global Hint Resolve monGRBar : core.
 
 Section lems.
 Variable trm : Type.

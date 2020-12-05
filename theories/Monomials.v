@@ -141,7 +141,7 @@ Inductive mdiv : forall d : nat, mon d -> mon d -> Prop :=
   | mdiv_cons :
       forall (d : nat) (v v' : mon d) (n n' : nat),
       n <= n' -> mdiv d v v' -> mdiv (S d) (c_n d n v) (c_n d n' v').
-Hint Resolve mdiv_nil mdiv_cons : core.
+Local Hint Resolve mdiv_nil mdiv_cons : core.
 
 Lemma mdiv_proj :
  forall (d : nat) (m m' : mon (S d)),
@@ -219,7 +219,7 @@ Qed.
 Theorem mon_0 : forall a : mon 0, a = n_0.
 intros a; generalize (is_nil_id 0 a); simpl in |- *; auto.
 Qed.
-Hint Resolve mon_0 : core.
+Local Hint Resolve mon_0 : core.
 
 Theorem eqmon_dec : forall (d : nat) (x y : mon d), {x = y} + {x <> y}.
 intros d; elim d; auto.
