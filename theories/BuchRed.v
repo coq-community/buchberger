@@ -618,8 +618,8 @@ apply
             ltM_dec os p L); auto.
 apply Cb_nf.
 Qed.
-Hint Resolve zerop_nf_cb : core.
- 
+Local Hint Resolve zerop_nf_cb : core.
+
 Definition redacc :
   list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> list (poly A0 eqA ltM).
 intros H'; elim H'.

@@ -23,7 +23,7 @@ Inductive orderc : forall n : nat, mon n -> mon n -> Prop :=
   | lo2 :
       forall (n a b : nat) (p q : mon n),
       orderc n p q -> orderc (S n) (c_n n a p) (c_n n b q).
-Hint Resolve lo1 lo2 : core.
+Local Hint Resolve lo1 lo2 : core.
 
 
 Theorem orderc_dec :
@@ -60,7 +60,7 @@ Inductive total_orderc : forall n : nat, mon n -> mon n -> Prop :=
   | total_orderc1 :
       forall (n : nat) (p q : mon n),
       degc n p = degc n q -> orderc n p q -> total_orderc n p q.
-Hint Resolve total_orderc0 total_orderc1 : core.
+Local Hint Resolve total_orderc0 total_orderc1 : core.
 
 Theorem total_orderc_dec :
  forall (n : nat) (a b : mon n),

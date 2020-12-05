@@ -21,7 +21,7 @@ Set Implicit Arguments.
 Unset Strict Implicit.
  
 Definition ltT (a b : Term A n) : Prop := ltM (T2M a) (T2M b).
-Hint Unfold ltT : core.
+Local Hint Unfold ltT : core.
 Set Strict Implicit.
 Unset Implicit Arguments.
  
@@ -63,13 +63,13 @@ Qed.
 Theorem ltT_not_refl : forall x : Term A n, ~ ltT x x.
 intros x; unfold ltT in |- *; apply ltM_nonrefl with (1 := os).
 Qed.
-Hint Resolve ltT_not_eqT eqT_not_ltT ltT_not_refl : core.
+Local Hint Resolve ltT_not_eqT eqT_not_ltT ltT_not_refl : core.
  
 Lemma ltT_not_ltT : forall x y : Term A n, ltT x y -> ~ ltT y x.
 intros x y H'; red in |- *; intros H'0; absurd (ltT x x); auto.
 apply ltT_trans with (y := y); auto.
 Qed.
-Hint Resolve ltT_not_ltT : core.
+Local Hint Resolve ltT_not_ltT : core.
  
 Lemma ltT_eqT :
  forall a b c d : Term A n, eqT a b -> eqT c d -> ltT a c -> ltT b d.
@@ -128,7 +128,7 @@ Let consA := cons (A:=mon n).
 Let nilA := nil (A:=mon n).
  
 Let listA := list (mon n).
-Hint Unfold consA nilA listA : core.
+Local Hint Unfold consA nilA listA : core.
 
 Fixpoint fP (a : list (Term A n)) : listA :=
   match a with
@@ -147,8 +147,8 @@ Set Implicit Arguments.
 Unset Strict Implicit.
  
 Definition olist (p : list (Term A n)) := DescA (fP p).
-Hint Resolve d_nil d_one : core.
-Hint Unfold olist DescA : core.
+Local Hint Resolve d_nil d_one : core.
+Local Hint Unfold olist DescA : core.
 Set Strict Implicit.
 Unset Implicit Arguments.
  
@@ -157,7 +157,7 @@ unfold olist, ltT in |- *; simpl in |- *; auto.
 intros a b H'.
 generalize (d_conc _ ltM (T2M b) (T2M a) nilA); simpl in |- *; auto.
 Qed.
-Hint Resolve olistOne : core.
+Local Hint Resolve olistOne : core.
  
 Theorem olistO : olist pO.
 unfold olist, ltT in |- *; simpl in |- *; auto.
@@ -290,7 +290,7 @@ simpl in |- *; intros; apply (Lt_hd (mon n)); auto.
 simpl in |- *; unfold eqT in |- *; (intros x y p1 q1 H; rewrite H).
 simpl in |- *; intros; apply (Lt_tl (mon n)); auto.
 Qed.
-Hint Resolve fltP : core.
+Local Hint Resolve fltP : core.
  
 Theorem ltp_not_refl : forall x, ~ ltP x x.
 intros x; elim x.
@@ -304,7 +304,7 @@ apply (ltT_not_refl a); auto.
 injection H1; injection H2.
 intros H'1 H'2 H'3 H'4; rewrite H'1; rewrite H'3; auto.
 Qed.
-Hint Resolve ltPO : core.
+Local Hint Resolve ltPO : core.
  
 Theorem ltP_trans : forall x y z, ltP x y -> ltP y z -> ltP x z.
 intros x y z H'; generalize z; clear z; elim H'.
@@ -372,7 +372,7 @@ intros; apply ltT_trans with (y := a); auto.
 apply eqT_compat_ltTl.
 apply eqT_sym; trivial.
 Qed.
-Hint Resolve ltP_order_comp : core.
+Local Hint Resolve ltP_order_comp : core.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -391,7 +391,7 @@ Unset Implicit Arguments.
 Theorem canonical_imp_olist : forall a, canonical a -> olist a.
 intros a H'; elim H'; auto.
 Qed.
-Hint Resolve canonical_imp_olist : core.
+Local Hint Resolve canonical_imp_olist : core.
 
 Theorem canonical0 :
  forall a b,
@@ -512,7 +512,7 @@ Theorem fsltP :
  forall p q : poly, sltP p q -> lex_exp _ ltM (fspoly p) (fspoly q).
 intros p q; case p; case q; unfold lex_exp in |- *; simpl in |- *; auto.
 Qed.
-Hint Resolve fsltP : core.
+Local Hint Resolve fsltP : core.
 
 Theorem sltp_wf : well_founded sltP.
 lapply (wf_inverse_image poly (Pow _ ltM) (lex_exp _ ltM) fspoly);

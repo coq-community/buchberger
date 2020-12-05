@@ -48,7 +48,7 @@ cut (~ zeroP (A:=A) A0 eqA (n:=n) a0);
  [ intros Z1 | apply canonical_nzeroP with (ltM := ltM) (p := l0) ]; 
  auto.
 Qed.
-Hint Resolve spolyf_canonical : core.
+Local Hint Resolve spolyf_canonical : core.
  
 Theorem spolyf_pO :
  forall (a : list (Term A n)) (Ca : canonical A0 eqA ltM a),
@@ -273,7 +273,7 @@ cut (canonical A0 eqA ltM q); [ intros Op2 | auto ]; unfold LetP in |- *;
 apply canonical_imp_canonical with (a := b); auto.
 apply canonical_imp_canonical with (a := a); auto.
 Qed.
-Hint Resolve spolyf_def : core.
+Local Hint Resolve spolyf_def : core.
  
 Theorem eqTerm_spolyf_red2 :
  forall (a b c : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a)
@@ -1547,8 +1547,8 @@ apply canonical_spminusf with (1 := cs); auto.
 apply ltP_reduce with (1 := cs) (3 := red2); auto.
 apply canonical_spminusf with (1 := cs); auto.
 Qed.
-Hint Resolve pO_irreducible : core.
- 
+Local Hint Resolve pO_irreducible : core.
+
 Theorem confl_restar :
  forall Q : list (poly A0 eqA ltM),
  SpolyQ Q ->

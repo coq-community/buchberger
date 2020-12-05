@@ -83,7 +83,7 @@ Proof.
 intros L p H'.
 apply zerop_elim_cb with (p := nf L p); auto.
 Qed.
-Hint Resolve zerop_nf_cb : core.
+Local Hint Resolve zerop_nf_cb : core.
 
 Definition redacc : list poly -> list poly -> list poly.
 Proof.
@@ -97,7 +97,7 @@ exact (u :: Rec (u :: Acc)).
 Defined.
 
 Definition red (L : list poly) : list poly := redacc L nil.
-Hint Resolve incl_refl incl_tl incl_appr incl_appl incl_cons incl_app
+Local Hint Resolve incl_refl incl_tl incl_appr incl_appl incl_cons incl_app
   in_or_app : core.
 
 Theorem redacc_cb :

@@ -24,14 +24,14 @@ Inductive inPolySet : list (Term A n) -> list (poly A0 eqA ltM) -> Prop :=
   | inskip :
       forall (a : poly A0 eqA ltM) (p : list (Term A n))
         (P : list (poly A0 eqA ltM)), inPolySet p P -> inPolySet p (a :: P).
-Hint Resolve incons inskip : core.
+Local Hint Resolve incons inskip : core.
  
 Lemma inPolySet_imp_canonical :
  forall (p : list (Term A n)) (L : list (poly A0 eqA ltM)),
  inPolySet p L -> canonical A0 eqA ltM p.
 intros p L H'; elim H'; auto.
 Qed.
-Hint Resolve inPolySet_imp_canonical : core.
+Local Hint Resolve inPolySet_imp_canonical : core.
  
 Lemma not_nil_in_polySet_elm :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
@@ -70,7 +70,7 @@ list (Term A n) -> list (Term A n) -> Prop :=
       forall (a b : Term A n) (p q : list (Term A n)),
       reduce Q p q ->
       eqTerm (A:=A) eqA (n:=n) a b -> reduce Q (pX a p) (pX b q).
-Hint Resolve reduceskip : core.
+Local Hint Resolve reduceskip : core.
  
 Lemma pO_reduce :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
@@ -259,7 +259,7 @@ Theorem reducetop_sp :
 intros Q a b nZb p q H' H'0.
 apply reducetop with (b := b) (nZb := nZb) (q := q); auto.
 Qed.
-Hint Resolve reducetop_sp : core.
+Local Hint Resolve reducetop_sp : core.
  
 Theorem reduce_inv2 :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
@@ -538,7 +538,7 @@ simpl in |- *; apply reduceskip; auto.
 apply H'0; auto.
 apply canonical_imp_canonical with (a := a); auto.
 Qed.
-Hint Resolve reduce_mults : core.
+Local Hint Resolve reduce_mults : core.
  
 Theorem reduce_mults_inv_lem :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
@@ -748,7 +748,7 @@ Lemma pO_irreducible :
 unfold irreducible in |- *; auto.
 intros Q q; red in |- *; intros H'; inversion H'.
 Qed.
-Hint Resolve pO_irreducible : core.
+Local Hint Resolve pO_irreducible : core.
  
 Theorem irreducible_eqp_com :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
@@ -775,7 +775,7 @@ Term A n -> list (Term A n) -> list (poly A0 eqA ltM) -> Prop :=
       forall (a b : Term A n) (p : list (Term A n)) 
         (q : poly A0 eqA ltM) (P : list (poly A0 eqA ltM)),
       pickinSetp a p P -> pickinSetp a p (q :: P).
-Hint Resolve pickinSeteqp pickinSetskip : core.
+Local Hint Resolve pickinSeteqp pickinSetskip : core.
  
 Lemma pickin_is_pX :
  forall (a : Term A n) (p : list (Term A n)) (Q : list (poly A0 eqA ltM)),
@@ -794,8 +794,8 @@ list (Term A n) -> list (Term A n) -> Prop :=
       reducehead Q (pX a p)
         (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a
            b nZb p q).
-Hint Resolve reduceheadO : core.
- 
+Local Hint Resolve reduceheadO : core.
+
 Lemma pick_inv_in :
  forall (Q : list (poly A0 eqA ltM)) (a : Term A n) (p : list (Term A n)),
  pickinSetp a p Q -> inPolySet p Q.

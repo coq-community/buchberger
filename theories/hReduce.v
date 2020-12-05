@@ -13,7 +13,7 @@ Notation irreducible1 :=
   (only parsing).
 Notation s2p1 := (s2p A A0 eqA n ltM) (only parsing).
 
-Hint Resolve (reducetop A A0 A1 eqA invA minusA multA divA eqA_dec n ltM
+Local Hint Resolve (reducetop A A0 A1 eqA invA minusA multA divA eqA_dec n ltM
                 ltM_dec) : core.
-Hint Resolve (reduceskip A A0 A1 eqA invA minusA multA divA eqA_dec n ltM
+Local Hint Resolve (reduceskip A A0 A1 eqA invA minusA multA divA eqA_dec n ltM
                 ltM_dec) : core.
