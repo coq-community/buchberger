@@ -1,7 +1,7 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-Require Import Relation_Definitions.
+From Coq Require Import Relation_Definitions.
 
 Record OrderStructure (A : Type) (M1 : A) (ltM : A -> A -> Prop)
   (plusM : A -> A -> A) : Prop := mkOrderStructure

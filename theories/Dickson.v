@@ -1,13 +1,8 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-Require Import List.
-Require Import Bar.
-Require Import OpenIndGoodRel.
-Require Import Lt.
-Require Import Wf_nat.
-Require Import Inverse_Image.
-Require Import Monomials.
+From Coq Require Import List Lt Wf_nat Inverse_Image.
+From Buchberger Require Import Bar OpenIndGoodRel Monomials.
 
 Definition DecRel (A : Type) (R : Rel A) :=
   forall x y : A, {R x y} + {~ R x y}.

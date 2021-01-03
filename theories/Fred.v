@@ -1,17 +1,16 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-
-(****************************************************************************
+(* ************************************************************************
                                                                            
           Buchberger : final reduction algorithm                           
                                                                            
-          Laurent Thery April 98 (revised Mai 98)                          
+          Laurent Thery April 1998 (revised May 1998)                          
                                                                            
-****************************************************************************)
-Require Import List.
-Require Import LetP.
-Require Import Relation_Definitions.
+   ************************************************************************ *)
+
+From Coq Require Import List Relation_Definitions.
+From Buchberger Require Import LetP.
 
 Section Reduce.
 Variable poly : Type.

@@ -1,17 +1,11 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-Require Import Lexicographic_Exponentiation.
-Require Import Relation_Definitions.
-Require Import Inverse_Image.
-Require Import Inclusion.
-Require Import List.
-Require Import Relation_Operators.
-Require Import Relation_Operators_compat.
-Require Import Monomials.
-Require Import Term.
-Require Import CoefStructure.
-Require Import OrderStructure.
+From Coq Require Import Lexicographic_Exponentiation Relation_Definitions.
+From Coq Require Import Inverse_Image Inclusion List Relation_Operators.
+From Buchberger Require Import Relation_Operators_compat Monomials.
+From Buchberger Require Import Term CoefStructure OrderStructure.
+
 Section Porder.
 Load hCoefStructure.
 Load hOrderStructure.

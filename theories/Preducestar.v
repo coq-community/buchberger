@@ -1,14 +1,16 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-(****************************************************************************
+(* *************************************************************************
                                                                            
           Buchberger : reduction  star                                         
                                                                            
-          Laurent Thery May 97 (revised April 01)                            
+          Laurent Thery May 1997 (revised April 2001)                            
                                                                            
-  ****************************************************************************)
-Require Export Preduceplus.
+  ************************************************************************** *)
+
+From Buchberger Require Export Preduceplus.
+
 Section Preducestar.
 Load hCoefStructure.
 Load hOrderStructure.

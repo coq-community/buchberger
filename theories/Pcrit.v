@@ -1,14 +1,14 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-Require Export Pspoly.
-Require Export Pmult.
+From Buchberger Require Export Pspoly Pmult.
+
 Section crit.
 Load hCoefStructure.
 Load hOrderStructure.
 Load hSpoly.
 Load hMult.
- 
+
 Definition Rminus :
   forall (a : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a),
   list (Term A n) -> list (Term A n) -> list (Term A n) -> list (Term A n).

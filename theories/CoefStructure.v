@@ -1,7 +1,7 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-Require Import Relation_Definitions.
+From Coq Require Import Relation_Definitions.
 
 Record CoefStructure (A : Type) (A0 A1 : A) (eqA : A -> A -> Prop)
   (plusA : A -> A -> A) (invA : A -> A) (minusA multA : A -> A -> A)

@@ -1,24 +1,17 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-(****************************************************************************
+(* *************************************************************************
                                                                            
-          Buchberger : equality over polynomials                       
+          Buchberger : equality over polynomials, definition of Peq
                                                                            
-          Laurent Thery March 97 (revised April 01)                          
+          Laurent Thery March 1997 (revised April 2001)                          
                                                                            
-  ***************************************************************************
-   definition of Peq *)
+  ************************************************************************** *)
 
-Require Export Relation_Definitions.
-Require Import Arith.
-Require Import Compare_dec.
-Require Export CoefStructure.
-Require Export OrderStructure.
-Require Export POrder.
-Require Export Monomials.
-Require Export Term.
-Require Export List.
+From Coq Require Export Relation_Definitions List.
+From Coq Require Import Arith Compare_dec.
+From Buchberger Require Export CoefStructure OrderStructure POrder Monomials Term.
 
 Section Peq.
 Load hCoefStructure.
@@ -26,7 +19,7 @@ Load hOrderStructure.
 Load hOrder.
  
 Definition size := length (A:=Term A n).
- 
+
 Definition sizel m := match m with
                       | (l1, l2) => size l1 + size l2
                       end.
