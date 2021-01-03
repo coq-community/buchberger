@@ -1,26 +1,25 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-(****************************************************************************
+(* **************************************************************************
                                                                            
           Buchberger : Division for Term                           
                                                                            
-          Laurent Thery April 01                          
+          Laurent Thery April 2001                          
                                                                            
-  ****************************************************************************)
-Require Import Relation_Definitions.
-Require Import CoefStructure.
-Require Import moreCoefStructure.
-Require Import OrderStructure.
-Require Import Monomials.
-Require Import Term.
-Require Import List.
+  ************************************************************************** *)
+
+From Coq Require Import Relation_Definitions List.
+From Buchberger Require Import CoefStructure moreCoefStructure OrderStructure.
+From Buchberger Require Import Monomials Term.
+
 Section DivTerm.
 Load hCoefStructure.
 Load mCoefStructure.
 Load hOrderStructure.
 Load mOrderStructure.
 Load hTerm.
+
 Set Implicit Arguments.
 Unset Strict Implicit.
  

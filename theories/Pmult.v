@@ -1,15 +1,16 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-(****************************************************************************
+(* ************************************************************************
                                                                            
-          Buchberger : multiplication over polynomials                     
+          Buchberger : multiplication over polynomials, definition of smult                     
                                                                            
           Laurent Thery March 98 (revised Avril 01)                          
                                                                            
-  ***************************************************************************
-   definition of smult*)
-Require Export Pmults.
+   ************************************************************************ *)
+
+From Buchberger Require Export Pmults.
+
 Section Pmult.
 Load hCoefStructure.
 Load hOrderStructure.

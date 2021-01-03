@@ -1,18 +1,18 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-(****************************************************************************
+(* *************************************************************************
                                                                            
           Buchberger : Terms                           
                                                                            
-          Laurent Thery April 01                          
+          Laurent Thery April 2001                          
                                                                            
-  ****************************************************************************)
-Require Import Relation_Definitions.
-Require Import CoefStructure.
-Require Import moreCoefStructure.
-Require Import OrderStructure.
-Require Import Monomials.
+  ************************************************************************** *)
+
+From Coq Require Import Relation_Definitions.
+From Buchberger Require Import CoefStructure moreCoefStructure.
+From Buchberger Require Import OrderStructure Monomials.
+
 Section Term.
 Load hCoefStructure.
 Load mCoefStructure.
@@ -22,6 +22,7 @@ Load mOrderStructure.
 Definition M1 := zero_mon n.
  
 Definition Term := (A * mon n)%type.
+
 Set Implicit Arguments.
 Unset Strict Implicit.
  
@@ -35,6 +36,7 @@ intros H'; case H'.
 intros a a' H'2; case H'2.
 intros b b'; exact (eqA a b /\ a' = b').
 Defined.
+
 Set Strict Implicit.
 Unset Implicit Arguments.
  
@@ -286,6 +288,7 @@ Unset Strict Implicit.
 Definition invTerm : Term -> Term.
 intros H; case H; intros b2 c2; exact (invA b2, c2).
 Defined.
+
 Set Strict Implicit.
 Unset Implicit Arguments.
  
@@ -332,6 +335,7 @@ apply zeroP_invTerm_zeroP; auto.
 apply eqTerm_sym; apply invTerm_invol; auto.
 Qed.
 Local Hint Resolve nZero_invTerm_nZero : core.
+
 Set Implicit Arguments.
 Unset Strict Implicit.
  

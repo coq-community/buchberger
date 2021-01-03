@@ -1,20 +1,21 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-(****************************************************************************
-                                                                           
-          Buchberger : multiplication by a scalar                     
-                                                                           
-          Laurent Thery March 98 (revised Avril 01)                          
-                                                                           
-  ***************************************************************************
-   definition of Pmults*)
+(* *************************************************************************
 
-Require Export Pplus.
+          Buchberger : multiplication by a scalar, definition of Pmults
+
+          Laurent Thery March 1998 (revised April 2001)
+
+  ************************************************************************** *)
+
+From Buchberger Require Export Pplus.
+
 Section Pmults.
 Load hCoefStructure.
 Load hOrderStructure.
 Load hPlus.
+
 Set Implicit Arguments.
 Unset Strict Implicit.
  
@@ -24,6 +25,7 @@ exact (pO A n).
 intros b p1 p'1.
 exact (pX (multTerm (A:=A) multA (n:=n) a b) p'1).
 Defined.
+
 Set Strict Implicit.
 Unset Implicit Arguments.
 Local Hint Resolve multTerm_eqT : core.

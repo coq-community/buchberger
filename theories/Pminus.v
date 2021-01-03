@@ -1,9 +1,10 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-Require Export Pmults.
-Require Import Arith.
-Require Import LetP.
+From Coq Require Import Arith.
+From Buchberger Require Export Pmults.
+From Buchberger Require Import LetP.
+
 Section Pminus.
 Load hCoefStructure.
 Load hOrderStructure.

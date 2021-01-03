@@ -1,4 +1,4 @@
--R theories Buchberger
+-Q theories Buchberger
 
 -arg -w -arg -extraction-opaque-accessed
 -arg -w -arg -fragile-hint-constr

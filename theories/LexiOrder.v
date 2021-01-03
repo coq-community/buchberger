@@ -1,19 +1,17 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-(*****************************************************************************)
+(* ************************************************************************* *)
 (*                                                                           *)
 (*          Buchberger : ordering: lexi and total                            *)
 (*                                                                           *)
 (*          Laurent Thery 	                                             *)
 (*                                                                           *)
-(*****************************************************************************)
+(* ************************************************************************* *)
 
-Require Import Eqdep.
-Require Import Arith.
-Require Import Compare_dec.
-Require Import Monomials.
-Require Import LetP.
+From Coq Require Import Eqdep Arith Compare_dec.
+From Buchberger Require Import Monomials LetP.
+
 Section lexi_order.
 
 Inductive orderc : forall n : nat, mon n -> mon n -> Prop :=
@@ -24,7 +22,6 @@ Inductive orderc : forall n : nat, mon n -> mon n -> Prop :=
       forall (n a b : nat) (p q : mon n),
       orderc n p q -> orderc (S n) (c_n n a p) (c_n n b q).
 Local Hint Resolve lo1 lo2 : core.
-
 
 Theorem orderc_dec :
  forall (n : nat) (a b : mon n), {orderc n a b} + {orderc n b a} + {a = b}.
@@ -76,4 +73,5 @@ rewrite H'0; rewrite H'; intro H'2; case (orderc_dec n a b); auto.
 intro H'3; case H'3; auto.
 rewrite H'0; rewrite H'; auto.
 Qed.
+
 End lexi_order.

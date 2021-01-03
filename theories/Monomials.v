@@ -1,21 +1,16 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-
-(****************************************************************************
+(* ************************************************************************
                                                                            
           Buchberger : the monomials                                       
                                                                            
           Laurent Thery 	                                             
                                                                            
-****************************************************************************)
-Require Import Arith.
-Require Import Compare.
-Require Import Compare_dec.
-Require Import Peano_dec.
-Require Import Relation_Definitions.
-Require Import Eqdep.
-Require Import Max.
+   ************************************************************************ *)
+
+From Coq Require Import Arith Compare Compare_dec Peano_dec.
+From Coq Require Import Relation_Definitions Eqdep Max.
 
 Section Monomials.
 

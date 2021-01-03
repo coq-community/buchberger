@@ -1,15 +1,14 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-Require Export Pcomb.
-Require Export Pcrit.
-Require Export Fred.
-Require Import moreCoefStructure.
+From Buchberger Require Export Pcomb Pcrit Fred.
+From Buchberger Require Import moreCoefStructure.
+
 Section BuchAux.
 Load hCoefStructure.
 Load hOrderStructure.
 Load hComb.
- 
+
 Definition red (a : poly A0 eqA ltM) (P : list (poly A0 eqA ltM)) :=
   reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec P
     (s2p A A0 eqA n ltM a) (pO A n).
@@ -754,4 +753,5 @@ apply in_inPolySet; auto.
 red in |- *; intros H'3; inversion H'3; auto.
 apply spolyf_canonical with (1 := cs); auto.
 Qed.
+
 End BuchAux.

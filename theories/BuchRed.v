@@ -1,11 +1,8 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-Require Export Pcomb.
-Require Export Pcrit.
-Require Export Buch.
-Require Export Fred.
-Require Import Buch.
+From Buchberger Require Export Pcomb Pcrit Buch Fred.
+From Buchberger Require Import Buch.
 
 Section BuchRed.
 Load hCoefStructure.

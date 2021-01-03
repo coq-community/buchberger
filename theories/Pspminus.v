@@ -1,15 +1,16 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-(****************************************************************************
+(* *************************************************************************
                                                                            
           Buchberger : one step divisison  terms                           
                                                                            
-          Laurent Thery April 97 (revised April 01)                          
+          Laurent Thery April 1997 (revised April 2001)                          
                                                                            
-  ****************************************************************************)
-Require Export Pminus.
-Require Export DivTerm.
+  ************************************************************************** *)
+
+From Buchberger Require Export Pminus DivTerm.
+
 Section Pspminus.
 Load hCoefStructure.
 Load hOrderStructure.

@@ -1,20 +1,19 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-(****************************************************************************
+(* *************************************************************************
                                                                            
-          Buchberger : addition over polynomials                       
+          Buchberger : addition over polynomials, definition of Pplus
                                                                            
           Laurent Thery March 97 (revised April 01)                          
                                                                            
-  ***************************************************************************
-   definition of Pplus *)
-Require Export Peq.
-Require Import Arith.
-Require Import LetP.
+  ************************************************************************** *)
+
+From Coq Require Import Arith.
+From Buchberger Require Export Peq.
+From Buchberger Require Import LetP.
 
 Section Pplus.
-
 Load hCoefStructure.
 Load hOrderStructure.
 Load hEq.

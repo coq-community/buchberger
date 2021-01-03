@@ -8,7 +8,9 @@
           Laurent Thery May 97 (revised April 01)                            
                                                                            
   ****************************************************************************)
-Require Export Pspminus.
+
+From Buchberger Require Export Pspminus.
+
 Section Preduce.
 Load hCoefStructure.
 Load hOrderStructure.

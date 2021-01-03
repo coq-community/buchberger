@@ -1,19 +1,18 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-(****************************************************************************
+(* **************************************************************************
                                                                            
           Buchberger : Application of Dickson lemma                           
                                                                            
           Henrik Persson
                                                                            
-  ****************************************************************************)
-Require Import List.
-Require Import ListProps.
-Require Import Bar.
-Require Import Dickson.
-Require Import Monomials.
-Require Export BuchAux.
+   ************************************************************************** *)
+
+From Coq Require Import List.
+From Buchberger Require Import ListProps Bar Dickson Monomials.
+From Buchberger Require Export BuchAux.
+
 Section thRO.
 Load hCoefStructure.
 Load hOrderStructure.
