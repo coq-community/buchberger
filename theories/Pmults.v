@@ -11,6 +11,8 @@
 
 From Buchberger Require Export Pplus.
 
+Set Default Proof Using "Type".
+
 Section Pmults.
 Load hCoefStructure.
 Load hOrderStructure.
@@ -28,6 +30,7 @@ Defined.
 
 Set Strict Implicit.
 Unset Implicit Arguments.
+
 Local Hint Resolve multTerm_eqT : core.
 Local Hint Resolve invTerm_eqT : core.
 Local Hint Resolve T1_is_min_ltT : core.
@@ -37,6 +40,7 @@ Lemma mults_order_l :
  ~ zeroP (A:=A) A0 eqA (n:=n) m1 ->
  canonical A0 eqA ltM (pX m2 l) ->
  canonical A0 eqA ltM (pX (multTerm (A:=A) multA (n:=n) m1 m2) (mults m1 l)).
+Proof using plusA os minusA invA eqA_dec divA cs A1.
 intros l; elim l; simpl in |- *; auto.
 intros m1 m2 H' H'0.
 apply canonicalp1; auto.
@@ -55,11 +59,12 @@ apply canonical_nzeroP with (ltM := ltM) (p := pX a l0); auto.
 apply H'; auto.
 apply canonical_imp_canonical with (a := m2); auto.
 Qed.
- 
+
 Lemma canonical_mults :
  forall m l,
  ~ zeroP (A:=A) A0 eqA (n:=n) m ->
  canonical A0 eqA ltM l -> canonical A0 eqA ltM (mults m l).
+Proof using plusA os minusA invA eqA_dec divA cs A1.
 intros m l; elim l; simpl in |- *; auto.
 intros a l0 H' H'0 H'1.
 apply mults_order_l; auto.
@@ -69,6 +74,7 @@ Lemma canonical_mults_inv :
  forall (p : list (Term A n)) (a : Term A n),
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
  canonical A0 eqA ltM (mults a p) -> canonical A0 eqA ltM p.
+Proof using plusA os minusA ltM_dec invA divA cs A1.
 intros p; elim p; simpl in |- *; auto.
 intros a l; case l; simpl in |- *; auto.
 intros H' a0 H'0 H'1.
@@ -106,18 +112,20 @@ Qed.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
- 
+
 Definition tmults : Term A n -> list (Term A n) -> list (Term A n).
 intros a; case (zeroP_dec A A0 eqA eqA_dec n a); intros Z0.
 intros H'; exact (pO A n).
 intros p; exact (mults a p).
 Defined.
+
 Set Strict Implicit.
 Unset Implicit Arguments.
- 
+
 Theorem tmults_zerop_eqp_pO :
  forall p a,
  zeroP (A:=A) A0 eqA (n:=n) a -> eqP A eqA n (tmults a p) (pO A n).
+Proof.
 intros p a; unfold tmults in |- *; case (zeroP_dec A A0 eqA eqA_dec n a);
  auto.
 intros H' H'0; elim H'; auto.
@@ -125,24 +133,25 @@ Qed.
  
 Theorem mults_eqp_pO_pO :
  forall p a, eqP A eqA n p (pO A n) -> eqP A eqA n (mults a p) (pO A n).
+Proof.
 unfold pO in |- *; intros p a H'; inversion H'; auto.
 Qed.
- 
  
 Theorem eqp_invT1_pO_is_pO :
  forall p : list (Term A n),
  eqP A eqA n (mults (invTerm (A:=A) invA (n:=n) (T1 A1 n)) p) (pO A n) ->
  eqP A eqA n p (pO A n).
+Proof.
 intros p; case p; simpl in |- *; auto.
 intros a l H'; inversion H'.
 Qed.
- 
 
 Theorem mults_eqp_zpO :
  forall a : Term A n,
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
  forall p : list (Term A n),
  eqP A eqA n (mults a p) (pO A n) -> eqP A eqA n p (pO A n).
+Proof.
 intros a H' p; elim p; simpl in |- *; auto.
 intros a0 l H'0 H'1; inversion H'1; auto.
 Qed.
@@ -157,6 +166,7 @@ Theorem mults_dist1 :
  eqP A eqA n (mults (plusTerm (A:=A) plusA (n:=n) a b) p)
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
       (mults a p) (mults b p)).
+Proof using os minusA invA divA cs A1.
 intros p; elim p; simpl in |- *; auto.
 intros; apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n);
  apply p0_pluspf_l with (1 := cs); auto.
@@ -216,6 +226,7 @@ Theorem mults_dist2 :
  eqP A eqA n (pO A n)
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
       (mults a p) (mults b p)).
+Proof using os minusA invA divA cs A1.
 intros p; elim p; simpl in |- *; auto.
 intros; apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 intros a l H' a0 b H'0 H'1 H'2 H'3 H'4.
@@ -236,10 +247,11 @@ apply
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n);
  apply multTerm_plusTerm_dist_l with (1 := cs); auto.
 Qed.
- 
+
 Theorem mults_T1 :
  forall (p : list (Term A n)) (a : Term A n),
  eqTerm (A:=A) eqA (n:=n) a (T1 A1 n) -> eqP A eqA n (mults a p) p.
+Proof using plusA minusA invA divA cs A0.
 intros p; elim p; auto.
 simpl in |- *; auto.
 intros a l H a0 H0;
@@ -250,13 +262,14 @@ apply (eqpP1 A eqA n); auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); apply T1_multTerm_l with (1 := cs);
  auto.
 Qed.
- 
+
 Theorem mults_invTerm :
  forall (p : list (Term A n)) (a : Term A n),
  eqTerm (A:=A) eqA (n:=n) a (T1 A1 n) ->
  eqP A eqA n
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec p
       (mults (invTerm (A:=A) invA (n:=n) a) p)) (pO A n).
+Proof using os minusA divA cs.
 intros p; elim p; simpl in |- *; auto.
 intros a l H' a0 H'0.
 apply
@@ -315,48 +328,53 @@ apply
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n);
  apply mult_invTerm_com with (1 := cs); auto.
 Qed.
- 
+
 Theorem mults_multTerm :
  forall (p : list (Term A n)) (a b : Term A n),
  eqP A eqA n (mults (multTerm (A:=A) multA (n:=n) a b) p)
    (mults a (mults b p)).
+Proof using plusA minusA invA divA cs A1 A0.
 intros p; elim p; simpl in |- *; auto.
 intros a l H a0 b; apply (eqpP1 A eqA n); auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n);
  apply multTerm_assoc with (1 := cs); auto.
 Qed.
- 
+
 Theorem mults_com :
  forall (p : list (Term A n)) (a b : Term A n),
  eqP A eqA n (mults (multTerm (A:=A) multA (n:=n) a b) p)
    (mults (multTerm (A:=A) multA (n:=n) b a) p).
+Proof using plusA minusA invA divA cs A1 A0.
 intros p; elim p; simpl in |- *; auto.
 Qed.
- 
+
 Theorem mults_comp :
  forall (a b : Term A n) (p q : list (Term A n)),
  eqTerm (A:=A) eqA (n:=n) a b ->
  eqP A eqA n p q -> eqP A eqA n (mults a p) (mults b q).
+Proof using plusA minusA invA divA cs A1 A0.
 intros a b p q H' H'0; elim H'0; simpl in |- *; auto.
 Qed.
- 
+
 Theorem mults_ltP_comp :
  forall (a : Term A n) (p q : list (Term A n)),
  ltP (A:=A) (n:=n) ltM p q -> ltP (A:=A) (n:=n) ltM (mults a p) (mults a q).
+Proof using os.
 intros a p q H'; elim H'; simpl in |- *; auto.
 intros x y p0 q0 H'0; simpl in |- *; apply ltP_hd; auto.
 apply multTerm_ltT_l with (1 := os); auto.
 Qed.
- 
- 
+
 Theorem multlm_comp_canonical :
  forall (p : list (Term A n)) (a b : Term A n),
  canonical A0 eqA ltM (pX a p) ->
  ~ zeroP (A:=A) A0 eqA (n:=n) b ->
  canonical A0 eqA ltM (pX (multTerm (A:=A) multA (n:=n) b a) (mults b p)).
+Proof using plusA os minusA invA eqA_dec divA cs A1.
 intros p a b H' H'0; generalize (canonical_mults b (pX a p)); simpl in |- *;
  auto.
 Qed.
+
 Local Hint Resolve multlm_comp_canonical : core.
  
 Let ffst := fst (A:=list (Term A n)) (B:=list (Term A n)).
@@ -365,11 +383,12 @@ Let ssnd := snd (A:=list (Term A n)) (B:=list (Term A n)).
  
 Let ppair := pair (A:=list (Term A n)) (B:=list (Term A n)).
  
-Definition twoP_ind :
+Theorem twoP_ind :
   forall P : list (Term A n) -> list (Term A n) -> Prop,
   (forall p q : list (Term A n),
    (forall r s : list (Term A n), lessP A n (r, s) (p, q) -> P r s) -> P p q) ->
   forall p q : list (Term A n), P p q.
+Proof.
 intros P H' p q; try assumption.
 change
   ((fun pq : list (Term A n) * list (Term A n) => P (ffst pq) (ssnd pq))
@@ -402,6 +421,7 @@ Theorem mults_dist_pluspf :
          q))
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
       (mults a p) (mults a q)).
+Proof using os minusA invA divA cs A1.
 intros p q; pattern p, q in |- *.
 apply twoP_ind; simpl in |- *; auto.
 intros p0; case p0; simpl in |- *; auto.
@@ -613,6 +633,7 @@ apply
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n);
  apply multTerm_plusTerm_dist_r with (1 := cs); auto.
 Qed.
+
 Local Hint Resolve mults_dist_pluspf : core.
 
 Definition smults : Term A n -> poly A0 eqA ltM -> poly A0 eqA ltM.

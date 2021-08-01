@@ -7,6 +7,8 @@ From Coq Require Import Relation_Operators Lexicographic_Product.
 From Buchberger Require Import Relation_Operators_compat LetP.
 From Buchberger Require Export WfR0.
 
+Set Default Proof Using "Type".
+
 Section Buch.
 Load hCoefStructure.
 Load hOrderStructure.
@@ -23,35 +25,42 @@ list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> Prop :=
        Cb A A0 eqA plusA multA eqA_dec n ltM ltM_dec a Q ->
        Cb A A0 eqA plusA multA eqA_dec n ltM ltM_dec a P) -> 
       stable P Q.
+
 Local Hint Resolve stable0 : core.
  
 Theorem stable_refl : forall Q : list (poly A0 eqA ltM), stable Q Q.
+Proof.
 auto.
 Qed.
  
 Theorem stable_trans :
  forall Q y R : list (poly A0 eqA ltM),
  stable Q y -> stable y R -> stable Q R.
+Proof.
 intros Q y R H' H'0; inversion H'; inversion H'0; auto.
 Qed.
  
 Theorem stable_sym :
  forall Q R : list (poly A0 eqA ltM), stable R Q -> stable Q R.
+Proof.
 intros Q R H'; elim H'; auto.
 Qed.
+
 Local Hint Resolve (Cb_in _ _ _ _ _ _ _ _ _ cs eqA_dec _ _ ltM_dec os) : core.
  
 Theorem Cb_stable :
  forall (a : poly A0 eqA ltM) (Q : list (poly A0 eqA ltM)),
  Cb A A0 eqA plusA multA eqA_dec n ltM ltM_dec a Q ->
  stable Q (addEnd A A0 eqA n ltM a Q).
+Proof using os minusA invA divA cs A1.
 intros a Q H'0; apply stable0; auto.
 intros a0 H'1.
 apply Cb_trans with (b := a) (1 := cs); auto.
 Qed.
- 
+
 Theorem in_incl :
  forall (A : Type) (p q : list A) (a b : A), incl p q -> In a p -> In a q.
+Proof.
 auto.
 Qed.
  
@@ -74,6 +83,7 @@ poly A0 eqA ltM -> poly A0 eqA ltM -> list (poly A0 eqA ltM) -> Prop :=
 Theorem reds_com :
  forall (P : list (poly A0 eqA ltM)) (a b : poly A0 eqA ltM),
  reds a b P -> reds b a P.
+Proof.
 intros P a b H'; elim H'; simpl in |- *; auto.
 intros P0 a0 b0 H'0.
 apply reds0; auto.
@@ -82,6 +92,7 @@ intros P0 a0 b0 c H'0 H'1 H'2 H'3 H'4 H'5.
 apply reds1 with (c := c); auto.
 apply divp_ppc; auto.
 Qed.
+
 (* Now we are ready!! We start with the definition of genCpC *)
  
 Inductive cpRes : Type :=
@@ -97,7 +108,7 @@ intros i H'; case H'.
 intros H'0; exact (Keep (i :: H'0)).
 intros H'0; exact (DontKeep (i :: H'0)).
 Defined.
- 
+
 Definition slice :
   poly A0 eqA ltM -> poly A0 eqA ltM -> list (poly A0 eqA ltM) -> cpRes.
 intros i a q; elim q; clear q.
@@ -116,7 +127,7 @@ case
 intros divp11; exact Rec.
 intros divp11; exact (addRes b Rec).
 Defined.
- 
+
 Definition slicef :
   poly A0 eqA ltM ->
   poly A0 eqA ltM -> list (poly A0 eqA ltM) -> list (poly A0 eqA ltM).
@@ -126,6 +137,7 @@ Defined.
 Theorem slicef_incl :
  forall (a b : poly A0 eqA ltM) (P : list (poly A0 eqA ltM)),
  incl (slicef a b P) P.
+Proof.
 intros a b P; elim P; simpl in |- *; auto.
 unfold slicef in |- *; simpl in |- *; auto.
 case (foreigner_dec A A0 A1 eqA multA n ltM a b); intros H; apply incl_refl;
@@ -141,7 +153,7 @@ case
  auto with datatypes.
 intros H' H'0 l; case (slice a b l); simpl in |- *; auto with datatypes.
 Qed.
- 
+
 Theorem slice_inv :
  forall (a b : poly A0 eqA ltM) (P : list (poly A0 eqA ltM))
    (c : poly A0 eqA ltM),
@@ -149,6 +161,7 @@ Theorem slice_inv :
  In c (getRes (slice a b P)) \/
  divp A A0 eqA multA divA n ltM
    (ppcp A A0 A1 eqA plusA invA minusA multA divA cs n ltM a c) b.
+Proof.
 intros a b P; elim P; simpl in |- *; auto.
 intros c H'; elim H'.
 intros p aP1;
@@ -173,7 +186,7 @@ intros P0 H' H'0 H'1 c H'2; elim H'2;
  auto.
 elim (H'1 c); [ intros H'5; try exact H'5 | intros H'5 | idtac ]; auto.
 Qed.
- 
+
 Theorem slice_cons :
  forall (i a : poly A0 eqA ltM) (aP Q : list (poly A0 eqA ltM)),
  slice i a aP = DontKeep Q ->
@@ -182,6 +195,7 @@ Theorem slice_cons :
     divp A A0 eqA multA divA n ltM
       (ppcp A A0 A1 eqA plusA invA minusA multA divA cs n ltM i a) c) \/
  foreigner A A0 A1 eqA multA n ltM i a.
+Proof.
 intros i a aP; elim aP.
 simpl in |- *; case (foreigner_dec A A0 A1 eqA multA n ltM i a); auto.
 intros H' Q H'0; inversion H'0.
@@ -205,21 +219,23 @@ elim (H' P);
  | idtac ]; auto.
 left; exists c; split; simpl in |- *; auto.
 Qed.
- 
+
 Definition Tl : list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> Prop.
 exact (fun x y : list (poly A0 eqA ltM) => length x < length y).
 Defined.
  
 Theorem wf_Tl : well_founded Tl.
+Proof.
 apply (wf_inverse_image _ _ lt (length (A:=poly A0 eqA ltM))); auto.
 generalize lt_wf; auto.
 Qed.
- 
+
 Scheme Sdep := Induction for prod Sort Prop.
- 
+
 Theorem slice_Tl :
  forall (a ia : poly A0 eqA ltM) (L : list (poly A0 eqA ltM)),
  Tl (slicef a ia L) (a :: L).
+Proof.
 intros a b P; elim P; simpl in |- *; auto.
 unfold slicef in |- *; simpl in |- *; auto.
 case (foreigner_dec A A0 A1 eqA multA n ltM a b); unfold Tl in |- *;
@@ -241,7 +257,7 @@ unfold Tl in |- *; simpl in |- *; auto.
 unfold Tl in |- *; intros H' H'0; case (slice a b l); simpl in |- *;
  auto with arith.
 Qed.
- 
+
 Inductive genPcP :
 poly A0 eqA ltM ->
 list (poly A0 eqA ltM) ->
@@ -261,8 +277,9 @@ list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> Prop :=
       forall (L L1 L2 L3 : list _) (a i : poly A0 eqA ltM),
       slice i a L1 = DontKeep L2 ->
       genPcP i L2 L L3 -> genPcP i (a :: L1) L L3.
+
 Local Hint Resolve genPcP0 : core.
- 
+
 Theorem genPcP_spolyp1 :
  forall (i : poly A0 eqA ltM) (L L1 L2 : list _),
  genPcP i L1 L L2 ->
@@ -273,6 +290,7 @@ Theorem genPcP_spolyp1 :
     a =
     spolyp A A0 A1 eqA plusA invA minusA multA divA cs eqA_dec n ltM ltM_dec
       os i b) \/ In a L.
+Proof.
 intros i L L1 L2 H'; elim H'; clear H'; simpl in |- *; auto.
 intros L0 L3 L4 L5 a i0 H' H'0 H'1 a0 H'2.
 case (addEnd_cons A A0 eqA n ltM) with (1 := H'2); auto; intros H'7.
@@ -293,12 +311,14 @@ elim (H'1 a0);
 left; exists b; split; [ right | idtac ]; auto.
 generalize (slicef_incl i0 a L3); unfold slicef in |- *; rewrite H'; auto.
 Qed.
+
 Local Hint Resolve (addEnd_id2 A A0 eqA n ltM) : core.
 Local Hint Resolve (addEnd_id1 A A0 eqA n ltM) : core.
  
 Theorem genPcP_incl :
  forall (i : poly A0 eqA ltM) (L L1 L2 : list _),
  genPcP i L1 L L2 -> incl L L2.
+Proof.
 intros i L L1 L2 H'; elim H'; simpl in |- *; auto with datatypes.
 intros L0 L3 L4 L5 a i0 H'0 H'1 H'2.
 unfold incl in |- *; simpl in |- *; auto.
@@ -318,6 +338,7 @@ Lemma spolyp_cons_genPcP0 :
          ltM_dec os i c) Q \/ foreigner A A0 A1 eqA multA n ltM i c) /\
    divp A A0 eqA multA divA n ltM
      (ppcp A A0 A1 eqA plusA invA minusA multA divA cs n ltM i b) c.
+Proof.
 intros aP R Q i H'; elim H'; clear H' i aP R Q; simpl in |- *; auto.
 intros i L H' b H'0; elim H'0.
 intros L L1 L2 L3 a i H' H'0 H'1 H'2 b H'3 H'4.
@@ -448,7 +469,7 @@ apply divp_nzeropr with (1 := H'10); auto.
 apply divp_nzeropr with (1 := H'11); auto.
 exists a; split; [ idtac | split; [ right | idtac ] ]; auto.
 Qed.
- 
+
 Lemma spolyp_cons_genPcP :
  forall (aP R Q : list _) (i : poly A0 eqA ltM),
  genPcP i aP R Q ->
@@ -466,6 +487,7 @@ Lemma spolyp_cons_genPcP :
          ltM_dec os i c) (addEnd A A0 eqA n ltM i aP)) /\
    divp A A0 eqA multA divA n ltM
      (ppcp A A0 A1 eqA plusA invA minusA multA divA cs n ltM i b) c.
+Proof.
 intros aP R Q i H' H'0 b H'1 H'2.
 lapply (spolyp_cons_genPcP0 aP R Q i);
  [ intros H'7; lapply H'7;
@@ -482,7 +504,7 @@ exists c; split; [ idtac | split; [ left | idtac ] ]; auto.
 exists c; split; [ idtac | split; [ right | idtac ] ]; auto.
 apply foreigner_red; auto.
 Qed.
- 
+
 Theorem Cb_genPcP :
  forall (i : poly A0 eqA ltM) (P Q R S : list (poly A0 eqA ltM)),
  genPcP i P R Q ->
@@ -493,6 +515,7 @@ Theorem Cb_genPcP :
   In a R -> Cb A A0 eqA plusA multA eqA_dec n ltM ltM_dec a S) ->
  forall a : poly A0 eqA ltM,
  In a Q -> Cb A A0 eqA plusA multA eqA_dec n ltM ltM_dec a S.
+Proof.
 intros i P Q R S H'; elim H'; simpl in |- *; auto.
 intros L L1 L2 L3 a i0 H'0 H'1 H'2 H'3 H'4 H'5 a0 H'6.
 case (addEnd_cons A A0 eqA n ltM) with (1 := H'6); auto; intros H'7.
@@ -509,7 +532,7 @@ intros a1 H'7.
 apply H'4; auto.
 generalize (slicef_incl i0 a L1); unfold slicef in |- *; rewrite H'0; auto.
 Qed.
- 
+
 Definition genPcPf0 :
   forall (i : poly A0 eqA ltM) (aP R : list (poly A0 eqA ltM)),
   {Q : list (poly A0 eqA ltM) | genPcP i aP R Q}.
@@ -536,17 +559,18 @@ exists L3; auto.
 apply genPcP2 with (L2 := L2); auto.
 generalize (slice_Tl i a L1); unfold slicef in |- *; rewrite H';
  simpl in |- *; auto.
-Qed.
- 
+Defined.
+
 Definition genPcPf :
   poly A0 eqA ltM ->
   list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> list (poly A0 eqA ltM).
 intros i aP Q; case (genPcPf0 i aP Q).
 intros x H'; exact x.
 Defined.
+
 (* The proof will carry on if we have the following 3 properties for
    the function genPcPf *)
- 
+
 Theorem Cb_genPcPf :
  forall (b : poly A0 eqA ltM) (P Q R : list (poly A0 eqA ltM)),
  Cb A A0 eqA plusA multA eqA_dec n ltM ltM_dec b R ->
@@ -556,6 +580,7 @@ Theorem Cb_genPcPf :
   In a Q -> Cb A A0 eqA plusA multA eqA_dec n ltM ltM_dec a R) ->
  forall a : poly A0 eqA ltM,
  In a (genPcPf b P Q) -> Cb A A0 eqA plusA multA eqA_dec n ltM ltM_dec a R.
+Proof.
 intros b P Q R; unfold genPcPf in |- *; case (genPcPf0 b P Q).
 intros x H' H'0 H'1 H'2 a H'3.
 apply Cb_genPcP with (i := b) (P := P) (Q := x) (R := Q); auto.
@@ -564,10 +589,12 @@ Qed.
 Theorem genPcPf_incl :
  forall (a : poly A0 eqA ltM) (aL Q : list (poly A0 eqA ltM)),
  incl Q (genPcPf a aL Q).
+Proof.
 intros a aL Q; unfold genPcPf in |- *; case (genPcPf0 a aL Q).
 intros x H'.
 apply genPcP_incl with (i := a) (L1 := aL); auto.
 Qed.
+
 Local Hint Resolve genPcPf_incl : core.
 
 Theorem spolyp_addEnd_genPcPf :
@@ -585,12 +612,14 @@ Theorem spolyp_addEnd_genPcPf :
          ltM_dec os a c) (addEnd A A0 eqA n ltM a aP)) /\
    divp A A0 eqA multA divA n ltM
      (ppcp A A0 A1 eqA plusA invA minusA multA divA cs n ltM a b) c.
+Proof.
 intros aP H' Q a b H'0 H'1 H'2.
 unfold genPcPf in |- *.
 case (genPcPf0 a aP Q).
 intros x H'3.
 apply spolyp_cons_genPcP with (R := Q); auto.
 Qed.
+
 (* Now we can define the optimized version of Buchberger *)
  
 Definition genOCPf : list (poly A0 eqA ltM) -> list (poly A0 eqA ltM).
@@ -598,11 +627,13 @@ intros H'; elim H'.
 exact (nil (A:=poly A0 eqA ltM)).
 intros a l rec; exact (genPcPf a l rec).
 Defined.
+
 (* Now we can define the optimized version of Buchberger *)
  
 Theorem genOCPf_stable :
  forall (a : poly A0 eqA ltM) (P : list (poly A0 eqA ltM)),
  In a (genOCPf P) -> Cb A A0 eqA plusA multA eqA_dec n ltM ltM_dec a P.
+Proof.
 intros a P; generalize a; elim P; clear a P; simpl in |- *; auto.
 intros a H; elim H.
 intros a l H' a0 H'0.
@@ -636,12 +667,14 @@ list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> Prop :=
       BuchAux.zerop A A0 eqA n ltM
         (nf A A0 A1 eqA plusA invA minusA multA divA cs eqA_dec n ltM ltM_dec
            os a aP) -> OBuch aP (a :: Q) R.
+
 Local Hint Resolve OBuch0 OBuch2 : core.
 Local Hint Resolve incl_refl incl_tl : core.
  
 Theorem incl_addEnd1 :
  forall (a : poly A0 eqA ltM) (L1 L2 : list (poly A0 eqA ltM)),
  incl (addEnd A A0 eqA n ltM a L1) L2 -> incl (a :: L1) L2.
+Proof.
 unfold incl in |- *; simpl in |- *; auto.
 intros a L1 L2 H' a0 H'0; case H'0;
  [ intros H'1; rewrite <- H'1; clear H'0 | intros H'1; clear H'0 ]; 
@@ -650,6 +683,7 @@ Qed.
  
 Theorem ObuchPincl :
  forall aP R Q : list (poly A0 eqA ltM), OBuch aP Q R -> incl aP R.
+Proof.
 intros aP R Q H'; elim H'; simpl in |- *; auto.
 intros a aP0 Q0 R0 H'0 H'1 H'2; try assumption.
 apply
@@ -666,6 +700,7 @@ Theorem ObuchPred :
  OBuch aP Q R ->
  forall a : poly A0 eqA ltM,
  In a aP -> red A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a R.
+Proof.
 intros aP R Q H'; elim H'; simpl in |- *; auto.
 intros; apply red_cons with (1 := cs); auto.
 Qed.
@@ -675,6 +710,7 @@ Theorem ObuchQred :
  OBuch aP Q R ->
  forall a : poly A0 eqA ltM,
  In a Q -> red A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a R.
+Proof.
 intros aP R Q H'; elim H'; simpl in |- *; auto.
 intros aL a H'0; elim H'0.
 intros a aP0 Q0 R0 H'0 H'1 H'2 a0 H'3; elim H'3;
@@ -708,13 +744,14 @@ apply red_incl with (1 := cs) (p := aP0); auto.
 apply ObuchPincl with (Q := Q0); auto.
 apply zerop_red with (cs := cs) (os := os); auto.
 Qed.
- 
+
 Theorem OBuch_Stable :
  forall P Q R : list (poly A0 eqA ltM),
  OBuch P Q R ->
  (forall a : poly A0 eqA ltM,
   In a Q -> Cb A A0 eqA plusA multA eqA_dec n ltM ltM_dec a P) -> 
  stable P R.
+Proof.
 intros P Q R H'; elim H'; simpl in |- *; auto.
 intros a aP Q0 R0 H'0 H'1 H'2 H'3.
 apply
@@ -745,7 +782,7 @@ apply Cb_id with (1 := cs); auto.
 intros; apply Cb_in with (1 := cs); auto.
 apply Cb_id with (1 := cs); auto.
 Qed.
- 
+
 Inductive redIn :
 poly A0 eqA ltM ->
 poly A0 eqA ltM ->
@@ -772,11 +809,13 @@ list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> Prop :=
       divp A A0 eqA multA divA n ltM
         (ppcp A A0 A1 eqA plusA invA minusA multA divA cs n ltM a b) c ->
       redIn a b P Q R.
+
 Local Hint Resolve redIn1 redIn0 : core.
- 
+
 Remark lem_redIn_nil :
  forall (aP Q R : list (poly A0 eqA ltM)) (a b : poly A0 eqA ltM),
  In a R -> In b R -> redIn a b aP Q R -> Q = nil -> aP = R -> reds a b R.
+Proof.
 intros aP Q R a b H' H'0 H'1; elim H'1; auto.
 intros P Q0 R0 a0 b0 H'2 H'3 H'4 H'5.
 apply reds_com; auto.
@@ -790,14 +829,15 @@ apply reds1 with (c := c); auto.
 rewrite <- H'9; auto.
 apply reds_com; auto.
 Qed.
- 
+
 Theorem redIn_nil :
  forall (R : list (poly A0 eqA ltM)) (a b : poly A0 eqA ltM),
  In a R -> In b R -> redIn a b R nil R -> reds a b R.
+Proof.
 intros R a b H' H'0 H'1.
 apply lem_redIn_nil with (aP := R) (Q := nil (A:=poly A0 eqA ltM)); auto.
 Qed.
- 
+
 Remark lem_redln_cons :
  forall (aP R Q : list (poly A0 eqA ltM)) (a b : poly A0 eqA ltM),
  In a aP ->
@@ -807,6 +847,7 @@ Remark lem_redln_cons :
  Q = c :: Q1 ->
  red A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec c R ->
  redIn a b aP Q1 R.
+Proof.
 intros aP R Q a b H' H'0 H'1; elim H'1; auto.
 intros P Q0 R0 a0 b0 H'2 H'3 c Q1 H'4 H'5.
 apply redIn0b; auto.
@@ -827,14 +868,16 @@ Theorem redln_cons :
  redIn a b aP (c :: Q) R ->
  red A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec c R ->
  redIn a b aP Q R.
+Proof.
 intros aP R Q a b c H' H'0 H'1 H'2; try assumption.
 apply lem_redln_cons with (Q := c :: Q) (c := c); auto.
 Qed.
- 
+
 Theorem redInclP :
  forall (P Q R : list (poly A0 eqA ltM)) (a b : poly A0 eqA ltM),
  redIn a b P Q R ->
  forall P1 : list (poly A0 eqA ltM), incl P P1 -> redIn a b P1 Q R.
+Proof.
 intros P Q R a b H'; elim H'; auto.
 intros P0 Q0 R0 a0 b0 H'0 H'1 P1 H'2.
 apply redIn0b; auto.
@@ -846,6 +889,7 @@ Theorem redInInclQ :
  forall (P Q R : list (poly A0 eqA ltM)) (a b : poly A0 eqA ltM),
  redIn a b P Q R ->
  forall Q1 : list (poly A0 eqA ltM), incl Q Q1 -> redIn a b P Q1 R.
+Proof.
 intros P Q R a b H'; elim H'; auto.
 intros P0 Q0 R0 a0 b0 H'0 H'1 Q1 H'2; try assumption.
 apply redIn0b; auto.
@@ -857,6 +901,7 @@ Theorem redInclR :
  forall (P Q R : list (poly A0 eqA ltM)) (a b : poly A0 eqA ltM),
  redIn a b P Q R ->
  forall R1 : list (poly A0 eqA ltM), incl R R1 -> redIn a b P Q R1.
+Proof.
 intros P Q R a b H'; elim H'; simpl in |- *; auto.
 intros P0 Q0 R0 a0 b0 H'0 H'1 R1 H'2; try assumption.
 apply redIn0b; auto.
@@ -866,7 +911,7 @@ apply red_incl with (1 := cs) (p := R0); auto.
 intros P0 Q0 R0 a0 b0 c H'0 H'1 H'2 H'3 H'4 H'5 R1 H'6.
 apply redIn2 with (c := c); auto.
 Qed.
- 
+
 Remark lem_redln_cons_gen :
  forall (aP R Q : list (poly A0 eqA ltM)) (a b : poly A0 eqA ltM),
  In a aP ->
@@ -882,6 +927,7 @@ Remark lem_redln_cons_gen :
    (addEnd A A0 eqA n ltM
       (nf A A0 A1 eqA plusA invA minusA multA divA cs eqA_dec n ltM ltM_dec
          os c aP) aP) Q1 R.
+Proof.
 intros aP R Q a b H' H'0 H'1; elim H'1; auto.
 intros P Q0 R0 a0 b0 H'2 H'3 c Q1 H'4 H'5.
 apply redIn0b; auto.
@@ -907,7 +953,7 @@ rewrite H'5; simpl in |- *; auto.
 intros P Q0 R0 a0 b0 c H'2 H'3 H'4 H'5 H'6 H'7 c0 Q1 H'8 H'9.
 apply redIn2 with (c := c); auto.
 Qed.
- 
+
 Theorem redln_cons_gen :
  forall (aP R Q : list (poly A0 eqA ltM)) (a b c : poly A0 eqA ltM),
  In a aP ->
@@ -921,9 +967,11 @@ Theorem redln_cons_gen :
    (addEnd A A0 eqA n ltM
       (nf A A0 A1 eqA plusA invA minusA multA divA cs eqA_dec n ltM ltM_dec
          os c aP) aP) Q R.
+Proof.
 intros aP R Q a b c H' H'0 H'1 H'2.
 apply lem_redln_cons_gen with (Q := c :: Q); auto.
 Qed.
+
 Local Hint Resolve redln_cons_gen : core.
 
 Theorem red_gen_in :
@@ -952,6 +1000,7 @@ Theorem red_gen_in :
    (genPcPf
       (nf A A0 A1 eqA plusA invA minusA multA divA cs eqA_dec n ltM ltM_dec
          os a aP) aP Q) R.
+Proof.
 intros a aP R Q H' H'0 H'1 b H'2 H'3.
 lapply (spolyp_addEnd_genPcPf aP);
  [ intros H'5;
@@ -999,12 +1048,13 @@ apply
             (nf A A0 A1 eqA plusA invA minusA multA divA cs eqA_dec n ltM
                ltM_dec os a aP) aP Q); auto.
 Qed.
- 
+
 Theorem OBuch_Inv :
  forall aP R Q : list (poly A0 eqA ltM),
  OBuch aP Q R ->
  (forall a b : poly A0 eqA ltM, In a aP -> In b aP -> redIn a b aP Q R) ->
  forall a b : poly A0 eqA ltM, In a R -> In b R -> reds a b R.
+Proof.
 intros aP R Q H'; elim H'; simpl in |- *; auto.
 intros aL H'0 a b H'1 H'2; try assumption.
 apply redIn_nil; auto.
@@ -1074,20 +1124,22 @@ apply red_incl with (p := aP0) (1 := cs); auto.
 apply ObuchPincl with (Q := Q0); auto.
 apply zerop_red with (cs := cs) (os := os); auto.
 Qed.
- 
+
 Theorem addEnd_incl :
  forall (a : poly A0 eqA ltM) (L1 L2 : list (poly A0 eqA ltM)),
  incl (a :: L1) L2 -> incl (addEnd A A0 eqA n ltM a L1) L2.
+Proof.
 unfold incl in |- *; simpl in |- *; auto.
 intros a L1 L2 H' a0 H'0.
 case (addEnd_cons A A0 eqA n ltM) with (1 := H'0); auto.
 Qed.
- 
+
 Theorem genOCp_redln :
  forall aL1 R : list (poly A0 eqA ltM),
  incl aL1 R ->
  forall a b : poly A0 eqA ltM,
  In a aL1 -> In b aL1 -> redIn a b aL1 (genOCPf aL1) R.
+Proof.
 intros aL1; elim aL1; simpl in |- *; auto.
 intros a l H' R H'0 a0 b H'1 H'2.
 elim H'2; [ intros H'3; rewrite <- H'3; clear H'2 | intros H'3; clear H'2 ];
@@ -1162,26 +1214,28 @@ apply redInInclQ with (Q := genOCPf l); auto.
 apply H'; auto.
 apply incl_tran with (m := a :: l); auto.
 Qed.
- 
+
 Theorem OBuch_Stable_f :
  forall P Q : list (poly A0 eqA ltM), OBuch P (genOCPf P) Q -> stable P Q.
+Proof.
 intros P Q H'; try assumption.
 apply OBuch_Stable with (Q := genOCPf P); auto.
 intros a H'0; try assumption.
 apply genOCPf_stable; auto.
 Qed.
- 
+
 Theorem OBuch_Inv_f :
  forall P Q : list (poly A0 eqA ltM),
  OBuch P (genOCPf P) Q ->
  forall a b : poly A0 eqA ltM, In a Q -> In b Q -> reds a b Q.
+Proof.
 intros P Q H' a b H'0 H'1; try assumption.
 apply OBuch_Inv with (aP := P) (Q := genOCPf P); auto.
 intros a0 b0 H'3 H'4.
 apply genOCp_redln; auto.
 apply ObuchPincl with (Q := genOCPf P); auto.
 Qed.
- 
+
 Let FPset (A : list (poly A0 eqA ltM)) := list (poly A0 eqA ltM).
  
 Definition Fl : forall x : list (poly A0 eqA ltM), FPset x -> FPset x -> Prop.
@@ -1191,6 +1245,7 @@ exact (Tl P1 P2).
 Defined.
  
 Theorem wf_Fl : forall x : list (poly A0 eqA ltM), well_founded (Fl x).
+Proof.
 unfold FPset in |- *; simpl in |- *.
 intros x; generalize wf_Tl; auto.
 Qed.
@@ -1199,8 +1254,9 @@ Let Co :=
   lexprod (list (poly A0 eqA ltM)) FPset
     (RO A A0 A1 eqA plusA invA minusA multA divA cs eqA_dec n ltM ltM_dec os)
     Fl.
- 
+
 Theorem wf_Co : well_founded Co.
+Proof.
 unfold Co in |- *; apply wf_lexprod.
 apply wf_incl.
 exact wf_Fl.
@@ -1217,6 +1273,7 @@ Definition RL (x y : list (poly A0 eqA ltM) * list (poly A0 eqA ltM)) :
   Prop := Co (PtoS x) (PtoS y).
  
 Theorem wf_RL : well_founded RL.
+Proof.
 apply (wf_inverse_image _ _ Co PtoS); auto.
 try exact wf_Co.
 Qed.
@@ -1278,17 +1335,19 @@ Defined.
 Theorem pbuchf_Stable :
  forall P R : list (poly A0 eqA ltM),
  R = strip _ (pbuchf (P, genOCPf P)) -> stable P R.
+Proof.
 simpl in |- *.
 intros P R H'; try assumption.
 apply OBuch_Stable_f; auto.
 rewrite H'.
 case (pbuchf (pair P (genOCPf P))); simpl in |- *; auto.
 Qed.
- 
+
 Theorem pbuchf_Inv :
  forall P R : list (poly A0 eqA ltM),
  R = strip _ (pbuchf (P, genOCPf P)) ->
  forall a b : poly A0 eqA ltM, In a R -> In b R -> reds a b R.
+Proof.
 intros P R H' a b H'0 H'1; simpl in |- *.
 apply OBuch_Inv_f with (P := P); auto.
 rewrite H'; simpl in |- *; auto.
@@ -1300,21 +1359,24 @@ intros P; exact (strip _ (pbuchf (P, genOCPf P))).
 Defined.
  
 Theorem buch_Stable : forall P : list (poly A0 eqA ltM), stable P (buch P).
+Proof.
 intros P; apply pbuchf_Stable; auto.
 Qed.
  
 Theorem buch_reds :
  forall (P : list (poly A0 eqA ltM)) (a b : poly A0 eqA ltM),
  In a (buch P) -> In b (buch P) -> reds a b (buch P).
+Proof.
 intros P a b H' H'0.
 apply pbuchf_Inv with (P := P); auto.
 Qed.
- 
+
 Theorem reds_SpolyQ :
  forall (P : list (poly A0 eqA ltM)) (a b : poly A0 eqA ltM),
  reds a b P ->
  Spoly_1 A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec P
    (s2p A A0 eqA n ltM a) (s2p A A0 eqA n ltM b).
+Proof.
 intros P a b H'; elim H'; auto.
 intros P0 a0 b0 H'0;
  cut
@@ -1345,11 +1407,12 @@ change
 apply in_inPolySet; simpl in |- *; auto.
 red in |- *; intros H; inversion H.
 Qed.
- 
+
 Theorem imp_in :
  forall (P : list (poly A0 eqA ltM)) (a : list (Term A n)),
  inPolySet A A0 eqA n ltM a P ->
  exists b : poly A0 eqA ltM, In b P /\ a = s2p A A0 eqA n ltM b.
+Proof.
 intros P a H'; elim H'; auto.
 intros a0 p H P0;
  exists
@@ -1360,11 +1423,12 @@ intros a0 p P0 H'0 H'1; elim H'1; intros b E; elim E; intros H'2 H'3;
  clear E H'1; auto.
 exists b; split; auto with datatypes.
 Qed.
- 
+
 Theorem reds_SpolyQ1 :
  forall P : list (poly A0 eqA ltM),
  (forall a b : poly A0 eqA ltM, In a P -> In b P -> reds a b P) ->
  SpolyQ A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec P.
+Proof.
 intros P H'.
 apply SpolyQ0; auto.
 intros p q H'0 H'1 H'2 H'3.
@@ -1376,22 +1440,25 @@ elim (imp_in P q); [ intros b0 E; elim E; intros H'9 H'10; clear E | idtac ];
 rewrite H'10.
 apply reds_SpolyQ; auto.
 Qed.
- 
+
 Theorem buch_spolyQ :
  forall P : list (poly A0 eqA ltM),
  SpolyQ A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec (buch P).
+Proof.
 intros P.
 apply reds_SpolyQ1; auto.
 intros; apply buch_reds; auto.
 Qed.
- 
+
 Theorem buch_Grobner :
  forall P : list (poly A0 eqA ltM),
  Grobner A A0 A1 eqA plusA invA minusA multA divA eqA_dec n ltM ltM_dec
    (buch P).
+Proof.
 intros P.
 apply ConfluentReduce_imp_Grobner; auto.
 apply SpolyQ_imp_ConfluentReduce with (1 := cs); auto.
 apply buch_spolyQ; auto.
 Qed.
+
 End Buch.

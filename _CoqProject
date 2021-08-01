@@ -1,6 +1,5 @@
 -Q theories Buchberger
 
--arg -w -arg -extraction-opaque-accessed
 -arg -w -arg -fragile-hint-constr
 
 theories/Relation_Operators_compat.v

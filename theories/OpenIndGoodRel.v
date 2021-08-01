@@ -4,6 +4,8 @@
 From Coq Require Import List.
 From Buchberger Require Import Bar.
 
+Set Default Proof Using "Type".
+
 Section OpenIndGoodRel.
 Variable A : Type.
 Variable lt R : Rel A.
@@ -20,7 +22,7 @@ Lemma OpenInd :
  forall xs : list A,
  Min xs ->
  (forall a : A, Min (a :: xs) -> GRBar A R (a :: xs)) -> GRBar A R xs.
-Proof.
+Proof using wflt.
 intros; red in |- *.
 apply Ind; auto.
 intros a; elim (wflt a); auto.
@@ -28,4 +30,5 @@ intros x H' H'0.
 apply X0.
 apply cmin; auto.
 Qed.
+
 End OpenIndGoodRel.

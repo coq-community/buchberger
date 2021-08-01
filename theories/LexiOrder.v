@@ -12,6 +12,8 @@
 From Coq Require Import Eqdep Arith Compare_dec.
 From Buchberger Require Import Monomials LetP.
 
+Set Default Proof Using "Type".
+
 Section lexi_order.
 
 Inductive orderc : forall n : nat, mon n -> mon n -> Prop :=
@@ -21,9 +23,10 @@ Inductive orderc : forall n : nat, mon n -> mon n -> Prop :=
   | lo2 :
       forall (n a b : nat) (p q : mon n),
       orderc n p q -> orderc (S n) (c_n n a p) (c_n n b q).
+
 Local Hint Resolve lo1 lo2 : core.
 
-Theorem orderc_dec :
+Definition orderc_dec :
  forall (n : nat) (a b : mon n), {orderc n a b} + {orderc n b a} + {a = b}.
 intros n a; elim a; auto.
 intro b.
@@ -42,7 +45,7 @@ left; right; auto.
 rewrite H'0; auto.
 right; rewrite H'0; rewrite H'2; auto.
 left; left; rewrite H'0; auto.
-Qed.
+Defined.
 
 Definition degc : forall n : nat, mon n -> nat.
 intros n H'; elim H'.
@@ -57,9 +60,10 @@ Inductive total_orderc : forall n : nat, mon n -> mon n -> Prop :=
   | total_orderc1 :
       forall (n : nat) (p q : mon n),
       degc n p = degc n q -> orderc n p q -> total_orderc n p q.
+
 Local Hint Resolve total_orderc0 total_orderc1 : core.
 
-Theorem total_orderc_dec :
+Definition total_orderc_dec :
  forall (n : nat) (a b : mon n),
  {total_orderc n a b} + {total_orderc n b a} + {a = b}.
 intros n a b.
@@ -72,6 +76,6 @@ rewrite H'0; rewrite H'; auto.
 rewrite H'0; rewrite H'; intro H'2; case (orderc_dec n a b); auto.
 intro H'3; case H'3; auto.
 rewrite H'0; rewrite H'; auto.
-Qed.
+Defined.
 
 End lexi_order.

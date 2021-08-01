@@ -1,5 +1,4 @@
 (coq.extraction
  (prelude Extract)
  (extracted_modules sin_num)
- (theories Buchberger)
- (flags -w -extraction-opaque-accessed))
+ (theories Buchberger))

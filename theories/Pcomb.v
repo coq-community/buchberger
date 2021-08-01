@@ -3,6 +3,8 @@
 
 From Buchberger Require Export Pspoly LetP.
 
+Set Default Proof Using "Type".
+
 Section Pcomb.
 Load hCoefStructure.
 Load hOrderStructure.
@@ -19,11 +21,13 @@ list (Term A n) -> Prop :=
       eqP A eqA n s
         (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
            (mults (A:=A) multA (n:=n) a q) p) -> CombLinear Q s.
+
 Local Hint Resolve CombLinear_0 CombLinear_1 : core.
- 
+
 Theorem CombLinear_canonical :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
  CombLinear Q p -> canonical A0 eqA ltM p.
+Proof using os minusA invA divA cs A1.
 intros Q p H'; elim H'; auto.
 intros a p0 q s H'0 H'1 H'2 H'3 H'4.
 apply
@@ -37,12 +41,13 @@ apply canonical_pluspf; auto.
 apply canonical_mults with (1 := cs); auto.
 apply inPolySet_imp_canonical with (L := Q); auto.
 Qed.
- 
+
 Theorem CombLinear_comp :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
  CombLinear Q p ->
  forall q : list (Term A n),
  canonical A0 eqA ltM q -> eqP A eqA n p q -> CombLinear Q q.
+Proof using minusA invA divA cs A1.
 intros Q p H'; elim H'; auto.
 intros q H'0 H'1; inversion H'1; auto.
 intros a p0 q s H'0 H'1 H'2 H'3 H'4 q0 H'5 H'6.
@@ -55,6 +60,7 @@ apply eqp_imp_canonical with (p := q0) (1 := cs); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply inPolySet_imp_canonical with (L := Q); auto.
 Qed.
+
 Local Hint Resolve CombLinear_canonical : core.
  
 Theorem CombLinear_pluspf :
@@ -64,6 +70,7 @@ Theorem CombLinear_pluspf :
  CombLinear Q q ->
  CombLinear Q
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec p q).
+Proof using os minusA invA divA cs A1.
 intros Q p H'; elim H'; auto.
 intros q H'0.
 cut (canonical A0 eqA ltM q);
@@ -105,12 +112,14 @@ apply
     (1 := cs); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
+
 Local Hint Resolve CombLinear_pluspf : core.
  
 Theorem CombLinear_mults1 :
  forall (Q : list (poly A0 eqA ltM)) (a : Term A n) (p : list (Term A n)),
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
  CombLinear Q p -> CombLinear Q (mults (A:=A) multA (n:=n) a p).
+Proof using os minusA invA divA cs A1.
 intros Q a p H' H'0; elim H'0; auto.
 intros a0 p0 q s H'1 H'2 H'3 H'4 H'5.
 cut (canonical A0 eqA ltM q);
@@ -138,8 +147,9 @@ apply
             (mults (A:=A) multA (n:=n) a p0)); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
+
 Local Hint Resolve CombLinear_mults1 : core.
- 
+
 Theorem CombLinear_minuspf :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
  CombLinear Q p ->
@@ -147,6 +157,7 @@ Theorem CombLinear_minuspf :
  CombLinear Q q ->
  CombLinear Q
    (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p q).
+Proof using os divA cs.
 intros Q p H' q H'0; try assumption.
 cut (canonical A0 eqA ltM p);
  [ intros Op1 | apply CombLinear_canonical with (Q := Q); auto ].
@@ -161,11 +172,13 @@ apply
                q)); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
+
 Local Hint Resolve CombLinear_minuspf : core.
- 
+
 Theorem CombLinear_id :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
  inPolySet A A0 eqA n ltM p Q -> CombLinear Q p.
+Proof using os minusA invA divA cs A1.
 intros Q p H'.
 cut (canonical A0 eqA ltM p);
  [ intros C0 | apply inPolySet_imp_canonical with (L := Q); auto ].
@@ -181,6 +194,7 @@ apply
   with (y := mults (A:=A) multA (n:=n) (T1 A1 n) p); 
  auto.
 Qed.
+
 Local Hint Resolve CombLinear_id : core.
 
 Theorem CombLinear_spoly :
@@ -190,6 +204,7 @@ Theorem CombLinear_spoly :
  inPolySet A A0 eqA n ltM q Q ->
  CombLinear Q
    (spolyf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec p q Cp Cq).
+Proof using os cs.
 intros Q p; case p.
 simpl in |- *; auto.
 intros a l q; case q.
@@ -235,11 +250,12 @@ change
            (pX a0 l0)))) in |- *.
 apply spoly_is_minus with (1 := cs); auto.
 Qed.
- 
+
 Theorem CombLinear_reduce :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q p q ->
  canonical A0 eqA ltM p -> CombLinear Q q -> CombLinear Q p.
+Proof using os cs.
 intros Q p q H'0 H'1 H'2.
 case reduce_inv2 with (1 := cs) (3 := H'0); auto.
 intros x H; elim H; intros a H0; elim H0; intros H1 H2; elim H2; intros H3 H4;
@@ -265,11 +281,12 @@ apply
             (mults (A:=A) multA (n:=n) a x)); auto.
 apply pluspf_minuspf_id with (1 := cs); auto.
 Qed.
- 
+
 Theorem CombLinear_reduceplus :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduceplus A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q p q ->
  canonical A0 eqA ltM p -> CombLinear Q q -> CombLinear Q p.
+Proof using os cs.
 intros Q p q H'0; elim H'0; auto.
 intros x y H' H'1 H'2.
 apply CombLinear_comp with (p := y); auto.
@@ -279,25 +296,27 @@ apply CombLinear_reduce with (q := y); auto.
 apply H'2; auto.
 apply canonical_reduce with (1 := cs) (3 := H'); auto.
 Qed.
- 
+
 Theorem CombLinear_reducestar :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q p q ->
  canonical A0 eqA ltM p -> CombLinear Q q -> CombLinear Q p.
+Proof using os cs.
 intros Q p q H'; elim H'; auto.
 intros p0 q0 H'0 H'1 H'2 H'3.
 apply CombLinear_reduceplus with (q := q0); auto.
 Qed.
- 
+
 Theorem Reducestar_pO_imp_CombLinear :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q p q ->
  canonical A0 eqA ltM p -> eqP A eqA n q (pO A n) -> CombLinear Q p.
+Proof using os cs.
 intros Q p q H' H'0 H'1; inversion H'1; auto.
 apply CombLinear_reducestar with (q := q); auto.
 rewrite <- H; auto.
 Qed.
- 
+
 Inductive Grobner (Q : list (poly A0 eqA ltM)) : Prop :=
     Grobner0 :
       (forall p q : list (Term A n),
@@ -309,6 +328,7 @@ Theorem Grobner_imp_SpolyQ :
  forall Q : list (poly A0 eqA ltM),
  Grobner Q ->
  SpolyQ A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q.
+Proof using os cs.
 intros Q H'; elim H'.
 intros H'1.
 apply SpolyQ0; auto.
@@ -339,7 +359,7 @@ apply
 apply CombLinear_spoly; auto.
 apply spolyf_canonical with (1 := cs); auto.
 Qed.
- 
+
 Inductive ConfluentReduce (Q : list (poly A0 eqA ltM)) : Prop :=
     ConfluentReduce0 :
       (forall p : list (Term A n),
@@ -351,6 +371,7 @@ Theorem SpolyQ_imp_ConfluentReduce :
  forall Q : list (poly A0 eqA ltM),
  SpolyQ A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q ->
  ConfluentReduce Q.
+Proof using plusA os cs.
 intros Q H'0.
 apply ConfluentReduce0.
 intros p H'1.
@@ -360,9 +381,10 @@ change
  in |- *.
 apply confl_restar with (1 := cs); auto.
 Qed.
- 
+
 Theorem ConfluentReduce_imp_Grobner :
  forall Q : list (poly A0 eqA ltM), ConfluentReduce Q -> Grobner Q.
+Proof using os cs.
 intros Q H'; elim H'.
 intros H'0.
 apply Grobner0; auto.
@@ -454,12 +476,13 @@ apply
             (mults (A:=A) multA (n:=n) a q) p0); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Theorem CombLinear_incl :
  forall (a : list (Term A n)) (P Q : list (poly A0 eqA ltM)),
  (forall a : list (Term A n),
   inPolySet A A0 eqA n ltM a P -> inPolySet A A0 eqA n ltM a Q) ->
  CombLinear P a -> CombLinear Q a.
+Proof using os minusA invA divA cs A1.
 intros a P Q H' H'0; elim H'0; auto.
 intros a0 p q s H'1 H'2 H'3 H'4 H'5.
 apply
@@ -480,12 +503,13 @@ apply inPolySet_imp_canonical with (L := P); auto.
 apply CombLinear_canonical with (Q := Q); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Remark CombLinear_trans_cons_lem :
  forall (a : list (Term A n)) (R : list (poly A0 eqA ltM)),
  CombLinear R a ->
  forall (b : poly A0 eqA ltM) (Q : list (poly A0 eqA ltM)),
  R = b :: Q -> CombLinear Q (s2p A A0 eqA n ltM b) -> CombLinear Q a.
+Proof using os minusA invA divA cs A1.
 intros a R H'; elim H'; auto.
 intros a0 p q s H'0 H'1 H'2 H'3 H'4 b Q H'5 H'6.
 apply
@@ -512,11 +536,12 @@ apply CombLinear_mults1; auto.
 rewrite H'5 in H'1; inversion H'1; auto.
 rewrite <- H2 in H'6; simpl in H'6; auto.
 Qed.
- 
+
 Theorem reduce_cb :
  forall (a b : list (Term A n)) (Q : list (poly A0 eqA ltM)),
  reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q a b ->
  canonical A0 eqA ltM a -> CombLinear Q a -> CombLinear Q b.
+Proof using os cs.
 intros a b Q H' H'0 H'1.
 cut (canonical A0 eqA ltM b);
  [ intros Op1 | apply canonical_reduce with (1 := cs) (3 := H'); auto ].
@@ -531,11 +556,12 @@ apply
             (mults (A:=A) multA (n:=n) d c)); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Theorem reduceplus_cb :
  forall (a b : list (Term A n)) (Q : list (poly A0 eqA ltM)),
  reduceplus A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q a b ->
  canonical A0 eqA ltM a -> CombLinear Q a -> CombLinear Q b.
+Proof using os cs.
 intros a b Q H'; elim H'; auto.
 intros x y H'0 H'1 H'2.
 apply CombLinear_comp with (p := x); auto.
@@ -545,11 +571,12 @@ apply H'2; auto.
 apply canonical_reduce with (1 := cs) (3 := H'0) (p := x); auto.
 apply reduce_cb with (a := x); auto.
 Qed.
- 
+
 Theorem reducestar_cb :
  forall (a b : list (Term A n)) (Q : list (poly A0 eqA ltM)),
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q a b ->
  canonical A0 eqA ltM a -> CombLinear Q a -> CombLinear Q b.
+Proof using os cs.
 intros a b Q H'; elim H'; auto.
 intros p q H'0 H'1 H'2 H'3.
 apply reduceplus_cb with (a := p); auto.
@@ -560,6 +587,7 @@ Theorem reduce_cb1 :
    (Q : list (poly A0 eqA ltM)),
  reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
    (s2p A A0 eqA n ltM a) b -> CombLinear (a :: Q) b.
+Proof using os cs.
 intros a; case a; simpl in |- *.
 intros x c b Q H'.
 cut (canonical A0 eqA ltM b);
@@ -588,7 +616,7 @@ apply CombLinear_id; auto.
 apply inskip; auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Theorem CombLinear_compo :
  forall (p : list (Term A n)) (L1 : list (poly A0 eqA ltM)),
  CombLinear L1 p ->
@@ -596,6 +624,7 @@ Theorem CombLinear_compo :
  (forall q : list (Term A n),
   inPolySet A A0 eqA n ltM q L1 -> CombLinear L2 q) -> 
  CombLinear L2 p.
+Proof using os minusA invA divA cs A1.
 intros p L1 H'; elim H'; auto.
 intros a p0 q s H'0 H'1 H'2 H'3 H'4 L2 H'5.
 apply
@@ -616,12 +645,13 @@ apply inPolySet_imp_canonical with (L := L1); auto.
 apply CombLinear_canonical with (1 := H'2); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Theorem reduceplus_cb1_lem :
  forall (a b : list (Term A n)) (Q : list (poly A0 eqA ltM)),
  reduceplus A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q a b ->
  forall x : poly A0 eqA ltM,
  s2p A A0 eqA n ltM x = a -> CombLinear (x :: Q) b.
+Proof using os cs.
 intros a b Q H'; elim H'; auto.
 intros x y H'0 x0; case x0; simpl in |- *; auto.
 intros x1 c H'1.
@@ -659,30 +689,33 @@ apply canonical_reduce with (1 := cs) (3 := H'0); auto.
 generalize H'3; case x0; simpl in |- *; auto.
 intros x1 H'4 H'5; elim H'5; auto.
 Qed.
- 
+
 Theorem reduceplus_cb1 :
  forall (a : poly A0 eqA ltM) (b : list (Term A n))
    (Q : list (poly A0 eqA ltM)),
  reduceplus A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
    (s2p A A0 eqA n ltM a) b -> CombLinear (a :: Q) b.
+Proof using os cs.
 intros a b Q H'.
 apply reduceplus_cb1_lem with (a := s2p A A0 eqA n ltM a); auto.
 Qed.
- 
+
 Theorem reducestar_cb1 :
  forall (a : poly A0 eqA ltM) (b : list (Term A n))
    (Q : list (poly A0 eqA ltM)),
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
    (s2p A A0 eqA n ltM a) b -> CombLinear (a :: Q) b.
+Proof using os cs.
 intros a b Q H'; inversion H'; auto.
 apply reduceplus_cb1; auto.
 Qed.
- 
+
 Theorem reduce_cb2 :
  forall (a b : poly A0 eqA ltM) (Q : list (poly A0 eqA ltM)),
  reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
    (s2p A A0 eqA n ltM a) (s2p A A0 eqA n ltM b) ->
  CombLinear (b :: Q) (s2p A A0 eqA n ltM a).
+Proof using os cs.
 intros a b; case a; case b; simpl in |- *.
 intros x c x0 c1 Q H'0.
 case reduce_inv2 with (1 := cs) (3 := H'0); auto; intros c0 E; elim E;
@@ -714,13 +747,14 @@ apply
             (mults (A:=A) multA (n:=n) d c0)); auto.
 apply pluspf_minuspf_id with (1 := cs); auto.
 Qed.
- 
+
 Theorem reduceplus_cb2_lem :
  forall (a b : list (Term A n)) (Q : list (poly A0 eqA ltM)),
  reduceplus A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q a b ->
  canonical A0 eqA ltM a ->
  forall x : poly A0 eqA ltM,
  s2p A A0 eqA n ltM x = b -> CombLinear (x :: Q) a.
+Proof using os cs.
 intros a b Q H'; elim H'; auto.
 intros x y H'0 H'1 x0 H'2.
 apply CombLinear_comp with (p := y); auto.
@@ -753,23 +787,26 @@ intros a1 H'8; elim H'8; auto.
 apply canonical_reduce with (1 := cs) (3 := H'0); auto.
 apply canonical_reduce with (1 := cs) (3 := H'0); auto.
 Qed.
- 
+
 Theorem reduceplus_cb2 :
  forall (a b : poly A0 eqA ltM) (Q : list (poly A0 eqA ltM)),
  reduceplus A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
    (s2p A A0 eqA n ltM a) (s2p A A0 eqA n ltM b) ->
  CombLinear (b :: Q) (s2p A A0 eqA n ltM a).
+Proof using os cs.
 intros a b Q H'.
 apply reduceplus_cb2_lem with (b := s2p A A0 eqA n ltM b); auto.
 case a; auto.
 Qed.
- 
+
 Theorem reducestar_cb2 :
  forall (a b : poly A0 eqA ltM) (Q : list (poly A0 eqA ltM)),
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
    (s2p A A0 eqA n ltM a) (s2p A A0 eqA n ltM b) ->
  CombLinear (b :: Q) (s2p A A0 eqA n ltM a).
+Proof using os cs.
 intros a b Q H'; inversion H'; auto.
 apply reduceplus_cb2; auto.
 Qed.
+
 End Pcomb.

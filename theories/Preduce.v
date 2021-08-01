@@ -11,6 +11,8 @@
 
 From Buchberger Require Export Pspminus.
 
+Set Default Proof Using "Type".
+
 Section Preduce.
 Load hCoefStructure.
 Load hOrderStructure.
@@ -26,34 +28,40 @@ Inductive inPolySet : list (Term A n) -> list (poly A0 eqA ltM) -> Prop :=
   | inskip :
       forall (a : poly A0 eqA ltM) (p : list (Term A n))
         (P : list (poly A0 eqA ltM)), inPolySet p P -> inPolySet p (a :: P).
+
 Local Hint Resolve incons inskip : core.
  
 Lemma inPolySet_imp_canonical :
  forall (p : list (Term A n)) (L : list (poly A0 eqA ltM)),
  inPolySet p L -> canonical A0 eqA ltM p.
+Proof.
 intros p L H'; elim H'; auto.
 Qed.
+
 Local Hint Resolve inPolySet_imp_canonical : core.
- 
+
 Lemma not_nil_in_polySet_elm :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
  inPolySet p Q -> p <> pO A n.
+Proof.
 intros Q p H'; elim H'; auto.
 intros a p0 H'0 H'1; red in |- *; intros H'2; inversion H'2.
 Qed.
- 
+
 Theorem not_nil_in_polySet :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
  ~ inPolySet (pO A n) Q.
+Proof.
 intros Q H'; red in |- *; intros H'0.
 lapply (not_nil_in_polySet_elm Q (pO A n));
  [ intros H'3; apply H'3 || elim H'3 | idtac ]; auto.
 Qed.
- 
+
 Lemma inPolySet_is_pX :
  forall (p : list (Term A n)) (L : list (poly A0 eqA ltM)),
  inPolySet p L ->
  exists a : Term A n, (exists q : list (Term A n), p = pX a q).
+Proof.
 intros p L H'; elim H'; auto.
 intros a p0 H'0 H'1; exists a; exists p0; auto.
 Qed.
@@ -72,17 +80,20 @@ list (Term A n) -> list (Term A n) -> Prop :=
       forall (a b : Term A n) (p q : list (Term A n)),
       reduce Q p q ->
       eqTerm (A:=A) eqA (n:=n) a b -> reduce Q (pX a p) (pX b q).
+
 Local Hint Resolve reduceskip : core.
  
 Lemma pO_reduce :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
  ~ reduce Q (pO A n) p.
+Proof.
 intros Q p; red in |- *; intros H'; inversion H'; auto.
 Qed.
- 
+
 Theorem reduce_in_pO :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
  inPolySet p Q -> reduce Q p (pO A n).
+Proof using plusA os cs.
 intros Q p; case p; simpl in |- *; auto.
 intros H'; elim (inPolySet_is_pX (pO A n) Q);
  [ intros a E; elim E; intros q E0; inversion E0 | idtac ]; 
@@ -129,10 +140,11 @@ apply minuspf_refl with (1 := cs); auto.
 apply (canonical_nzeroP A A0 eqA n ltM) with (p := l); auto.
 apply inPolySet_imp_canonical with (L := Q); auto.
 Qed.
- 
+
 Theorem ltP_reduce :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduce Q p q -> canonical A0 eqA ltM p -> ltP (A:=A) (n:=n) ltM q p.
+Proof using plusA os cs.
 intros Q p q H'; elim H'; auto.
 2: intros a b p0 q0 H'0 H'1 H'2 H'3; apply ltP_tl; auto.
 2: apply (eqT_sym A n); apply (eqTerm_imp_eqT A eqA n); auto.
@@ -164,10 +176,11 @@ apply canonical_spminusf_full_t with (1 := cs); auto.
 apply inPolySet_imp_canonical with (L := Q); auto.
 change (ltP (A:=A) (n:=n) ltM (pX a (pO A n)) (pX a (pX t l))) in |- *; auto.
 Qed.
- 
+
 Theorem canonical_reduce :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduce Q p q -> canonical A0 eqA ltM p -> canonical A0 eqA ltM q.
+Proof using plusA os cs.
 intros Q p q H'; elim H'; auto.
 intros a b nZb p0 q0 r H'0 H'1 H'2 H'3.
 apply
@@ -191,11 +204,12 @@ apply ltP_trans with (y := p0); auto.
 apply ltP_reduce with (Q := Q); auto.
 apply (canonical_pX_ltP A A0 eqA); auto.
 Qed.
- 
+
 Theorem reduce_eqp_com :
  forall (Q : list (poly A0 eqA ltM)) (p q r s : list (Term A n)),
  reduce Q p q ->
  canonical A0 eqA ltM p -> eqP A eqA n p r -> eqP A eqA n q s -> reduce Q r s.
+Proof using plusA os cs.
 intros Q p q r s H'; generalize r s; clear r s; elim H'; auto.
 intros a b nZb p0 q0 r H'0 H'1 H'2 r0 s H'3 H'4 H'5.
 inversion_clear H'4.
@@ -226,12 +240,13 @@ apply (eqTerm_trans _ _ _ _ _ _ _ _ _ cs n) with (y := a); auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply (eqTerm_trans _ _ _ _ _ _ _ _ _ cs n) with (y := b); auto.
 Qed.
- 
+
 Theorem reduce_inv :
  forall (Q : list (poly A0 eqA ltM)) (a b : Term A n) (p q : list (Term A n)),
  reduce Q (pX a p) (pX b q) ->
  eqTerm (A:=A) eqA (n:=n) a b ->
  canonical A0 eqA ltM (pX a p) -> reduce Q p q.
+Proof using plusA os cs.
 intros Q a b p q H'; inversion_clear H'; auto.
 intros eq Cap.
 elim (not_double_canonical A A0 eqA n ltM) with (a := b) (p := q); auto.
@@ -249,7 +264,7 @@ apply (eqTerm_imp_eqT A eqA n); auto.
 apply nzeroP_comp_eqTerm with (1 := cs) (a := a); auto.
 apply canonical_nzeroP with (p := p) (ltM := ltM); auto.
 Qed.
- 
+
 Theorem reducetop_sp :
  forall (Q : list (poly A0 eqA ltM)) (a b : Term A n)
    (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b) (p q : list (Term A n)),
@@ -258,11 +273,13 @@ Theorem reducetop_sp :
  reduce Q (pX a p)
    (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a b nZb
       p q).
+Proof using plusA cs.
 intros Q a b nZb p q H' H'0.
 apply reducetop with (b := b) (nZb := nZb) (q := q); auto.
 Qed.
+
 Local Hint Resolve reducetop_sp : core.
- 
+
 Theorem reduce_inv2 :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduce Q p q ->
@@ -275,6 +292,7 @@ Theorem reduce_inv2 :
       eqP A eqA n q
         (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p
            (mults (A:=A) multA (n:=n) a x))).
+Proof using plusA os cs.
 intros Q p q H'; elim H'; auto.
 intros a b nZb p0 q0 r H'0 H'1 H'2 H'3; cut (canonical A0 eqA ltM (pX b q0));
  [ intros C1 | apply inPolySet_imp_canonical with (L := Q); auto ];
@@ -360,11 +378,12 @@ apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply plusTerm_is_pX with (1 := cs); auto.
 apply canonical_nzeroP with (ltM := ltM) (p := q0); auto.
 Qed.
- 
+
 Theorem mults_eqp_inv :
  forall (a : Term A n) (p q : list (Term A n)),
  eqP A eqA n (mults (A:=A) multA (n:=n) a p) (mults (A:=A) multA (n:=n) a q) ->
  ~ zeroP (A:=A) A0 eqA (n:=n) a -> eqP A eqA n p q.
+Proof using plusA minusA invA divA cs A1.
 intros a p; elim p; auto.
 intros q; case q; simpl in |- *; auto.
 intros t l H'; inversion_clear H'; auto.
@@ -376,7 +395,7 @@ change (eqP A eqA n (pX a0 l) (pX t l0)) in |- *.
 apply eqpP1; auto.
 apply multTerm_eqTerm_inv with (1 := cs) (a := a); auto.
 Qed.
- 
+
 Theorem reduce_mults_invf :
  forall (a : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a),
  eqT a (T1 A1 n) ->
@@ -386,6 +405,7 @@ Theorem reduce_mults_invf :
  reduce Q p
    (mults (A:=A) multA (n:=n)
       (divTerm (A:=A) (A0:=A0) (eqA:=eqA) divA (n:=n) (T1 A1 n) (b:=a) nZa) q).
+Proof using plusA os cs.
 intros a H' eq0 Q p; elim p; auto.
 simpl in |- *; intros q H'0 H'1; inversion_clear H'1; auto.
 intros a0 l H'0 q H'1 H'2.
@@ -491,13 +511,14 @@ apply (eqT_sym A n); auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n);
  apply multTerm_assoc with (1 := cs); auto.
 Qed.
- 
+
 Theorem reduce_mults :
  forall (Q : list (poly A0 eqA ltM)) (a : Term A n) (p q : list (Term A n)),
  reduce Q p q ->
  canonical A0 eqA ltM p ->
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
  reduce Q (mults (A:=A) multA (n:=n) a p) (mults (A:=A) multA (n:=n) a q).
+Proof using plusA os cs.
 intros Q a p q H'; generalize a; elim H'; clear a H'; auto.
 simpl in |- *; auto.
 intros a b nZb p0 q0 r H' H'0 H'1 a0 H'2 H'3.
@@ -540,8 +561,9 @@ simpl in |- *; apply reduceskip; auto.
 apply H'0; auto.
 apply canonical_imp_canonical with (a := a); auto.
 Qed.
+
 Local Hint Resolve reduce_mults : core.
- 
+
 Theorem reduce_mults_inv_lem :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduce Q p q ->
@@ -550,6 +572,7 @@ Theorem reduce_mults_inv_lem :
  p = mults (A:=A) multA (n:=n) (invTerm (A:=A) invA (n:=n) (T1 A1 n)) r ->
  reduce Q r
    (mults (A:=A) multA (n:=n) (invTerm (A:=A) invA (n:=n) (T1 A1 n)) q).
+Proof using plusA os cs.
 intros Q p q H'; elim H'; clear H'; auto.
 2: intros a b p0 q0 H' H'0 H'1 r; case r; auto.
 2: intros H'2 H'3; inversion_clear H'3; auto.
@@ -711,7 +734,7 @@ rewrite H'3;
       (mults (A:=A) multA (n:=n) (invTerm (A:=A) invA (n:=n) (T1 A1 n))
          (pX a0 l))) in |- *; auto.
 Qed.
- 
+
 Theorem reduce_mults_invr :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduce Q
@@ -719,6 +742,7 @@ Theorem reduce_mults_invr :
  canonical A0 eqA ltM p ->
  reduce Q p
    (mults (A:=A) multA (n:=n) (invTerm (A:=A) invA (n:=n) (T1 A1 n)) q).
+Proof using plusA os cs.
 intros Q p q H' H'0.
 apply
  reduce_mults_inv_lem
@@ -726,7 +750,7 @@ apply
     (p := mults (A:=A) multA (n:=n) (invTerm (A:=A) invA (n:=n) (T1 A1 n)) p);
  auto.
 Qed.
- 
+
 Definition irreducible (Q : list (poly A0 eqA ltM)) 
   (p : list (Term A n)) := forall q : list (Term A n), ~ reduce Q p q.
  
@@ -734,6 +758,7 @@ Lemma irreducible_inv_px_l :
  forall (Q : list (poly A0 eqA ltM)) (a : Term A n) (p : list (Term A n)),
  canonical A0 eqA ltM (pX a p) ->
  irreducible Q (pX a p) -> irreducible Q (pX a (pO A n)).
+Proof using plusA cs.
 unfold irreducible in |- *.
 intros Q a p H' H'0 q; red in |- *; intros H'1.
 inversion_clear H'1.
@@ -744,18 +769,21 @@ apply
              a b nZb p q0); auto.
 inversion_clear H; auto.
 Qed.
- 
+
 Lemma pO_irreducible :
  forall Q : list (poly A0 eqA ltM), irreducible Q (pO A n).
+Proof.
 unfold irreducible in |- *; auto.
 intros Q q; red in |- *; intros H'; inversion H'.
 Qed.
+
 Local Hint Resolve pO_irreducible : core.
- 
+
 Theorem irreducible_eqp_com :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  irreducible Q p ->
  canonical A0 eqA ltM p -> eqP A eqA n p q -> irreducible Q q.
+Proof using plusA os cs.
 unfold irreducible in |- *.
 intros Q p q H' H'0 H'1 q0; red in |- *; intros H'2.
 apply H' with (q := q0); auto.
@@ -763,7 +791,7 @@ apply reduce_eqp_com with (p := q) (q := q0); auto.
 apply eqp_imp_canonical with (1 := cs) (p := p); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Inductive pickinSetp :
 Term A n -> list (Term A n) -> list (poly A0 eqA ltM) -> Prop :=
   | pickinSeteqp :
@@ -777,16 +805,18 @@ Term A n -> list (Term A n) -> list (poly A0 eqA ltM) -> Prop :=
       forall (a b : Term A n) (p : list (Term A n)) 
         (q : poly A0 eqA ltM) (P : list (poly A0 eqA ltM)),
       pickinSetp a p P -> pickinSetp a p (q :: P).
+
 Local Hint Resolve pickinSeteqp pickinSetskip : core.
  
 Lemma pickin_is_pX :
  forall (a : Term A n) (p : list (Term A n)) (Q : list (poly A0 eqA ltM)),
  pickinSetp a p Q ->
  exists b : Term A n, (exists q : list (Term A n), p = pX b q).
+Proof.
 intros a p Q H'; elim H'; auto.
 intros a0 b p0 H'0 H'1 H'2; exists b; exists p0; auto.
 Qed.
- 
+
 Inductive reducehead (Q : list (poly A0 eqA ltM)) :
 list (Term A n) -> list (Term A n) -> Prop :=
     reduceheadO :
@@ -796,6 +826,7 @@ list (Term A n) -> list (Term A n) -> Prop :=
       reducehead Q (pX a p)
         (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a
            b nZb p q).
+
 Local Hint Resolve reduceheadO : core.
 
 Lemma pick_inv_in :
@@ -803,34 +834,37 @@ Lemma pick_inv_in :
  pickinSetp a p Q -> inPolySet p Q.
 intros Q a p H'; elim H'; auto.
 Qed.
- 
+
 Lemma pick_inv_eqT_lem :
  forall (Q : list (poly A0 eqA ltM)) (a : Term A n) (p : list (Term A n)),
  pickinSetp a p Q ->
  forall (b : Term A n) (q : list (Term A n)),
  p = pX b q -> divP A A0 eqA multA divA n a b.
+Proof.
 intros Q a p H'; elim H'; auto.
 intros a0 b p0 H'0 H'1 H'2 b0 q H'3; injection H'3; auto.
 intros H'4 H'5; rewrite <- H'5; auto.
 Qed.
- 
+
 Lemma pick_inv_eqT :
  forall (Q : list (poly A0 eqA ltM)) (a b : Term A n) (p q : list (Term A n)),
  pickinSetp a (pX b q) Q -> divP A A0 eqA multA divA n a b.
+Proof.
 intros Q a b H' q H'0.
 apply pick_inv_eqT_lem with (Q := Q) (p := pX b q) (q := q); auto.
 Qed.
- 
+
 Theorem reducehead_imp_reduce :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reducehead Q p q -> reduce Q p q.
+Proof using plusA cs.
 intros Q p q H'; elim H'; auto.
 intros a b nZb p0 q0 H'0.
 apply reducetop with (b := b) (nZb := nZb) (q := q0); auto.
 apply pick_inv_in with (a := a); auto.
 apply pick_inv_eqT with (Q := Q) (q := q0); auto.
 Qed.
- 
+
 Definition s2p : poly A0 eqA ltM -> list (Term A n).
 intros H'; elim H'.
 intros x H'0; exact x.
@@ -839,6 +873,7 @@ Defined.
 Theorem In_inp_inPolySet :
  forall (Q : list (poly A0 eqA ltM)) (p : poly A0 eqA ltM),
  In p Q -> ~ eqP A eqA n (s2p p) (pO A n) -> inPolySet (s2p p) Q.
+Proof.
 intros Q; elim Q; simpl in |- *; auto.
 intros p H'; elim H'.
 intros a l H' p H'0; elim H'0;
@@ -851,10 +886,11 @@ intros t l0 c H;
  change (inPolySet (pX t l0) (exist (canonical A0 eqA ltM) (pX t l0) c :: l))
   in |- *; apply incons.
 Qed.
- 
+
 Theorem in_inPolySet :
  forall (P : list (poly A0 eqA ltM)) (p : poly A0 eqA ltM),
  In p P -> ~ eqP A eqA n (s2p p) (pO A n) -> inPolySet (s2p p) P.
+Proof.
 intros P; elim P; auto.
 intros p H'; inversion H'.
 simpl in |- *.
@@ -868,17 +904,19 @@ intros t l0 c H;
  change (inPolySet (pX t l0) (exist (canonical A0 eqA ltM) (pX t l0) c :: l))
   in |- *; apply incons.
 Qed.
- 
+
 Theorem inPolySet_inv0 :
  forall (P : list (poly A0 eqA ltM)) (p : list (Term A n)),
  inPolySet p P -> ~ eqP A eqA n p (pO A n).
+Proof.
 intros P p H'; elim H'; auto.
 intros a p0 H'0 H'1; red in |- *; intros H'2; inversion H'2.
 Qed.
- 
+
 Theorem inPolySet_inv1 :
  forall (P : list (poly A0 eqA ltM)) (p : list (Term A n)),
  inPolySet p P -> exists q : poly A0 eqA ltM, In q P /\ p = s2p q.
+Proof.
 intros P p H'; elim H'; auto.
 intros a p0 H P0.
 exists (exist (canonical A0 eqA ltM) (a :: p0) H); split; simpl in |- *; auto.
@@ -886,10 +924,11 @@ intros a p0 P0 H'0 H'1; elim H'1; intros q E; elim E; intros H'2 H'3;
  clear E H'1.
 exists q; split; simpl in |- *; auto.
 Qed.
- 
+
 Theorem Incl_inp_inPolySet :
  forall P Q : list (poly A0 eqA ltM),
  incl P Q -> forall p : list (Term A n), inPolySet p P -> inPolySet p Q.
+Proof.
 intros P Q H' p H'0; auto.
 elim (inPolySet_inv1 P p);
  [ intros q E; elim E; intros H'4 H'5; clear E | idtac ]; 
@@ -899,4 +938,5 @@ apply in_inPolySet; auto.
 rewrite <- H'5; auto.
 apply inPolySet_inv0 with (P := P); auto.
 Qed.
+
 End Preduce.

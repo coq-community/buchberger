@@ -12,45 +12,45 @@
 From Coq Require Import Arith Compare Compare_dec Peano_dec.
 From Coq Require Import Relation_Definitions Eqdep Max.
 
+Set Default Proof Using "Type".
+
 Section Monomials.
 
 Inductive mon : nat -> Set :=
   | n_0 : mon 0
   | c_n : forall d : nat, nat -> mon d -> mon (S d).
 
-Definition pmon1 : forall d : nat, mon d -> nat.
 (*
 Realizer [d: nat][m:(mon d)](Cases  m of n_0 => O | (c_n _ n _) => n end).
 *)
+Definition pmon1 : forall d : nat, mon d -> nat.
 intros d m; case m.
 exact 0.
 intros d' n p; exact n.
 Defined.
 
-
-Definition pmon2 : forall d : nat, mon d -> mon (pred d).
 (*
 Realizer [d:nat] [m:mon](<mon>Case m of n_0 [a:nat] [b:nat] [m':mon]m' end).
 *)
+Definition pmon2 : forall d : nat, mon d -> mon (pred d).
 intros d m; case m.
 exact n_0.
 intros d' n p; exact p.
 Defined.
 
+(* Realizer [d:nat] [m:mon]
+         (<mon>Case d of
+           (False_rec mon) [d':nat](c_n d' (pmon1 (S d') m) (pmon2 (S d') m))
+           end).
+*)
 Definition recomp : forall d : nat, d <> 0 -> mon d -> mon d.
 intros d; case d.
 intros H'; apply False_rec; case H'; auto.
 intros d' H m; exact (c_n d' (pmon1 (S d') m) (pmon2 (S d') m)).
-
-(*Realizer [d:nat] [m:mon]
-         (<mon>Case d of
-           (False_rec mon) [d':nat](c_n d' (pmon1 (S d') m) (pmon2 (S d') m))
-           end).
-Program_all.
-*)
 Defined.
 
 Lemma recomp_ok : forall (d : nat) (h : d <> 0) (m : mon d), recomp d h m = m.
+Proof.
 intros d h m.
 generalize h; clear h.
 elim m.
@@ -60,12 +60,13 @@ Qed.
 
 Lemma proj_ok :
  forall (d : nat) (m : mon (S d)), c_n d (pmon1 (S d) m) (pmon2 (S d) m) = m.
+Proof.
 intros d m; cut (S d <> 0); auto.
 intros H; cut (recomp (S d) H m = m); auto.
 apply recomp_ok; auto.
 Qed.
-(*Generator
-*)
+
+(* Generator *)
 
 Definition gen_mon : forall d : nat, nat -> mon d.
 intros d; elim d.
@@ -74,9 +75,8 @@ intros n H' n'; case n'.
 exact (c_n n 1 (H' n)).
 intros n''; exact (c_n n 0 (H' n'')).
 Defined.
-(*
-	Multiplication of monomials.
-*)
+
+(* Multiplication of monomials *)
 
 Definition mult_mon : forall d : nat, mon d -> mon d -> mon d.
 intros d; elim d.
@@ -89,6 +89,7 @@ Defined.
 
 Theorem mult_mon_com :
  forall (d : nat) (a b : mon d), mult_mon d a b = mult_mon d b a.
+Proof.
 intros d; elim d; simpl in |- *; auto.
 intros n H' a b.
 rewrite (H' (pmon2 (S n) a) (pmon2 (S n) b)); auto.
@@ -98,14 +99,14 @@ Qed.
 Theorem mult_mon_assoc :
  forall (d : nat) (a b c : mon d),
  mult_mon d a (mult_mon d b c) = mult_mon d (mult_mon d a b) c.
+Proof.
 intros d; elim d; simpl in |- *; auto.
 intros n H' a b c.
 rewrite (H' (pmon2 (S n) a) (pmon2 (S n) b) (pmon2 (S n) c)); auto.
 rewrite (plus_assoc (pmon1 (S n) a) (pmon1 (S n) b) (pmon1 (S n) c)); auto.
 Qed.
-(*
-Zero
-*)
+
+(* Zero *)
 
 Definition zero_mon : forall d : nat, mon d.
 intros d; elim d.
@@ -115,6 +116,7 @@ Defined.
 
 Theorem mult_mon_zero_r :
  forall (d : nat) (a : mon d), mult_mon d a (zero_mon d) = a.
+Proof.
 intros d a; elim a; auto.
 simpl in |- *.
 intros d0 n m H'; rewrite H'; auto.
@@ -123,34 +125,35 @@ Qed.
 
 Theorem mult_mon_zero_l :
  forall (d : nat) (a : mon d), mult_mon d (zero_mon d) a = a.
+Proof.
 intros d a; elim a; auto.
 simpl in |- *.
 intros d0 n m H'; rewrite H'; auto.
 Qed.
-(* 
-			Division of monomials.
-*)
+
+(* Division of monomials *)
 
 Inductive mdiv : forall d : nat, mon d -> mon d -> Prop :=
   | mdiv_nil : mdiv 0 n_0 n_0
   | mdiv_cons :
       forall (d : nat) (v v' : mon d) (n n' : nat),
       n <= n' -> mdiv d v v' -> mdiv (S d) (c_n d n v) (c_n d n' v').
+
 Local Hint Resolve mdiv_nil mdiv_cons : core.
 
 Lemma mdiv_proj :
  forall (d : nat) (m m' : mon (S d)),
  pmon1 (S d) m <= pmon1 (S d) m' ->
  mdiv d (pmon2 (S d) m) (pmon2 (S d) m') -> mdiv (S d) m m'.
+Proof.
 intros d m m' H' H'0; rewrite <- (proj_ok d m); rewrite <- (proj_ok d m');
  auto.
 Qed.
 
-(*
-		Division is transitive.
-*)
+(* Division is transitive *)
 
 Lemma mdiv_trans : forall d : nat, transitive (mon d) (mdiv d).
+Proof.
 intros d; elim d; unfold transitive in |- *; auto.
 intros x y z mdiv_xy; inversion mdiv_xy.
 intros mdiv_yz; inversion mdiv_yz; auto.
@@ -167,8 +170,8 @@ apply le_trans with (m := n'); auto.
 apply Rec with (y := v0); auto.
 rewrite (inj_pair2 nat (fun x : nat => mon x) n v0 v'); auto.
 Qed.
-(*Division  of monomials (total function!).
-*)
+
+(* Division of monomials (total function!) *)
 
 Definition div_mon : forall d : nat, mon d -> mon d -> mon d.
 intros d; elim d.
@@ -182,14 +185,15 @@ Defined.
 Theorem mdiv_div :
  forall (d : nat) (a b : mon d),
  mdiv d b a -> mult_mon d (div_mon d a b) b = a.
+Proof.
 intros d a b H'; elim H'; simpl in |- *; auto.
 intros d0 v v' n n' H'0 H'1 H'2.
 rewrite (plus_comm (n' - n) n).
 rewrite <- (le_plus_minus n n'); auto.
 rewrite H'2; auto.
 Qed.
-(*Division  of monomials (total function!).
-*)
+
+(* Division of monomials (total function!) *)
 
 Definition div_mon_clean : forall d : nat, mon d -> mon d -> mon d * bool.
 intros d; elim d.
@@ -208,15 +212,18 @@ intros n H'; exact H'.
 Defined.
 
 Theorem is_nil_id : forall (d : nat) (a : mon d), a = is_nil d a.
+Proof.
 intros d a; elim a; simpl in |- *; auto.
 Qed.
 
 Theorem mon_0 : forall a : mon 0, a = n_0.
+Proof.
 intros a; generalize (is_nil_id 0 a); simpl in |- *; auto.
 Qed.
+
 Local Hint Resolve mon_0 : core.
 
-Theorem eqmon_dec : forall (d : nat) (x y : mon d), {x = y} + {x <> y}.
+Definition eqmon_dec : forall (d : nat) (x y : mon d), {x = y} + {x <> y}.
 intros d; elim d; auto.
 intros x y; left.
 rewrite (mon_0 x); rewrite (mon_0 y); auto.
@@ -237,10 +244,11 @@ change
 rewrite H'0; auto.
 right; red in |- *; rewrite <- (proj_ok n x); rewrite <- (proj_ok n y);
  intros H'0; apply H'2; injection H'0; auto.
-Qed.
+Defined.
 
 Theorem mult_div_com :
  forall (d : nat) (a b : mon d), div_mon d (mult_mon d a b) b = a.
+Proof.
 intros d; elim d; simpl in |- *; auto.
 intros n H' a b.
 rewrite (H' (pmon2 (S n) a) (pmon2 (S n) b)); auto.
@@ -251,6 +259,7 @@ Qed.
 
 Theorem mult_div_id :
  forall (d : nat) (a : mon d), div_mon d a a = zero_mon d.
+Proof.
 intros d a; elim a; simpl in |- *; auto.
 intros d0 n m H'; rewrite H'; auto.
 rewrite <- (minus_n_n n); auto.
@@ -265,6 +274,7 @@ intros d H'; case H'; auto.
 Defined.
 
 Theorem minus_lt_0 : forall m n : nat, n < m -> n - m = 0.
+Proof.
 intros m; elim m; simpl in |- *; auto.
 intros n H; absurd (n < 0); auto with arith.
 intros n H' n0; case n0; simpl in |- *; auto with arith.
@@ -273,6 +283,7 @@ Qed.
 Theorem div_clean_dec2 :
  forall (d : nat) (a b : mon d),
  gb d (div_mon_clean d a b) = false -> mult_mon d (div_mon d a b) b <> a.
+Proof.
 intros d; elim d; simpl in |- *; auto.
 intros a H' H'0; inversion H'0; auto.
 intros n H' a b.
@@ -309,6 +320,7 @@ Theorem div_clean_dec1 :
  gb d (div_mon_clean d a b) = true ->
  gm d (div_mon_clean d a b) = div_mon d a b /\
  mult_mon d (div_mon d a b) b = a.
+Proof.
 intros d; elim d; simpl in |- *; auto.
 intros n H' a b; case (le_lt_dec (pmon1 (S n) b) (pmon1 (S n) a));
  simpl in |- *; auto.
@@ -335,6 +347,7 @@ Defined.
 
 Theorem ppcm_com :
  forall (d : nat) (a b : mon d), ppcm_mon d a b = ppcm_mon d b a.
+Proof.
 intros d; elim d; simpl in |- *; auto.
 intros n H' a b; rewrite (H' (pmon2 (S n) a) (pmon2 (S n) b)).
 rewrite (max_comm (pmon1 (S n) a) (pmon1 (S n) b)); auto.
@@ -343,6 +356,7 @@ Qed.
 Theorem ppcm_prop_l :
  forall (d : nat) (a b : mon d),
  ppcm_mon d a b = mult_mon d (div_mon d (ppcm_mon d a b) a) a.
+Proof.
 intros d; elim d; simpl in |- *; auto.
 intros n H' a b;
  pattern (ppcm_mon n (pmon2 (S n) a) (pmon2 (S n) b)) at 1 in |- *;
@@ -361,6 +375,7 @@ Qed.
 Theorem ppcm_prop_r :
  forall (d : nat) (a b : mon d),
  ppcm_mon d a b = mult_mon d (div_mon d (ppcm_mon d a b) b) b.
+Proof.
 intros d; elim d; simpl in |- *; auto.
 intros n H' a b;
  pattern (ppcm_mon n (pmon2 (S n) a) (pmon2 (S n) b)) at 1 in |- *;
@@ -377,6 +392,7 @@ apply le_max_r; auto.
 Qed.
 
 Theorem plus_minus_le : forall a b : nat, a - b + b = a -> b <= a.
+Proof.
 intros a; elim a; simpl in |- *; auto.
 intros b H'; rewrite H'; auto.
 intros n H' b; case b; simpl in |- *; auto with arith.
@@ -389,6 +405,7 @@ Theorem ppcm_mom_is_ppcm :
  c = mult_mon d (div_mon d c a) a ->
  c = mult_mon d (div_mon d c b) b ->
  c = mult_mon d (div_mon d c (ppcm_mon d a b)) (ppcm_mon d a b).
+Proof.
 intros d; elim d; simpl in |- *; auto.
 intros n H' a b c H'0 H'1.
 rewrite <- (H' (pmon2 (S n) a) (pmon2 (S n) b) (pmon2 (S n) c)); auto.
@@ -431,4 +448,5 @@ change
  in |- *; auto.
 rewrite <- H'1; auto.
 Qed.
+
 End Monomials.

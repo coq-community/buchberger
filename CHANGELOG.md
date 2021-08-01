@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- Proof using annotations
+
+### Fixed
+- Add hint locality
+
+### Changed
+- Non-Prop definitions are transparent
+- Avoid global hint locality
+
 ## [8.11.0] - 2020-05-27
 ### Added
 - Support for building with dune, including extraction of OCaml code

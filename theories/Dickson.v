@@ -4,10 +4,12 @@
 From Coq Require Import List Lt Wf_nat Inverse_Image.
 From Buchberger Require Import Bar OpenIndGoodRel Monomials.
 
+Set Default Proof Using "Type".
+
 Definition DecRel (A : Type) (R : Rel A) :=
   forall x y : A, {R x y} + {~ R x y}.
-(* A computational double induction rule *)
 
+(* A computational double induction rule *)
 Theorem nat_double_ind_set :
  forall R : nat -> nat -> Type,
  (forall n : nat, R 0 n) ->
@@ -50,14 +52,14 @@ Definition MinD :=
 Definition prod_lt (a b : A * B) := lt (fst a) (fst b).
 
 Lemma WFlem1 : well_founded prod_lt.
-Proof.
+Proof using wfgt.
 unfold prod_lt in |- *; apply wf_inverse_image with (B := A); auto.
 Qed.
 
 Lemma lem0 :
  forall (l : list (A * B)) (a : A * B),
  ExistsL B (fun x : B => R x (snd a)) (sndL l) -> MinD l -> GBarlR (a :: l).
-Proof.
+Proof using declt.
 intros l; elim l; simpl in |- *; auto.
 intros a H' H'0; inversion H'.
 intros a l0 H' a0 H'0 H'1; inversion H'0.
@@ -79,7 +81,7 @@ Qed.
 Lemma lem1aux :
  forall l : list B,
  GoodR B R l -> forall us : list (A * B), l = sndL us -> MinD us -> GBarlR us.
-Proof.
+Proof using declt.
 intros l; elim l; auto.
 intros H'; inversion H'.
 intros a l0 H' H'0; inversion H'0; auto.
@@ -100,7 +102,7 @@ Qed.
 
 Lemma lem1 :
  forall us : list (A * B), GoodR B R (sndL us) -> MinD us -> GBarlR us.
-Proof.
+Proof using declt.
 intros us H' H'0.
 apply lem1aux with (l := sndL us); auto.
 Qed.
@@ -109,7 +111,7 @@ Lemma keylem :
  forall bs : list B,
  GRBar B R bs ->
  forall us : list (A * B), bs = sndL us -> MinD us -> GBarlR us.
-Proof.
+Proof using wfgt declt.
 intros bs H'; elim H'; auto.
 intros l H'0 us H'1 H'2.
 apply lem1; auto.
@@ -123,14 +125,15 @@ rewrite H'2; auto.
 Qed.
 
 Lemma keylem_cor : WR (A * B) (ProdRel A B leq R).
-Proof.
+Proof using wfgt wR declt.
 red in |- *; apply keylem with (bs := nil (A:=B)); auto.
 red in |- *; auto.
 apply nmin; auto.
 Qed.
+
 End Dickson.
 
-(* Now we transfer this result to another  representation: *)
+(* Now we transfer this result to another representation: *)
 
 Lemma leq2le : forall a b : nat, leq nat lt a b -> a <= b.
 Proof.

@@ -11,6 +11,8 @@
 
 From Buchberger Require Export Pmults.
 
+Set Default Proof Using "Type".
+
 Section Pmult.
 Load hCoefStructure.
 Load hOrderStructure.
@@ -29,6 +31,7 @@ Theorem canonical_multpf :
  forall l1 l2 : list (Term A n),
  canonical A0 eqA ltM l1 ->
  canonical A0 eqA ltM l2 -> canonical A0 eqA ltM (multpf l1 l2).
+Proof using os minusA invA divA cs A1.
 intros l1; elim l1; simpl in |- *; auto.
 intros a l H' l2 H'0 H'1; try assumption.
 apply canonical_pluspf; auto.
@@ -37,6 +40,7 @@ apply canonical_nzeroP with (ltM := ltM) (p := l); auto.
 apply H'; auto.
 apply canonical_imp_canonical with (a := a); auto.
 Qed.
+
 Local Hint Resolve canonical_multpf : core.
 
 Theorem pluspf_pX :
@@ -45,6 +49,7 @@ Theorem pluspf_pX :
  eqP A eqA n (pX a p)
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
       (pX a (pO A n)) p).
+Proof using os multA minusA invA divA cs A1.
 intros p; case p; clear p; auto.
 intros a H;
  change
@@ -73,7 +78,7 @@ change
 apply pluspf_inv1 with (1 := cs); auto.
 apply (canonical_pX_order _ A0 eqA) with (l := p); auto.
 Qed.
- 
+
 Theorem multpf_disr_pX :
  forall (p q : list (Term A n)) (a : Term A n),
  canonical A0 eqA ltM p ->
@@ -81,6 +86,7 @@ Theorem multpf_disr_pX :
  eqP A eqA n (multpf p (pX a q))
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
       (mults (A:=A) multA (n:=n) a p) (multpf p q)).
+Proof using os minusA invA divA cs A1.
 intros p; elim p; clear p; simpl in |- *; auto.
 intros; apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 intros b p Rec q a Op0 Op1.
@@ -199,13 +205,14 @@ apply pluspf_pX; auto.
 change (canonical A0 eqA ltM (mults (A:=A) multA (n:=n) a (pX b p))) in |- *;
  auto.
 Qed.
- 
+
 Theorem multpf_head :
  forall (p q : list (Term A n)) (a b : Term A n),
  canonical A0 eqA ltM (pX a p) ->
  canonical A0 eqA ltM (pX b q) ->
  exists c : list (Term A n),
    multpf (pX a p) (pX b q) = pX (multTerm (A:=A) multA (n:=n) a b) c.
+Proof using os.
 intros p; elim p; clear p; auto.
 simpl in |- *; intros q a b H' H'0.
 cut (canonical A0 eqA ltM q);
@@ -225,12 +232,13 @@ rewrite <- pluspf_inv1_eq; auto.
 apply multTerm_ltT_r; auto.
 apply (canonical_pX_order _ A0 eqA) with (l := p); auto.
 Qed.
- 
+
 Theorem in_multpf_head :
  forall (p q : list (Term A n)) (a b : Term A n),
  canonical A0 eqA ltM (pX a p) ->
  canonical A0 eqA ltM (pX b q) ->
  In (multTerm (A:=A) multA (n:=n) a b) (multpf (pX a p) (pX b q)).
+Proof using os.
 intros p q a b H' H'0.
 elim (multpf_head p q a b); [ intros c E; rewrite E | idtac | idtac ];
  simpl in |- *; auto.
@@ -245,6 +253,7 @@ Theorem multpf_comp :
  canonical A0 eqA ltM r ->
  canonical A0 eqA ltM s ->
  eqP A eqA n q s -> eqP A eqA n (multpf p q) (multpf r s).
+Proof using os minusA invA divA cs A1.
 intros p r H'; elim H'; simpl in |- *; auto.
 intros ma mb p0 q H'0 H'1 H'2 q0 s H'3 H'4 H'5 H'6 H'7.
 cut (canonical A0 eqA ltM p0);
@@ -257,11 +266,12 @@ cut (~ zeroP (A:=A) A0 eqA (n:=n) mb);
  [ intros Z1 | apply canonical_nzeroP with (ltM := ltM) (p := q) ]; 
  auto.
 Qed.
- 
+
 Theorem multpf_com :
  forall p q : list (Term A n),
  canonical A0 eqA ltM p ->
  canonical A0 eqA ltM q -> eqP A eqA n (multpf p q) (multpf q p).
+Proof using os minusA invA divA cs A1.
 intros p; elim p; simpl in |- *; auto.
 intros q; elim q; simpl in |- *; auto.
 intros a l H' H'0 H'1.
@@ -298,7 +308,7 @@ change
  in |- *.
 apply multpf_disr_pX; auto.
 Qed.
- 
+
 Theorem multpf_dist_plusr :
  forall (p q r : list (Term A n)) (a : Term A n),
  canonical A0 eqA ltM p ->
@@ -310,6 +320,7 @@ Theorem multpf_dist_plusr :
          q) r)
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
       (multpf p r) (multpf q r)).
+Proof using os minusA invA divA cs A1.
 intros p q r; elim r.
 intros H' H'0 H'1 H'2.
 apply
@@ -433,7 +444,7 @@ change
      (multpf q (pX a l))) in |- *.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); apply multpf_disr_pX; auto.
 Qed.
- 
+
 Theorem multpf_dist_plusl :
  forall (p q r : list (Term A n)) (a : Term A n),
  canonical A0 eqA ltM p ->
@@ -445,6 +456,7 @@ Theorem multpf_dist_plusl :
          r))
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
       (multpf p q) (multpf p r)).
+Proof using os minusA invA divA cs A1.
 intros p q r H' H'0 H'1 H'2.
 apply
  (eqp_trans _ _ _ _ _ _ _ _ _ cs n)
@@ -463,7 +475,7 @@ apply eqp_pluspf_com with (1 := cs); auto.
 apply multpf_com; auto.
 apply multpf_com; auto.
 Qed.
- 
+
 Theorem multpf_smultm_assoc :
  forall (p q : list (Term A n)) (a : Term A n),
  canonical A0 eqA ltM p ->
@@ -471,6 +483,7 @@ Theorem multpf_smultm_assoc :
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
  eqP A eqA n (mults (A:=A) multA (n:=n) a (multpf p q))
    (multpf (mults (A:=A) multA (n:=n) a p) q).
+Proof using os minusA invA divA cs A1.
 intros p q a; elim p; simpl in |- *; auto.
 intros a0 l H' H'0 H'1 H'2.
 cut (~ zeroP (A:=A) A0 eqA (n:=n) a0);
@@ -489,13 +502,14 @@ apply
 apply eqp_pluspf_com with (1 := cs); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Theorem multpf_assoc :
  forall p q r : list (Term A n),
  canonical A0 eqA ltM p ->
  canonical A0 eqA ltM q ->
  canonical A0 eqA ltM r ->
  eqP A eqA n (multpf p (multpf q r)) (multpf (multpf p q) r).
+Proof using os minusA invA divA cs A1.
 intros p q r; elim p; simpl in |- *; auto.
 intros a l H' H'0 H'1 H'2.
 cut (~ zeroP (A:=A) A0 eqA (n:=n) a);
@@ -515,10 +529,11 @@ apply multpf_smultm_assoc; auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply multpf_dist_plusr; auto.
 Qed.
- 
+
 Definition smult : poly A0 eqA ltM -> poly A0 eqA ltM -> poly A0 eqA ltM.
 intros sp1 sp2.
 case sp1; case sp2.
 intros p1 H'1 p2 H'2; exists (multpf p1 p2); auto.
 Defined.
+
 End Pmult.
