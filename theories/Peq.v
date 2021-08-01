@@ -13,6 +13,8 @@ From Coq Require Export Relation_Definitions List.
 From Coq Require Import Arith Compare_dec.
 From Buchberger Require Export CoefStructure OrderStructure POrder Monomials Term.
 
+Set Default Proof Using "Type".
+
 Section Peq.
 Load hCoefStructure.
 Load hOrderStructure.
@@ -25,9 +27,11 @@ Definition sizel m := match m with
                       end.
  
 Definition lessP m1 m2 := sizel m1 < sizel m2.
+
 Local Hint Unfold lessP : core.
  
 Lemma wf_lessP : well_founded lessP.
+Proof.
 red in |- *.
 cut (forall (m : nat) a, sizel a < m -> Acc lessP a).
 intros H' a.
@@ -40,25 +44,32 @@ intros y H'1; apply H'.
 unfold lessP in H'1.
 apply lt_le_trans with (sizel a); auto with arith.
 Qed.
+
 Local Hint Resolve wf_lessP : core.
  
 Theorem pX_inj :
  forall (n1 n2 : Term A n) l1 l2, n1 = n2 -> l1 = l2 -> pX n1 l1 = pX n2 l2.
+Proof.
 intros n1 n2 l1 l2 H' H'0; rewrite H'0; rewrite H'; auto.
 Qed.
+
 Local Hint Resolve pX_inj : core.
  
 Lemma pX_invl : forall (a b : Term A n) p q, pX a p = pX b q -> a = b.
+Proof.
 intros a b p q H'; inversion H'; auto.
 Qed.
+
 Local Hint Unfold pX : core.
  
 Lemma pX_invr : forall p q (a b : Term A n), pX a p = pX b q -> p = q.
+Proof.
 unfold pX, pX in |- *.
 intros p q a b H'; inversion H'; auto.
 Qed.
  
 Theorem canonicalpO : canonical A0 eqA ltM (pO A n).
+Proof.
 split; auto.
 apply olistO.
 red in |- *; simpl in |- *; auto.
@@ -67,9 +78,11 @@ Qed.
 Theorem canonicalp1 :
  forall a,
  ~ zeroP (A:=A) A0 eqA (n:=n) a -> canonical A0 eqA ltM (pX a (pO A n)).
+Proof.
 intros a H; split; simpl in |- *; auto.
 red in |- *; simpl in |- *; apply Relation_Operators_compat.d_one.
 Qed.
+
 Local Hint Resolve canonicalp1 canonical0 : core.
  
 Inductive eqP : list (Term A n) -> list (Term A n) -> Prop :=
@@ -77,44 +90,52 @@ Inductive eqP : list (Term A n) -> list (Term A n) -> Prop :=
   | eqpP1 :
       forall ma mb p q,
       eqTerm (A:=A) eqA (n:=n) ma mb -> eqP p q -> eqP (pX ma p) (pX mb q).
+
 Local Hint Resolve eqP0 eqpP1 : core.
 
 Theorem eqp_refl : reflexive _ eqP.
+Proof using plusA multA minusA invA divA cs A1 A0.
 red in |- *.
 intros x; elim x; auto.
 intros a l H; change (eqP (pX a l) (pX a l)) in |- *; apply eqpP1; auto.
 Qed.
  
 Theorem eqp_sym : symmetric _ eqP.
+Proof using plusA multA minusA invA divA cs A1 A0.
 red in |- *.
 intros x y H'; elim H'; auto.
 intros ma mb p q H H0 H1.
 apply eqpP1; auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Lemma eqp_inv1 : forall p, eqP (pO A n) p -> p = pO A n.
+Proof.
 unfold pO in |- *; intros p H'; inversion H'; auto.
 Qed.
  
 Theorem eqp_inv2 : forall p, eqP p (pO A n) -> p = pO A n.
+Proof.
 unfold pO in |- *; intros p H'; inversion H'; auto.
 Qed.
- 
+
 Theorem eqp_inv3l :
  forall a b p q, eqP (pX a p) (pX b q) -> eqTerm (A:=A) eqA (n:=n) a b.
+Proof.
 intros a b p q H'; simple inversion H'; auto.
 unfold pO in H0; inversion H0.
 rewrite (pX_invl ma a p0 p); auto; rewrite (pX_invl mb b q0 q); auto.
 Qed.
- 
+
 Theorem eqp_inv3r : forall a b p q, eqP (pX a p) (pX b q) -> eqP p q.
+Proof.
 intros a b p q H'; simple inversion H'; auto.
 unfold pO in H0; inversion H0.
 rewrite (pX_invr p0 p ma a); auto; rewrite (pX_invr q0 q mb b); auto.
 Qed.
  
 Theorem eqp_trans : transitive _ eqP.
+Proof using plusA multA minusA invA divA cs A1 A0.
 red in |- *.
 intros x; elim x; auto.
 intros y z H'; inversion_clear H'.
@@ -124,6 +145,7 @@ intros H4; inversion_clear H4.
 change (eqP (pX a l) (pX mb0 q0)) in |- *; apply eqpP1; eauto.
 apply (eqTerm_trans _ _ _ _ _ _ _ _ _ cs n) with (y := mb); auto.
 Qed.
+
 Local Hint Resolve eqp_refl : core.
 
 Let eqTerm_imp_eqT := eqTerm_imp_eqT A eqA n.
@@ -131,6 +153,7 @@ Let eqTerm_imp_eqT := eqTerm_imp_eqT A eqA n.
 Theorem ltP_refl_pX :
  forall (a : Term A n) (p : list (Term A n)),
  canonical A0 eqA ltM (pX a p) -> ltP (A:=A) (n:=n) ltM p (pX a p).
+Proof using plusA os multA minusA invA divA cs A1.
 intros a p; case p; auto.
 intros a0 l H'.
 apply ltP_trans with (y := pX a (pO A n)); auto.
@@ -143,6 +166,7 @@ Qed.
  
 Theorem eqp_eqTerm :
  forall a b p q, eqP (pX a p) (pX b q) -> eqTerm (A:=A) eqA (n:=n) a b.
+Proof.
 intros a b p q H'; inversion_clear H'; trivial.
 Qed.
  
@@ -151,6 +175,7 @@ Theorem ltp_eqp_comp :
  ltP (A:=A) (n:=n) ltM p q ->
  canonical A0 eqA ltM p ->
  canonical A0 eqA ltM q -> eqP p r -> eqP q s -> ltP (A:=A) (n:=n) ltM r s.
+Proof.
 intros p q r s H'; generalize r s; elim H'; clear r s H'; auto.
 intros x p0 r s H H0 H1; inversion H1.
 intros H4; inversion H4; apply ltPO.
@@ -169,9 +194,10 @@ apply H1; auto.
 apply canonical_imp_canonical with (a := x); auto.
 apply canonical_imp_canonical with (a := y); auto.
 Qed.
- 
+
 Theorem eqp_imp_canonical :
  forall p q, eqP p q -> canonical A0 eqA ltM p -> canonical A0 eqA ltM q.
+Proof using plusA multA minusA invA eqA_dec divA cs A1.
 intros p q H'; elim H'; auto.
 intros ma mb p0 q0 H'0 H'1 H'2 H'3.
 apply canonical_pX_eqT with (a := ma); auto.
@@ -187,18 +213,19 @@ apply (canonical_nzeroP A A0 eqA n ltM ma p0); auto.
 apply nzeroP_comp_eqTerm with (1 := cs) (a := ma); auto.
 apply (canonical_nzeroP A A0 eqA n ltM ma p0); auto.
 Qed.
- 
+
 Definition sizel3
-  (m : list (Term A n) * (list (Term A n) * list (Term A n))) :=
+ (m : list (Term A n) * (list (Term A n) * list (Term A n))) :=
   match m with
   | (l1, (l2, l3)) => size l1 + (size l2 + size l3)
   end.
  
 Definition lessP3
-  (m1 m2 : list (Term A n) * (list (Term A n) * list (Term A n))) :=
+ (m1 m2 : list (Term A n) * (list (Term A n) * list (Term A n))) :=
   sizel3 m1 < sizel3 m2.
  
 Lemma wf_lessP3 : well_founded lessP3.
+Proof.
 red in |- *.
 cut (forall (m : nat) a, sizel3 a < m -> Acc lessP3 a).
 intros H' a.
@@ -209,7 +236,9 @@ intros p H' a H'0; apply Acc_intro.
 intros y H'1; apply H'.
 unfold lessP in H'1; apply lt_le_trans with (sizel3 a); auto with arith.
 Qed.
+
 Local Hint Resolve wf_lessP3 : core.
+
 Set Implicit Arguments.
 Unset Strict Implicit.
 
@@ -242,33 +271,38 @@ Definition seqP : poly A0 eqA ltM -> poly A0 eqA ltM -> Prop.
 intros sp1 sp2; case sp1; case sp2.
 intros p1 H'1 p2 H'2; exact (eqP p1 p2).
 Defined.
+
 Set Strict Implicit.
 Unset Implicit Arguments.
  
-Theorem seqp_dec : forall p q : poly A0 eqA ltM, {seqP p q} + {~ seqP p q}.
+Definition seqp_dec : forall p q : poly A0 eqA ltM, {seqP p q} + {~ seqP p q}.
 intros p q; case p; case q; simpl in |- *.
 intros x H' x0 H'0.
 apply (eqPf (x, x0)).
-Qed.
+Defined.
  
 Theorem seqp_refl : reflexive (poly A0 eqA ltM) seqP.
+Proof using plusA multA minusA invA divA cs A1.
 red in |- *.
 intros p; case p; simpl in |- *.
 intros x H'.
 apply eqp_refl.
 Qed.
- 
+
 Theorem seqp_sym : symmetric (poly A0 eqA ltM) seqP.
+Proof using plusA multA minusA invA divA cs A1.
 red in |- *.
 intros p q; case p; case q; simpl in |- *.
 intros x H' x0 H'0 H'1.
 apply eqp_sym; auto.
 Qed.
- 
+
 Theorem seqp_trans : transitive (poly A0 eqA ltM) seqP.
+Proof using plusA multA minusA invA divA cs A1.
 red in |- *.
 intros p q r; case p; case q; case r; simpl in |- *.
 intros x H' x0 H'0 x1 H'1 H'2 H'3.
 apply eqp_trans with (y := x0); auto.
 Qed.
+
 End Peq.

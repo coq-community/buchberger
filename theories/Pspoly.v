@@ -3,6 +3,8 @@
 
 From Buchberger Require Export Preducestar LetP.
 
+Set Default Proof Using "Type".
+
 Section Pspoly.
 Load hCoefStructure.
 Load hOrderStructure.
@@ -29,10 +31,11 @@ exact
     (mults (A:=A) multA (n:=n)
        (divTerm (A:=A) (A0:=A0) (eqA:=eqA) divA (n:=n) u (b:=b) nZb) p22)).
 Defined.
- 
+
 Theorem spolyf_canonical :
  forall (p q : list (Term A n)) (Cp : canonical A0 eqA ltM p)
    (Cq : canonical A0 eqA ltM q), canonical A0 eqA ltM (spolyf p q Cp Cq).
+Proof using plusA os cs.
 intros p; case p; simpl in |- *; auto.
 intros a l q; case q; unfold LetP in |- *; simpl in |- *; auto.
 intros a0 l0 H' H'0.
@@ -48,21 +51,24 @@ cut (~ zeroP (A:=A) A0 eqA (n:=n) a0);
  [ intros Z1 | apply canonical_nzeroP with (ltM := ltM) (p := l0) ]; 
  auto.
 Qed.
+
 Local Hint Resolve spolyf_canonical : core.
  
 Theorem spolyf_pO :
  forall (a : list (Term A n)) (Ca : canonical A0 eqA ltM a),
  eqP A eqA n (spolyf a a Ca Ca) (pO A n).
+Proof using plusA os cs.
 intros a; case a; simpl in |- *; unfold LetP in |- *; auto.
 intros; apply minuspf_refl with (1 := cs); auto.
 Qed.
- 
+
 Theorem spolyf_com :
  forall (a b : list (Term A n)) (Ca : canonical A0 eqA ltM a)
    (Cb : canonical A0 eqA ltM b),
  eqP A eqA n (spolyf a b Ca Cb)
    (mults (A:=A) multA (n:=n) (invTerm (A:=A) invA (n:=n) (T1 A1 n))
       (spolyf b a Cb Ca)).
+Proof using plusA os cs.
 intros a b; case a; case b; simpl in |- *; auto.
 intros a0 l a1 l0 Cpxa0 Cpxa1.
 cut (~ zeroP (A:=A) A0 eqA (n:=n) a0);
@@ -252,7 +258,7 @@ apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply eqp_pluspf_com with (1 := cs); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Theorem spolyf_def :
  forall (a b : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a)
    (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b) (p q : list (Term A n))
@@ -266,6 +272,7 @@ Theorem spolyf_def :
       (mults (A:=A) multA (n:=n)
          (divTerm (A:=A) (A0:=A0) (eqA:=eqA) divA (n:=n)
             (ppc (A:=A) A1 (n:=n) a b) (b:=b) nZb) q)).
+Proof using plusA os cs.
 intros a b nZa nZb p q Cpxa Cpxb; simpl in |- *; auto.
 cut (canonical A0 eqA ltM p); [ intros Op1 | auto ]; auto.
 cut (canonical A0 eqA ltM q); [ intros Op2 | auto ]; unfold LetP in |- *;
@@ -273,8 +280,9 @@ cut (canonical A0 eqA ltM q); [ intros Op2 | auto ]; unfold LetP in |- *;
 apply canonical_imp_canonical with (a := b); auto.
 apply canonical_imp_canonical with (a := a); auto.
 Qed.
+
 Local Hint Resolve spolyf_def : core.
- 
+
 Theorem eqTerm_spolyf_red2 :
  forall (a b c : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a)
    (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
@@ -294,6 +302,7 @@ Theorem eqTerm_spolyf_red2 :
          nZb r q)
       (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec c a
          nZa r p)).
+Proof using plusA os cs.
 intros a b c nZa nZb nZppab H' H'0 p q r Cpxa Cpxb H'4.
 cut (canonical A0 eqA ltM p);
  [ intros Op | apply canonical_imp_canonical with (a := a); auto ].
@@ -732,7 +741,7 @@ apply
                      nZa) p))); auto; apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n);
  auto.
 Qed.
- 
+
 Theorem eqTerm_spolyf_red3 :
  forall (a b : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a)
    (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b) (p q r : list (Term A n))
@@ -745,6 +754,7 @@ Theorem eqTerm_spolyf_red3 :
          (ppc (A:=A) A1 (n:=n) a b) b nZb r q)
       (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec
          (ppc (A:=A) A1 (n:=n) a b) a nZa r p)).
+Proof using plusA os cs.
 intros a b nZa nZb p q r Cpxa Cpxb H'1.
 cut (~ zeroP (A:=A) A0 eqA (n:=n) (ppc (A:=A) A1 (n:=n) a b));
  [ intros nZppab | auto ].
@@ -764,7 +774,7 @@ apply
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply eqTerm_spolyf_red2; auto.
 Qed.
- 
+
 Theorem spoly_is_minus :
  forall (a b : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a)
    (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b) (p q : list (Term A n))
@@ -780,6 +790,7 @@ Theorem spoly_is_minus :
          (divTerm (A:=A) (A0:=A0) (eqA:=eqA) divA (n:=n)
             (ppc (A:=A) A1 (n:=n) a b) (b:=b) nZb) 
          (pX b q))).
+Proof using plusA os cs.
 simpl in |- *; unfold LetP in |- *; simpl in |- *.
 intros a b nZa nZb p q Cpxa Cpxb.
 cut (canonical A0 eqA ltM p);
@@ -867,7 +878,7 @@ change
            (ppc (A:=A) A1 (n:=n) a b) (b:=b) nZb) (pX b q))) 
  in |- *; auto.
 Qed.
- 
+
 Theorem spoly_div_is_minus :
  forall (a b c : Term A n) (nZa : ~ zeroP (A:=A) A0 eqA (n:=n) a)
    (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
@@ -888,6 +899,7 @@ Theorem spoly_div_is_minus :
       (mults (A:=A) multA (n:=n)
          (divTerm (A:=A) (A0:=A0) (eqA:=eqA) divA (n:=n) c (b:=b) nZb)
          (pX b q))).
+Proof using plusA os cs.
 intros a b c nZa nZb nZppab H' H'0 p q Cpxa Cpxb.
 cut (canonical A0 eqA ltM p);
  [ intros Op | apply canonical_imp_canonical with (a := a) ]; 
@@ -964,7 +976,7 @@ apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); apply divTerm_compo with (1 := cs);
 case ppc_is_ppcm with (1 := cs) (a := a) (b := b); auto.
 apply (divP_inv1 _ A0 eqA multA divA n) with (b := a); auto.
 Qed.
- 
+
 Inductive ReduStarConfluent (Q : list (poly A0 eqA ltM))
 (p : list (Term A n)) : Prop :=
     ReduStarConfluent0 :
@@ -990,6 +1002,7 @@ Theorem confl_under :
    (pX a r) r1 ->
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
    (pX a s) s1 -> eqP A eqA n r1 s1.
+Proof using plusA os cs.
 intros Q a p Op1 H'0 r s H'1 H'2 r1 s1 H'3 H'4.
 cut (canonical A0 eqA ltM p);
  [ intros Op2 | apply canonical_imp_canonical with (a := a); auto ].
@@ -1116,7 +1129,7 @@ apply reduce_inv with (1 := cs) (3 := H'2); auto.
 inversion_clear E; auto.
 inversion_clear E; auto.
 Qed.
- 
+
 Inductive Spoly_1 (Q : list (poly A0 eqA ltM)) :
 list (Term A n) -> list (Term A n) -> Prop :=
   | Spoly_10 :
@@ -1140,7 +1153,7 @@ Inductive SpolyQ (Q : list (poly A0 eqA ltM)) : Prop :=
        inPolySet A A0 eqA n ltM q Q ->
        canonical A0 eqA ltM q -> Spoly_1 Q p q) -> 
       SpolyQ Q.
- 
+
 Inductive Reducep (Q : list (poly A0 eqA ltM)) :
 list (Term A n) -> list (Term A n) -> list (Term A n) -> Prop :=
     Reducep0 :
@@ -1159,7 +1172,7 @@ list (Term A n) -> list (Term A n) -> list (Term A n) -> Prop :=
       divP A A0 eqA multA divA n a c ->
       inPolySet A A0 eqA n ltM (pX c r) Q ->
       Reducep Q (pX a p) (pX b q) (pX c r).
- 
+
 Inductive Confluent (Q : list (poly A0 eqA ltM)) :
 list (Term A n) -> list (Term A n) -> list (Term A n) -> Prop :=
     Confluent0 :
@@ -1173,7 +1186,7 @@ list (Term A n) -> list (Term A n) -> list (Term A n) -> Prop :=
          (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a
             c nZc p r) s1 -> eqP A eqA n r1 s1) ->
       Confluent Q (pX a p) (pX b q) (pX c r).
- 
+
 Theorem Conf_inv1 :
  forall (Q : list (poly A0 eqA ltM)) (a b c : Term A n)
    (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
@@ -1185,12 +1198,13 @@ Theorem Conf_inv1 :
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
    (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a c nZc
       p r) s1 -> eqP A eqA n r1 s1.
+Proof using plusA cs.
 intros Q a b c nZb nZc p q r r1 s1 H'0 H'1 H'2; inversion_clear H'0.
 apply H.
 rewrite sp_rew with (1 := cs) (a := a) (b := b) (nZ2 := nZb); auto.
 rewrite sp_rew with (1 := cs) (a := a) (b := c) (nZ2 := nZc); auto.
 Qed.
- 
+
 Theorem Conf_trans :
  forall (Q : list (poly A0 eqA ltM)) (a b c d : Term A n)
    (p0 q r t : list (Term A n)),
@@ -1200,6 +1214,7 @@ Theorem Conf_trans :
  Confluent Q (pX a p0) (pX d t) (pX b q) ->
  canonical A0 eqA ltM (pX a p0) ->
  canonical A0 eqA ltM (pX d t) -> Confluent Q (pX a p0) (pX c r) (pX b q).
+Proof using plusA os cs.
 intros Q a b c d p q r t H' H'0 H'1 H'2 H'3 H'4.
 cut (~ zeroP (A:=A) A0 eqA (n:=n) b); [ intros nZb | idtac ].
 cut (~ zeroP (A:=A) A0 eqA (n:=n) c); [ intros nZc | idtac ].
@@ -1252,7 +1267,7 @@ apply canonical_nzeroP with (ltM := ltM) (p := q); auto.
 apply inPolySet_imp_canonical with (L := Q); auto.
 inversion_clear H'0; auto.
 Qed.
- 
+
 Theorem confl_top_simpl :
  forall (Q : list (poly A0 eqA ltM)) (a b c : Term A n)
    (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
@@ -1284,6 +1299,7 @@ Theorem confl_top_simpl :
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
    (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a c nZc
       p r) s1 -> eqP A eqA n r1 s1.
+Proof using plusA os cs.
 intros Q a b c nZb nZc p q r Cpxc Cpxb red_r0 Cpxa divP_ab in_bp_Q divP_ac
  in_cr_Q Rec red1 red2 r1 s1 reds1 reds2.
 cut (canonical A0 eqA ltM p);
@@ -1382,7 +1398,7 @@ apply
             (pO A n))
     (1 := cs); auto; simpl in |- *; auto.
 Qed.
- 
+
 Theorem fconfl_top :
  forall (Q : list (poly A0 eqA ltM)) (q r : list (Term A n)),
  Spoly_1 Q q r ->
@@ -1395,6 +1411,7 @@ Theorem fconfl_top :
   canonical A0 eqA ltM q0 ->
   ltP (A:=A) (n:=n) ltM q0 p -> ReduStarConfluent Q q0) -> 
  Confluent Q p q r.
+Proof using plusA os cs.
 intros Q q r Spoly1; elim Spoly1; clear Spoly1 q r.
 intros q r Cq Cr red0 p H'1;
  (generalize Cq Cr red0; inversion_clear H'1; clear red0 Cq Cr).
@@ -1425,7 +1442,7 @@ apply inPolySet_imp_canonical with (L := Q); auto.
 apply reducetop_sp with (1 := cs); auto.
 apply reducetop_sp with (1 := cs); auto.
 Qed.
- 
+
 Theorem confl_top :
  forall Q : list (poly A0 eqA ltM),
  SpolyQ Q ->
@@ -1454,6 +1471,7 @@ Theorem confl_top :
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
    (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a c nZc
       p r) s1 -> eqP A eqA n r1 s1.
+Proof using plusA os cs.
 intros Q H' a b c nZb nZc p q r H'0 H'1 H'2 H'3 H'4 H'5 H'6 H'7 r1 s1 H'8 H'9.
 cut (canonical A0 eqA ltM (pX b q)); [ intros Op0 | idtac ].
 cut (canonical A0 eqA ltM (pX c r)); [ intros Op0bis | idtac ].
@@ -1466,7 +1484,7 @@ cut (Confluent Q (pX a p) (pX b q) (pX c r)); auto.
 intros H'10.
 apply (Conf_inv1 Q a b c nZb nZc p q r r1 s1); auto.
 Qed.
- 
+
 Theorem confl_mix :
  forall (Q : list (poly A0 eqA ltM)) (a b : Term A n)
    (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b) (p q r : list (Term A n)),
@@ -1488,6 +1506,7 @@ Theorem confl_mix :
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
    (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a b nZb
       p r) s1 -> eqP A eqA n r1 s1.
+Proof using plusA os cs.
 intros Q a b nZb p q r Op1 dviP_ab in_br Rec red1 red2 r1 s1 red3 red4.
 cut (canonical A0 eqA ltM (pX b r));
  [ intros Op2 | apply inPolySet_imp_canonical with (L := Q); auto ].
@@ -1547,12 +1566,14 @@ apply canonical_spminusf with (1 := cs); auto.
 apply ltP_reduce with (1 := cs) (3 := red2); auto.
 apply canonical_spminusf with (1 := cs); auto.
 Qed.
+
 Local Hint Resolve pO_irreducible : core.
 
 Theorem confl_restar :
  forall Q : list (poly A0 eqA ltM),
  SpolyQ Q ->
  forall p : poly A0 eqA ltM, ReduStarConfluent Q (s2p A A0 eqA n ltM p).
+Proof using plusA os cs.
 intros Q H'.
 intros p; pattern p in |- *;
  apply
@@ -1655,13 +1676,15 @@ rewrite H8; auto.
 rewrite H8; apply canonical_reduce with (1 := cs) (3 := H'4); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Theorem confl_reducestar :
  forall Q : list (poly A0 eqA ltM),
  SpolyQ Q ->
  forall p : list (Term A n), canonical A0 eqA ltM p -> ReduStarConfluent Q p.
+Proof using plusA os cs.
 intros Q H' p H'0.
 generalize (confl_restar Q H' (mks A A0 eqA n ltM p H'0)); simpl in |- *;
  auto.
 Qed.
+
 End Pspoly.

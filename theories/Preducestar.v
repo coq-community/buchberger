@@ -11,6 +11,8 @@
 
 From Buchberger Require Export Preduceplus.
 
+Set Default Proof Using "Type".
+
 Section Preducestar.
 Load hCoefStructure.
 Load hOrderStructure.
@@ -30,13 +32,14 @@ Theorem reducestar_eqp_com :
  reducestar Q p q ->
  canonical A0 eqA ltM p ->
  eqP A eqA n p r -> eqP A eqA n q s -> reducestar Q r s.
+Proof using plusA os cs.
 intros Q p q r s H' H'0 H'1 H'2; inversion H'.
 apply reducestar0; auto.
 apply reduceplus_eqp_com with (p := p) (q := q) (1 := cs); auto.
 apply irreducible_eqp_com with (p := q) (1 := cs); auto.
 apply canonical_reduceplus with (1 := cs) (3 := H); auto.
 Qed.
- 
+
 Definition mks :
   forall p : list (Term A n), canonical A0 eqA ltM p -> poly A0 eqA ltM.
 intros p H'; exists p; exact H'.
@@ -87,8 +90,8 @@ exists b; exists p; split; [ idtac | split ]; auto.
 apply inskip; auto.
 right.
 intros b q H'1; generalize divP1; inversion_clear H'1; eauto.
-Qed.
- 
+Defined.
+
 Definition selectpolyf :
   forall (Q : list (poly A0 eqA ltM)) (r : list (Term A n)),
   canonical A0 eqA ltM r ->
@@ -148,7 +151,7 @@ intros H'3 H'4;
   (reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q l q0);
  auto.
 auto.
-Qed.
+Defined.
  
 Definition Reducef :
   forall (Q : list (poly A0 eqA ltM)) (p : poly A0 eqA ltM),
@@ -272,36 +275,41 @@ Defined.
 Theorem reduce0_reducestar :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
  canonical A0 eqA ltM p -> exists t : list (Term A n), reducestar Q p t.
+Proof using plusA os cs.
 intros Q p H.
 generalize (Reducef Q (mks p H)).
 intros H'; elim H'.
 simpl in |- *.
 intros x H'0; exists (s2p A A0 eqA n ltM x); try assumption.
 Qed.
- 
+
 Theorem reducestar_trans :
  forall (Q : list (poly A0 eqA ltM)) (x y z : list (Term A n)),
  canonical A0 eqA ltM x ->
  reduceplus A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q x y ->
  reducestar Q y z -> reducestar Q x z.
+Proof using plusA os cs.
 intros Q x y z H' H'0 H'1; inversion H'1.
 apply reducestar0; auto.
 apply reduceplus_trans with (1 := cs) (y := y); auto.
 Qed.
- 
+
 Theorem reducestar_reduceplus :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reducestar Q p q ->
  reduceplus A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q p q.
+Proof.
 intros Q p q H'; inversion H'; auto.
 Qed.
- 
+
 Theorem reducestar_irreducible :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reducestar Q p q ->
  irreducible A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q q.
+Proof.
 intros Q p q H'; inversion H'; auto.
 Qed.
+
 Local Hint Resolve reducestar_reduceplus : core.
 
 Theorem reducestar_inv :
@@ -313,6 +321,7 @@ Theorem reducestar_inv :
  (exists r : list (Term A n),
     reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q p r /\
     reducestar Q r q).
+Proof using plusA os cs.
 intros Q p q H'; elim H'.
 intros p0 q0 H'0; inversion H'0.
 intros H'1 H'2; left; split; auto.
@@ -322,10 +331,11 @@ apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 intros H'1 H'2; right; exists y; split; auto.
 apply reducestar0; auto.
 Qed.
- 
+
 Lemma pO_reducestar :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
  reducestar Q (pO A n) p -> p = pO A n.
+Proof.
 intros Q p H'.
 cut
  (reduceplus A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
@@ -336,17 +346,19 @@ Qed.
 Theorem reducestar_pO_is_pO :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  canonical A0 eqA ltM p -> reducestar Q (pO A n) (pO A n).
+Proof.
 intros Q p H' H'0; auto.
 apply reducestar0; auto.
 apply Rstar_0; auto.
 apply pO_irreducible.
 Qed.
- 
+
 Theorem reducestar_in_pO :
  forall (Q : list (poly A0 eqA ltM)) (a : Term A n) (p : list (Term A n)),
  inPolySet A A0 eqA n ltM p Q ->
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
  reducestar Q (mults (A:=A) multA (n:=n) a p) (pO A n).
+Proof using plusA os cs.
 intros Q a p H' H'0.
 cut (canonical A0 eqA ltM p); [ intros Op0 | idtac ].
 apply
@@ -361,7 +373,7 @@ apply reduce_in_pO with (1 := cs); auto.
 simpl in |- *; apply pO_irreducible; auto.
 apply inPolySet_imp_canonical with (L := Q); auto.
 Qed.
- 
+
 Definition pickinSet :
   forall a : Term A n,
   ~ zeroP (A:=A) A0 eqA (n:=n) a ->
@@ -403,4 +415,5 @@ intros H'3; red in |- *; intros H'4; apply Hyp.
 injection H'4.
 intros H'5 H'6; rewrite H'6; auto.
 Defined.
+
 End Preducestar.

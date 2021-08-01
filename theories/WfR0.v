@@ -13,6 +13,8 @@ From Coq Require Import List.
 From Buchberger Require Import ListProps Bar Dickson Monomials.
 From Buchberger Require Export BuchAux.
 
+Set Default Proof Using "Type".
+
 Section thRO.
 Load hCoefStructure.
 Load hOrderStructure.
@@ -38,6 +40,7 @@ Theorem get_is_correct :
    (get_mon
       (nf A A0 A1 eqA plusA invA minusA multA divA cs eqA_dec n ltM ltM_dec
          os a P)).
+Proof.
 intros a b P H' H'0 H'1.
 cut
  (irreducible A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec P
@@ -86,7 +89,7 @@ apply mdiv_div; auto.
 apply canonical_nzeroP with (ltM := ltM) (p := l0); auto.
 apply nf_irreducible; auto.
 Qed.
- 
+
 Definition get_monL : list (poly A0 eqA ltM) -> list (mon n) := map get_mon.
  
 Inductive RO : list (poly A0 eqA ltM) -> list (poly A0 eqA ltM) -> Prop :=
@@ -110,6 +113,7 @@ Lemma l1 :
  ms = get_monL bs ->
  (forall f : poly A0 eqA ltM, In f bs -> ~ zerop A A0 eqA n ltM f) ->
  BadM ms -> Acc RO (cs ++ rev bs).
+Proof.
 intros cs1 ms1 H; elim H; auto.
 intros l H' bs H'0 H'1 H'2.
 case H'2; auto.
@@ -151,8 +155,9 @@ apply get_is_correct; auto.
 apply in_or_app; right; apply in_rev; rewrite ?rev_involutive; auto.
 apply map_in; auto.
 Qed.
- 
+
 Theorem wf_incl : well_founded RO.
+Proof.
 unfold well_founded in |- *; intros.
 apply Acc_intro; intros.
 inversion H.
@@ -176,7 +181,7 @@ rewrite <- H4; auto.
 elim H4.
 red in |- *; intros H4; inversion H4; inversion H5.
 Qed.
- 
+
 Lemma RO_lem :
  forall (a : poly A0 eqA ltM) (P : list (poly A0 eqA ltM)),
  ~
@@ -187,7 +192,9 @@ Lemma RO_lem :
    (addEnd A A0 eqA n ltM
       (nf A A0 A1 eqA plusA invA minusA multA divA cs eqA_dec n ltM ltM_dec
          os a P) P) P.
+Proof.
 intros a P H'; rewrite addEnd_app.
 apply RO0; auto.
 Qed.
+
 End thRO.

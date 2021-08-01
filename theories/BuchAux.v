@@ -4,6 +4,8 @@
 From Buchberger Require Export Pcomb Pcrit Fred.
 From Buchberger Require Import moreCoefStructure.
 
+Set Default Proof Using "Type".
+
 Section BuchAux.
 Load hCoefStructure.
 Load hOrderStructure.
@@ -23,6 +25,7 @@ Defined.
 Theorem addEnd_cons :
  forall (a b : poly A0 eqA ltM) (aL : list (poly A0 eqA ltM)),
  In a (addEnd b aL) -> a = b \/ In a aL.
+Proof.
 intros a b aL; elim aL; simpl in |- *; auto.
 intros H'; case H'; [ intros H'0; rewrite <- H'0 | intros H'0; clear H' ];
  auto.
@@ -31,27 +34,30 @@ intros a0 l H' H'0; case H'0;
  auto.
 case (H' H'1); auto.
 Qed.
- 
+
 Theorem addEnd_id1 :
  forall (a : poly A0 eqA ltM) (aL : list (poly A0 eqA ltM)),
  In a (addEnd a aL).
+Proof.
 intros a aL; elim aL; simpl in |- *; auto.
 Qed.
- 
+
 Theorem addEnd_id2 :
  forall (a b : poly A0 eqA ltM) (aL : list (poly A0 eqA ltM)),
  In a aL -> In a (addEnd b aL).
+Proof.
 intros a b aL; elim aL; simpl in |- *; auto.
 intros a0 l H' H'0; case H'0; auto.
 Qed.
- 
+
 Lemma addEnd_app :
  forall (a : poly A0 eqA ltM) (P : list (poly A0 eqA ltM)),
  addEnd a P = P ++ a :: nil.
+Proof.
 intros a P; elim P; simpl in |- *; auto.
 intros a0 l H'; elim H'; auto.
 Qed.
- 
+
 Definition spolyp : poly A0 eqA ltM -> poly A0 eqA ltM -> poly A0 eqA ltM.
 intros p q; case p; case q.
 intros x Cpx x0 Cpx0;
@@ -60,10 +66,11 @@ intros x Cpx x0 Cpx0;
      Cpx0); auto.
 apply spolyf_canonical with (1 := cs); auto.
 Defined.
- 
+
 Theorem red_com :
  forall (a b : poly A0 eqA ltM) (aL : list (poly A0 eqA ltM)),
  red (spolyp a b) aL -> red (spolyp b a) aL.
+Proof.
 intros a b; case a; case b; simpl in |- *.
 unfold red in |- *; simpl in |- *.
 intros x Cx x0 Cx0 aL H'1; inversion H'1.
@@ -94,7 +101,7 @@ apply spolyf_com with (1 := cs); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply spolyf_com with (1 := cs); auto.
 Qed.
- 
+
 Theorem rstar_rtopO :
  forall (Q : list (poly A0 eqA ltM)) (p : list (Term A n)),
  canonical A0 eqA ltM p ->
@@ -102,6 +109,7 @@ Theorem rstar_rtopO :
    (pO A n) ->
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q p
    (pO A n).
+Proof using plusA os cs.
 intros Q p H' H'0.
 elim
  reduce0_reducestar
@@ -114,7 +122,7 @@ elim
 intros t E; apply reducestar0; auto.
 apply pO_irreducible; auto.
 Qed.
- 
+
 Definition spO : poly A0 eqA ltM.
 exists (pO A n); simpl in |- *; auto.
 Defined.
@@ -133,10 +141,11 @@ intros a p; case p.
 intros x H'1; exists (tmults A0 multA eqA_dec (a, M1 n) x); auto.
 unfold tmults in |- *; case (zeroP_dec A A0 eqA eqA_dec n (a, M1 n));
  simpl in |- *; auto.
-Qed.
+Defined.
  
 Theorem red_cons :
  forall (a : poly A0 eqA ltM) (p : list (poly A0 eqA ltM)), In a p -> red a p.
+Proof using plusA os cs.
 intros a; case (seqp_dec A A0 eqA eqA_dec n ltM a spO).
 case a; unfold red, spO, seqP in |- *; simpl in |- *.
 intros x c H' p H'0; inversion H'; auto.
@@ -155,10 +164,11 @@ red in |- *; intros H'2; apply H'; apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n);
  auto.
 apply Rstar_0; auto.
 Qed.
- 
+
 Theorem red_id :
  forall (a : poly A0 eqA ltM) (aL : list (poly A0 eqA ltM)),
  red (spolyp a a) aL.
+Proof.
 intros a P; case a.
 unfold red in |- *; simpl in |- *; auto.
 intros x H'.
@@ -167,7 +177,7 @@ apply spolyf_canonical with (1 := cs); auto.
 apply Rstar_0; auto.
 apply spolyf_pO with (1 := cs); auto.
 Qed.
- 
+
 Theorem inP_reduce :
  forall P Q : list (poly A0 eqA ltM),
  (forall a : list (Term A n),
@@ -175,11 +185,12 @@ Theorem inP_reduce :
  forall a b : list (Term A n),
  reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q a b ->
  reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec P a b.
+Proof.
 intros P Q H' a b H'0; elim H'0; auto.
 intros a0 b0 nZb p q r H'1 H'2 H'3; auto.
 apply reducetop with (b := b0) (nZb := nZb) (q := q); auto.
 Qed.
- 
+
 Theorem inP_reduceplus :
  forall P Q : list (poly A0 eqA ltM),
  (forall a : list (Term A n),
@@ -187,13 +198,14 @@ Theorem inP_reduceplus :
  forall a b : list (Term A n),
  reduceplus A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q a b ->
  reduceplus A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec P a b.
+Proof.
 intros P Q H' a b H'0; elim H'0; auto.
 intros; apply Rstar_0; auto.
 intros x y z H'1 H'2 H'3.
 apply Rstar_n with (y := y); auto.
 apply inP_reduce with (Q := Q); auto.
 Qed.
- 
+
 Theorem inP_reducestar :
  forall P Q : list (poly A0 eqA ltM),
  (forall a : list (Term A n),
@@ -201,13 +213,15 @@ Theorem inP_reducestar :
  forall a b : list (Term A n),
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q a b ->
  reduceplus A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec P a b.
+Proof.
 intros P Q H' a b H'0; inversion H'0; auto.
 apply inP_reduceplus with (Q := Q); auto.
 Qed.
- 
+
 Theorem red_incl :
  forall (a : poly A0 eqA ltM) (p q : list (poly A0 eqA ltM)),
  incl p q -> red a p -> red a q.
+Proof using plusA os cs.
 unfold red in |- *.
 intros a p q H' H'0.
 inversion H'0.
@@ -217,7 +231,7 @@ apply inP_reducestar with (Q := p); auto.
 intros a0 H'1.
 apply Incl_inp_inPolySet with (P := p); auto.
 Qed.
- 
+
 Definition zerop : poly A0 eqA ltM -> Prop.
 intros H'; case H'.
 intros x; case x.
@@ -225,12 +239,12 @@ intros H'0; exact True.
 intros a l H'0; exact False.
 Defined.
  
-Theorem zerop_dec : forall a : poly A0 eqA ltM, {zerop a} + {~ zerop a}.
+Definition zerop_dec : forall a : poly A0 eqA ltM, {zerop a} + {~ zerop a}.
 intros H'; case H'.
 intros x; case x.
 intros c; left; simpl in |- *; auto.
 intros a l c; right; red in |- *; intros H'0; inversion H'0.
-Qed.
+Defined.
  
 Definition divp : poly A0 eqA ltM -> poly A0 eqA ltM -> Prop.
 intros H'; case H'.
@@ -244,6 +258,7 @@ exact (divP A A0 eqA multA divA n a a0).
 Defined.
  
 Theorem divp_trans : transitive (poly A0 eqA ltM) divp.
+Proof using plusA minusA invA cs A1.
 red in |- *.
 intros x y z; case x; case y; case z.
 intros x0 c x1 c0 x2 c1; generalize c c0 c1; case x0; case x1; case x2;
@@ -252,8 +267,8 @@ intros a l a0 l0 H' H'0 H'1 H'2; elim H'2.
 intros a l a0 l0 a1 l1 H' H'0 H'1 H'2 H'3.
 apply (divP_trans _ _ _ _ _ _ _ _ _ cs n) with (y := a0); auto.
 Qed.
- 
-Theorem divp_dec : forall a b : poly A0 eqA ltM, {divp a b} + {~ divp a b}.
+
+Definition divp_dec : forall a b : poly A0 eqA ltM, {divp a b} + {~ divp a b}.
 intros a b; case a; case b.
 intros x c x0 c0; generalize c c0; case x; case x0; simpl in |- *.
 intros H' H'0; right; red in |- *; intros H'1; elim H'1.
@@ -263,7 +278,7 @@ intros a0 l a1 l0 H' H'0.
 apply divP_dec with (1 := cs); auto.
 apply canonical_nzeroP with (ltM := ltM) (p := l); auto.
 apply canonical_nzeroP with (ltM := ltM) (p := l0); auto.
-Qed.
+Defined.
  
 Definition ppcp : poly A0 eqA ltM -> poly A0 eqA ltM -> poly A0 eqA ltM.
 intros H'; case H'.
@@ -282,15 +297,17 @@ Defined.
  
 Theorem divp_ppc :
  forall a b c : poly A0 eqA ltM, divp (ppcp a b) c -> divp (ppcp b a) c.
+Proof.
 intros a b c; (case a; case b; case c).
 intros x c0 x0 c1 x1 c2; generalize c0 c1 c2; case x; case x0; case x1;
  simpl in |- *; auto.
 intros a0 l a1 l0 a2 l1 H' H'0 H'1 H'2.
 apply divP_eqTerm_comp with (1 := cs) (a := ppc (A:=A) A1 (n:=n) a0 a1); auto.
 Qed.
- 
+
 Theorem zerop_ddivp_ppc :
  forall a b : poly A0 eqA ltM, ~ zerop a -> ~ zerop b -> divp (ppcp a b) b.
+Proof.
 intros a b; (case a; case b).
 intros x c0 x0 c1; generalize c0 c1; case x; case x0; simpl in |- *; auto.
 intros a0 l a1 l0 H' H'0 H'1 H'2.
@@ -298,30 +315,36 @@ apply divP_ppcr with (1 := cs); auto.
 apply canonical_nzeroP with (ltM := ltM) (p := l); auto.
 apply canonical_nzeroP with (ltM := ltM) (p := l0); auto.
 Qed.
- 
+
 Theorem divp_nzeropl : forall a b : poly A0 eqA ltM, divp a b -> ~ zerop a.
+Proof.
 intros a b; (case a; case b).
 intros x c0 x0 c1; generalize c0 c1; case x; case x0; simpl in |- *; auto.
 Qed.
- 
+
 Theorem divp_nzeropr : forall a b : poly A0 eqA ltM, divp a b -> ~ zerop b.
+Proof.
 intros a b; (case a; case b).
 intros x c0 x0 c1; generalize c0 c1; case x; case x0; simpl in |- *; auto.
 Qed.
+
 Local Hint Resolve pO_irreducible : core.
- 
+
 Theorem reducetopO_pO :
  forall Q : list (poly A0 eqA ltM),
  reducestar A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
    (pO A n) (pO A n).
+Proof.
 intros Q; apply reducestar0; auto.
 apply Rstar_0; auto.
 Qed.
+
 Local Hint Resolve reducetopO_pO : core.
  
 Theorem zerop_red_spoly_l :
  forall a b : poly A0 eqA ltM,
  zerop a -> forall Q : list (poly A0 eqA ltM), red (spolyp a b) Q.
+Proof.
 intros a b; (case a; case b).
 intros x c0 x0 c1; generalize c0 c1; case x; case x0; simpl in |- *; auto.
 intros c2 c3 H' Q; unfold red in |- *; simpl in |- *; auto.
@@ -329,10 +352,11 @@ intros a0 l c2 c3 H'; elim H'.
 intros a0 l c2 c3 H' Q; unfold red in |- *; simpl in |- *; auto.
 intros a0 l a1 l0 c2 c3 H'; elim H'.
 Qed.
- 
+
 Theorem zerop_red_spoly_r :
  forall a b : poly A0 eqA ltM,
  zerop b -> forall Q : list (poly A0 eqA ltM), red (spolyp a b) Q.
+Proof.
 intros a b; (case a; case b).
 intros x c0 x0 c1; generalize c0 c1; case x; case x0; simpl in |- *; auto.
 intros c2 c3 H' Q; unfold red in |- *; simpl in |- *; auto.
@@ -340,9 +364,10 @@ intros a0 l c2 c3 H' Q; unfold red in |- *; simpl in |- *; auto.
 intros a0 l c2 c3 H'; elim H'.
 intros a0 l a1 l0 c2 c3 H'; elim H'.
 Qed.
- 
+
 Theorem divP_ppc :
  forall a b c : poly A0 eqA ltM, divp a b -> divp a c -> divp a (ppcp b c).
+Proof.
 intros a b c; (case a; case b; case c).
 intros x c0 x0 c1 x1 c2; generalize c0 c1 c2; case x; case x0; case x1;
  simpl in |- *; auto.
@@ -351,7 +376,7 @@ elim ppc_is_ppcm with (1 := cs) (a := a1) (b := a2); auto.
 apply canonical_nzeroP with (ltM := ltM) (p := l0); auto.
 apply canonical_nzeroP with (ltM := ltM) (p := l1); auto.
 Qed.
- 
+
 Definition Cb : poly A0 eqA ltM -> list (poly A0 eqA ltM) -> Prop.
 intros H'; case H'.
 intros x H'0 Q;
@@ -360,6 +385,7 @@ Defined.
  
 Theorem Cb_id :
  forall (a : poly A0 eqA ltM) (Q : list (poly A0 eqA ltM)), In a Q -> Cb a Q.
+Proof using os minusA invA divA cs A1.
 intros a; case a; simpl in |- *.
 intros x; case x; auto.
 intros c Q H'.
@@ -372,12 +398,13 @@ change
  in |- *; apply in_inPolySet; auto.
 red in |- *; intros H'4; inversion H'4.
 Qed.
- 
+
 Theorem inPolySet_addEnd :
  forall (a : list (Term A n)) (p : poly A0 eqA ltM)
    (l : list (poly A0 eqA ltM)),
  inPolySet A A0 eqA n ltM a (addEnd p l) ->
  a = s2p A A0 eqA n ltM p \/ inPolySet A A0 eqA n ltM a l.
+Proof.
 intros a p l; elim l; simpl in |- *; auto.
 intros H'; inversion H'; auto.
 intros a0 l0 H' H'0; inversion H'0; auto.
@@ -387,7 +414,7 @@ case H'; auto.
 intros H3; right; try assumption.
 apply inskip; auto.
 Qed.
- 
+
 Remark CombLinear_trans1 :
  forall (a : list (Term A n)) (R : list (poly A0 eqA ltM)),
  CombLinear A A0 eqA plusA multA eqA_dec n ltM ltM_dec R a ->
@@ -396,6 +423,7 @@ Remark CombLinear_trans1 :
  CombLinear A A0 eqA plusA multA eqA_dec n ltM ltM_dec Q
    (s2p A A0 eqA n ltM b) ->
  CombLinear A A0 eqA plusA multA eqA_dec n ltM ltM_dec Q a.
+Proof using os minusA invA divA cs A1.
 intros a R H'; elim H'; auto.
 intros b Q H'0 H'1.
 apply CombLinear_0; auto.
@@ -430,10 +458,11 @@ rewrite <- H'5; auto.
 intros H'7; rewrite H'7; auto.
 intros; (apply CombLinear_id with (1 := cs); auto).
 Qed.
- 
+
 Theorem Cb_trans :
  forall (a b : poly A0 eqA ltM) (Q : list (poly A0 eqA ltM)),
  Cb a (addEnd b Q) -> Cb b Q -> Cb a Q.
+Proof using os minusA invA divA cs A1.
 intros a b; case a; case b; simpl in |- *; auto.
 intros x c x0 H' Q H'0 H'1.
 apply
@@ -444,35 +473,39 @@ apply
     (b := exist (fun l : list (Term A n) => canonical A0 eqA ltM l) x c);
  auto.
 Qed.
- 
+
 Theorem Cb_incl :
  forall (a : poly A0 eqA ltM) (P Q : list (poly A0 eqA ltM)),
  (forall a : poly A0 eqA ltM, In a P -> In a Q) -> Cb a P -> Cb a Q.
+Proof using os minusA invA divA cs A1.
 intros a; case a; simpl in |- *; auto.
 intros x H' P Q H'0 H'1.
 apply CombLinear_incl with (1 := cs) (P := P); auto.
 intros a0 H'2.
 apply Incl_inp_inPolySet with (P := P); auto.
 Qed.
- 
+
 Theorem Cb_in1 :
  forall (a b : poly A0 eqA ltM) (Q : list (poly A0 eqA ltM)),
  Cb a Q -> Cb a (b :: Q).
+Proof using os minusA invA divA cs A1.
 intros a b Q H'.
 apply Cb_incl with (P := Q); simpl in |- *; auto.
 Qed.
- 
+
 Theorem Cb_in :
  forall (a b : poly A0 eqA ltM) (Q : list (poly A0 eqA ltM)),
  Cb a Q -> Cb a (addEnd b Q).
+Proof using os minusA invA divA cs A1.
 intros a b Q H'.
 apply Cb_incl with (P := Q); simpl in |- *; auto.
 intros a0 H'0; apply addEnd_id2; auto.
 Qed.
- 
+
 Theorem Cb_sp :
  forall (a b : poly A0 eqA ltM) (Q : list (poly A0 eqA ltM)),
  Cb a Q -> Cb b Q -> Cb (spolyp a b) Q.
+Proof.
 intros a b; case a; case b; simpl in |- *; auto.
 intros x; case x; auto.
 intros a0 l H' x0; case x0; auto.
@@ -514,7 +547,7 @@ change
            (pX a1 l0)))) in |- *.
 apply spoly_is_minus with (1 := cs); auto.
 Qed.
- 
+
 Definition unit : poly A0 eqA ltM -> Term A n.
 intros p; case p.
 intros x; case x.
@@ -526,16 +559,18 @@ inversion H'; auto.
 simpl in H0.
 intuition.
 Defined.
- 
+
 Theorem unit_T1 : forall p : poly A0 eqA ltM, eqT (unit p) (T1 A1 n).
+Proof.
 unfold eqT in |- *; intros p; case p.
 intros x; case x; simpl in |- *; auto.
 intros a l; case a; simpl in |- *; auto.
 Qed.
- 
+
 Theorem divA_nZ :
  forall a b : A,
  ~ eqA b A0 -> forall nZa : ~ eqA a A0, ~ eqA (divA b a nZa) A0.
+Proof using plusA multA minusA invA cs A1.
 intros a b H' nZa; red in |- *; intros H'1; auto.
 case H';
  apply (eqA_trans _ _ _ _ _ _ _ _ _ cs) with (y := multA (divA b a nZa) a);
@@ -546,15 +581,17 @@ apply multA_eqA_comp with (1 := cs); auto.
 apply (eqA_ref _ _ _ _ _ _ _ _ _ cs); auto.
 apply multA_A0_l with (1 := cs); auto.
 Qed.
+
 Local Hint Resolve divA_nZ : core.
  
 Theorem unit_nZ :
  forall p : poly A0 eqA ltM, ~ zeroP (A:=A) A0 eqA (n:=n) (unit p).
+Proof using plusA multA minusA invA cs.
 intros p; case p.
 intros x; case x; simpl in |- *; auto.
 intros a l; case a; simpl in |- *; auto.
 Qed.
- 
+
 Definition nf : poly A0 eqA ltM -> list (poly A0 eqA ltM) -> poly A0 eqA ltM.
 intros p L.
 case
@@ -574,6 +611,7 @@ Theorem nf_irreducible :
  forall (p : poly A0 eqA ltM) (aP : list (poly A0 eqA ltM)),
  irreducible A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec aP
    (s2p A A0 eqA n ltM (nf p aP)).
+Proof.
 unfold nf in |- *.
 intros p aP;
  case
@@ -597,10 +635,11 @@ apply reduce_mults_invf with (1 := cs); auto.
 apply unit_T1; auto.
 apply unit_nZ; auto.
 Qed.
- 
+
 Theorem nf_red :
  forall (a : poly A0 eqA ltM) (aP aQ : list (poly A0 eqA ltM)),
  incl aP aQ -> red (nf a aP) aQ -> red a aQ.
+Proof.
 intros a; case a; simpl in |- *.
 unfold red in |- *; unfold nf in |- *; simpl in |- *; auto.
 intros x c aP aQ H';
@@ -623,10 +662,11 @@ apply unit_nZ; auto.
 apply unit_T1; auto.
 inversion H'1; inversion H; auto.
 Qed.
- 
+
 Theorem red_zerop :
  forall (a : poly A0 eqA ltM) (P : list (poly A0 eqA ltM)),
  red (nf a P) P -> zerop (nf a P).
+Proof.
 unfold nf in |- *.
 intros p aP; case p.
 intros x c.
@@ -660,10 +700,11 @@ apply reduce_mults_invf with (1 := cs); auto.
 apply unit_T1; auto.
 apply unit_nZ; auto.
 Qed.
- 
+
 Theorem zerop_red :
  forall (a : poly A0 eqA ltM) (aP : list (poly A0 eqA ltM)),
  zerop (nf a aP) -> red a aP.
+Proof.
 intros a aP H'.
 apply nf_red with (aP := aP); auto with datatypes.
 generalize H'; case (nf a aP); simpl in |- *; auto.
@@ -671,16 +712,19 @@ intros x; case x; simpl in |- *; auto.
 intros c H'0; red in |- *; simpl in |- *; auto.
 intros a0 l H'0 H'1; elim H'1; auto.
 Qed.
- 
+
 Theorem canonical_s2p :
  forall x : poly A0 eqA ltM, canonical A0 eqA ltM (s2p A A0 eqA n ltM x).
+Proof.
 intros x; case x; auto.
 Qed.
+
 Local Hint Resolve canonical_s2p : core.
 
 Theorem nf_Cb :
  forall (a : poly A0 eqA ltM) (aP : list (poly A0 eqA ltM)),
  Cb a aP -> Cb (nf a aP) aP.
+Proof.
 intros a; case a; unfold nf, Cb in |- *; auto.
 intros x c Q H';
  case
@@ -697,7 +741,7 @@ apply CombLinear_mults1 with (1 := cs); auto.
 apply unit_nZ; auto.
 apply reducestar_cb with (a := x) (1 := cs); auto.
 Qed.
- 
+
 Definition foreigner : poly A0 eqA ltM -> poly A0 eqA ltM -> Prop.
 intros a b; case a; case b.
 intros x; case x.
@@ -708,7 +752,7 @@ intros a1 l0 H'0;
  exact
   (eqT (ppc (A:=A) A1 (n:=n) a0 a1) (multTerm (A:=A) multA (n:=n) a0 a1)).
 Defined.
- 
+
 Definition foreigner_dec :
   forall a b : poly A0 eqA ltM, {foreigner a b} + {~ foreigner a b}.
 intros a b; case a; case b.
@@ -718,10 +762,11 @@ intros a0 l c x0; case x0; simpl in |- *; auto.
 intros a1 l0 H'.
 apply eqT_dec; auto.
 Defined.
- 
+
 Theorem foreigner_red :
  forall (a b : poly A0 eqA ltM) (P : list (poly A0 eqA ltM)),
  foreigner a b -> In a P -> In b P -> red (spolyp a b) P.
+Proof.
 intros a b; case a; case b.
 intros x; case x.
 simpl in |- *; auto.

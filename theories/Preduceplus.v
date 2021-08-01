@@ -11,6 +11,8 @@
 
 From Buchberger Require Export Preduce.
 
+Set Default Proof Using "Type".
+
 Section Preduceplus.
 Load hCoefStructure.
 Load hOrderStructure.
@@ -24,6 +26,7 @@ list (Term A n) -> list (Term A n) -> Prop :=
       forall x y z : list (Term A n),
       reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q x y ->
       reduceplus Q y z -> reduceplus Q x z.
+
 Local Hint Resolve Rstar_0 : core.
  
 Theorem reduceplus_eqp_com :
@@ -31,6 +34,7 @@ Theorem reduceplus_eqp_com :
  reduceplus Q p q ->
  canonical A0 eqA ltM p ->
  eqP A eqA n p r -> eqP A eqA n q s -> reduceplus Q r s.
+Proof using plusA os cs.
 intros Q p q r s H'; generalize r s; clear r s; elim H'; auto.
 intros x y H'0 r s H'1 H'2 H'3.
 apply Rstar_0; auto.
@@ -43,11 +47,12 @@ apply reduce_eqp_com with (1 := cs) (p := x) (q := y); auto.
 apply H'2; auto.
 apply canonical_reduce with (1 := cs) (3 := H'0); auto.
 Qed.
- 
+
 Theorem reduceplus_trans :
  forall (Q : list (poly A0 eqA ltM)) (x y z : list (Term A n)),
  reduceplus Q x y ->
  canonical A0 eqA ltM x -> reduceplus Q y z -> reduceplus Q x z.
+Proof using plusA os cs.
 intros Q x y z H'; elim H'; auto.
 intros x0 y0 H'0 H'1 H'2.
 apply reduceplus_eqp_com with (p := y0) (q := z); auto.
@@ -58,10 +63,11 @@ apply Rstar_n with (y := y0); auto.
 apply H'2; auto.
 apply canonical_reduce with (1 := cs) (3 := H'0); auto.
 Qed.
- 
+
 Theorem canonical_reduceplus :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduceplus Q p q -> canonical A0 eqA ltM p -> canonical A0 eqA ltM q.
+Proof using plusA os cs.
 intros Q p q H'; elim H'; auto.
 intros x y H H0.
 apply eqp_imp_canonical with (1 := cs) (p := x); auto.
@@ -69,11 +75,12 @@ intros x y z H'0 H'1 H'2 H'3.
 apply H'2; auto.
 apply canonical_reduce with (1 := cs) (3 := H'0); auto.
 Qed.
- 
+
 Theorem order_reduceplus :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduceplus Q p q ->
  canonical A0 eqA ltM p -> ltP (A:=A) (n:=n) ltM q p \/ eqP A eqA n p q.
+Proof using plusA os cs.
 intros Q p q H'; elim H'; auto.
 intros x y z H'0 H'1 H'2 H'3; left; try assumption.
 elim H'2;
@@ -91,6 +98,7 @@ Theorem reduceplus_skip :
  reduceplus Q p q ->
  canonical A0 eqA ltM (pX a p) ->
  eqTerm (A:=A) eqA (n:=n) a b -> reduceplus Q (pX a p) (pX b q).
+Proof using plusA os cs.
 intros Q a b p q H'; generalize a b; clear a b; elim H'; auto.
 intros x y z H'0 H'1 H'2 a b H'3 H'4.
 apply Rstar_n with (y := pX b y); auto.
@@ -106,20 +114,24 @@ apply canonical_imp_canonical with (a := a); auto.
 apply (canonical_pX_ltP A A0 eqA); auto.
 apply eqp_imp_canonical with (1 := cs) (p := pX a x); auto.
 Qed.
+
 Local Hint Resolve reduceplus_skip : core.
  
 Theorem reduce_imp_reduceplus :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q p q ->
  reduceplus Q p q.
+Proof using plusA cs.
 intros Q p q H'.
 apply Rstar_n with (y := q); auto.
 Qed.
+
 Local Hint Resolve reduce_imp_reduceplus : core.
 
 Lemma pO_reduceplus :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduceplus Q (pO A n) p -> p = pO A n.
+Proof.
 intros Q p q H'; inversion H'; auto.
 inversion H; auto.
 case (pO_reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q y);
@@ -140,6 +152,7 @@ Theorem rep_plus_reduce :
       eqP A eqA n s
         (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
            p1 q1)).
+Proof using os cs.
 intros Q p q; pattern p, q in |- *.
 apply (Opm_ind A n ltM ltM_dec); intros; auto.
 exists (pO A n); exists s; split; [ idtac | split ]; auto.
@@ -414,13 +427,14 @@ rewrite pX_invl with (1 := H4); auto.
 apply pluspf_inv3b with (1 := cs); auto.
 rewrite <- pX_invr with (1 := H4); auto.
 Qed.
- 
+
 Theorem reduceplus_mults :
  forall (Q : list (poly A0 eqA ltM)) (a : Term A n) (p q : list (Term A n)),
  reduceplus Q p q ->
  canonical A0 eqA ltM p ->
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
  reduceplus Q (mults (A:=A) multA (n:=n) a p) (mults (A:=A) multA (n:=n) a q).
+Proof using plusA os cs.
 intros Q a p q H'; elim H'; auto.
 intros x y z H'0 H'1 H'2 H'3 H'4.
 apply Rstar_n with (y := mults (A:=A) multA (n:=n) a y); auto.
@@ -428,7 +442,7 @@ apply reduce_mults with (1 := cs); auto.
 apply H'2; auto.
 apply canonical_reduce with (1 := cs) (3 := H'0); auto.
 Qed.
- 
+
 Lemma reduceplus_mults_invr_lem :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduceplus Q p q ->
@@ -438,6 +452,7 @@ Lemma reduceplus_mults_invr_lem :
  canonical A0 eqA ltM r ->
  reduceplus Q r
    (mults (A:=A) multA (n:=n) (invTerm (A:=A) invA (n:=n) (T1 A1 n)) q).
+Proof using plusA os cs.
 intros Q p q H'; elim H'; auto.
 intros x y H'0 r H'1 H'2.
 apply Rstar_0; auto.
@@ -489,7 +504,7 @@ apply
     (1 := cs); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Theorem reduceplus_mults_invr :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduceplus Q
@@ -497,6 +512,7 @@ Theorem reduceplus_mults_invr :
  canonical A0 eqA ltM p ->
  reduceplus Q p
    (mults (A:=A) multA (n:=n) (invTerm (A:=A) invA (n:=n) (T1 A1 n)) q).
+Proof using plusA os cs.
 intros Q p q H' H'0.
 apply
  reduceplus_mults_invr_lem
@@ -504,7 +520,7 @@ apply
     (p := mults (A:=A) multA (n:=n) (invTerm (A:=A) invA (n:=n) (T1 A1 n)) p);
  auto.
 Qed.
- 
+
 Theorem reduceplus_mults_invf0 :
  forall a : Term A n,
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
@@ -516,6 +532,7 @@ Theorem reduceplus_mults_invf0 :
  canonical A0 eqA ltM r ->
  eqP A eqA n p (mults (A:=A) multA (n:=n) a r) ->
  eqP A eqA n q (mults (A:=A) multA (n:=n) a s) -> reduceplus Q r s.
+Proof using plusA os cs.
 intros a H' H'0 Q p q H'1; elim H'1; auto.
 intros x y H'2 H'3 r s H'4 H'5 H'6.
 apply Rstar_0; auto.
@@ -562,7 +579,7 @@ apply divTerm_multTerm_l with (1 := cs); auto.
 apply divTerm_on_eqT with (1 := cs); auto.
 apply (eqT_sym A n); auto.
 Qed.
- 
+
 Theorem reduceplus_mults_inv :
  forall a : Term A n,
  ~ zeroP (A:=A) A0 eqA (n:=n) a ->
@@ -570,6 +587,7 @@ Theorem reduceplus_mults_inv :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  reduceplus Q (mults (A:=A) multA (n:=n) a p) (mults (A:=A) multA (n:=n) a q) ->
  canonical A0 eqA ltM p -> reduceplus Q p q.
+Proof using plusA os cs.
 intros a H' H'0 Q p q H'1 H'2.
 apply
  reduceplus_mults_invf0
@@ -578,7 +596,7 @@ apply
     (p := mults (A:=A) multA (n:=n) a p)
     (q := mults (A:=A) multA (n:=n) a q); auto.
 Qed.
- 
+
 Theorem rep_minus_reduce :
  forall (Q : list (poly A0 eqA ltM)) (p q s : list (Term A n)),
  reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q
@@ -591,6 +609,7 @@ Theorem rep_minus_reduce :
       reduceplus Q q q1 /\
       eqP A eqA n s
         (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p1 q1)).
+Proof using plusA os cs.
 intros Q p q s H' H'0 H'1.
 elim
  (rep_plus_reduce Q p
@@ -652,7 +671,7 @@ apply
     (p := minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p q)
     (q := s); auto.
 Qed.
- 
+
 Theorem rep_plus_zero_reduce :
  forall (Q : list (poly A0 eqA ltM)) (s t : list (Term A n)),
  reduceplus Q s t ->
@@ -667,6 +686,7 @@ Theorem rep_plus_zero_reduce :
    reduceplus Q p r1 /\
    reduceplus Q q
      (mults (A:=A) multA (n:=n) (invTerm (A:=A) invA (n:=n) (T1 A1 n)) r1).
+Proof using os cs.
 intros Q s t H'; elim H'.
 intros x y eqxy Op p q H'0 H'1 H'2 H'3; exists p; split; auto.
 apply Rstar_0; auto.
@@ -770,7 +790,7 @@ apply canonical_reduceplus with (Q := Q) (p := p); auto.
 apply canonical_reduceplus with (Q := Q) (p := q); auto.
 apply reduce_eqp_com with (p := x) (q := y) (1 := cs); auto.
 Qed.
- 
+
 Theorem red_plus_zero_reduce :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  canonical A0 eqA ltM p ->
@@ -782,6 +802,7 @@ Theorem red_plus_zero_reduce :
    reduceplus Q p r1 /\
    reduceplus Q q
      (mults (A:=A) multA (n:=n) (invTerm (A:=A) invA (n:=n) (T1 A1 n)) r1).
+Proof using os cs.
 intros Q p q H' H'0 H'1.
 apply
  rep_plus_zero_reduce
@@ -790,7 +811,7 @@ apply
             p q)
     (t := pO A n); auto.
 Qed.
- 
+
 Theorem red_minus_zero_reduce :
  forall (Q : list (poly A0 eqA ltM)) (p q : list (Term A n)),
  canonical A0 eqA ltM p ->
@@ -799,6 +820,7 @@ Theorem red_minus_zero_reduce :
    (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p q) 
    (pO A n) ->
  exists r1 : list (Term A n), reduceplus Q p r1 /\ reduceplus Q q r1.
+Proof using plusA os cs.
 intros Q p q H' H'0 H'1.
 elim
  (red_plus_zero_reduce Q p
@@ -829,7 +851,7 @@ apply
     (p := minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p q)
     (q := pO A n); auto.
 Qed.
- 
+
 Theorem reduce_plus_top :
  forall (Q : list (poly A0 eqA ltM)) (r : list (Term A n)),
  canonical A0 eqA ltM r ->
@@ -847,6 +869,7 @@ Theorem reduce_plus_top :
       (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
          (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a
             b nZb p q) r) s).
+Proof using os cs.
 intros Q r; elim r; auto.
 intros H' a b nZb p q H'0 H'1 H'2;
  exists
@@ -1065,7 +1088,7 @@ apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply spminusf_plusTerm with (1 := cs); auto.
 apply canonical_spminusf_full_t with (1 := cs); auto.
 Qed.
- 
+
 Theorem one_plus_reduceplus :
  forall (Q : list (poly A0 eqA ltM)) (p1 p2 : list (Term A n)),
  reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q p1 p2 ->
@@ -1079,6 +1102,7 @@ Theorem one_plus_reduceplus :
    reduceplus Q
      (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec p2
         r) s.
+Proof using os cs.
 intros Q p1 p2 H'; elim H'; auto.
 intros a b nZb p q r H'0 H'1 H'2 r0 H'3 H'4.
 lapply (reduce_plus_top Q r0);
@@ -1241,7 +1265,7 @@ apply
     (p := pX a p)
     (1 := cs); auto.
 Qed.
- 
+
 Theorem one_minus_reduceplus :
  forall (Q : list (poly A0 eqA ltM)) (p1 p2 : list (Term A n)),
  reduce A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec Q p1 p2 ->
@@ -1253,6 +1277,7 @@ Theorem one_minus_reduceplus :
      (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p1 r) s /\
    reduceplus Q
      (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p2 r) s.
+Proof using plusA os cs.
 intros Q p1 p2 H' r H'0 H'1.
 lapply (one_plus_reduceplus Q p1 p2);
  [ intros H'5;
@@ -1283,4 +1308,5 @@ apply
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply canonical_reduce with (1 := cs) (3 := H'); auto.
 Qed.
+
 End Preduceplus.

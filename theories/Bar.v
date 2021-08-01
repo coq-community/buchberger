@@ -3,6 +3,8 @@
 
 From Coq Require Import List.
 
+Set Default Proof Using "Type".
+
 Definition Pred (A : Type) := A -> Prop.
 
 Definition Rel (A : Type) := A -> A -> Prop.
@@ -11,13 +13,16 @@ Inductive ExistsL (A : Type) (P : Pred A) : list A -> Type :=
   | FoundE : forall (a : A) (l : list A), P a -> ExistsL A P (a :: l)
   | SearchE :
       forall (a : A) (l : list A), ExistsL A P l -> ExistsL A P (a :: l).
+
 Global Hint Resolve FoundE SearchE : core.
 
 Lemma monExistsL1 :
  forall (A : Type) (P : Pred A) (xs bs : list A),
  ExistsL A P bs -> ExistsL A P (xs ++ bs).
+Proof.
 intros A P xs; elim xs; simpl in |- *; auto.
 Qed.
+
 Global Hint Resolve monExistsL1 : core.
 
 Lemma monExistsL :
@@ -27,6 +32,7 @@ Proof.
 intros A P xs; elim xs; simpl in |- *; auto.
 intros a l H' bs cs H'0; inversion H'0; auto.
 Qed.
+
 Global Hint Resolve monExistsL : core.
 
 Inductive GoodR (A : Type) (R : Rel A) : list A -> Type :=
@@ -34,6 +40,7 @@ Inductive GoodR (A : Type) (R : Rel A) : list A -> Type :=
       forall (a : A) (l : list A),
       ExistsL A (fun x : A => R x a) l -> GoodR A R (a :: l)
   | SearchG : forall (a : A) (l : list A), GoodR A R l -> GoodR A R (a :: l).
+
 Global Hint Resolve FoundG SearchG : core.
 
 Lemma monGoodR1 :
@@ -42,6 +49,7 @@ Lemma monGoodR1 :
 Proof.
 intros A R xs; elim xs; simpl in |- *; auto.
 Qed.
+
 Global Hint Resolve monGoodR1 : core.
 
 Lemma monGoodR :
@@ -51,6 +59,7 @@ Proof.
 intros A R xs bs cs; elim xs; simpl in |- *; auto.
 intros a l H' H'0; inversion H'0; simpl in |- *; auto.
 Qed.
+
 Global Hint Resolve monGoodR : core.
 
 Lemma subPredExistsL :
@@ -74,11 +83,13 @@ Qed.
 Inductive Bar (A : Type) (P : list A -> Type) : list A -> Type :=
   | Base : forall l : list A, P l -> Bar A P l
   | Ind : forall l : list A, (forall a : A, Bar A P (a :: l)) -> Bar A P l.
+
 Global Hint Resolve Base Ind : core.
 
 Definition GRBar (A : Type) (R : Rel A) := Bar A (GoodR A R).
 
 Definition WR (A : Type) (R : Rel A) := GRBar A R nil.
+
 Global Hint Unfold GRBar WR : core.
 
 Lemma subRelGRBar :
@@ -86,6 +97,7 @@ Lemma subRelGRBar :
  (forall a b : A, R a b -> S (f a) (f b)) ->
  (forall b : B, {a : A | b = f a}) ->
  forall l : list A, GRBar A R l -> GRBar B S (map f l).
+Proof.
 intros A B R S f H' H'0 l H'1; elim H'1; simpl in |- *; auto.
 intros l0 H'2.
 red in |- *; apply Base; auto.
@@ -100,8 +112,10 @@ Qed.
 Lemma consGRBar :
  forall (A : Type) (R : Rel A) (l : list A),
  GRBar A R l -> forall a : A, GRBar A R (a :: l).
+Proof.
 intros A R l H'; elim H'; auto.
 Qed.
+
 Global Hint Resolve consGRBar : core.
 
 Lemma nilGRBar :
@@ -132,6 +146,7 @@ Proof.
 intros A R xs bs cs H'.
 apply monGRBarAux with (l := xs ++ cs); auto.
 Qed.
+
 Global Hint Resolve monGRBar : core.
 
 Section lems.
@@ -160,4 +175,5 @@ intros F f H' H'0; red in |- *.
 intros H'1; inversion H'1; auto.
 apply tdivExists_trmHd_lem with (F := F) (f := f); auto.
 Qed.
+
 End lems.

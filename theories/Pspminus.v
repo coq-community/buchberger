@@ -11,6 +11,8 @@
 
 From Buchberger Require Export Pminus DivTerm.
 
+Set Default Proof Using "Type".
+
 Section Pspminus.
 Load hCoefStructure.
 Load hOrderStructure.
@@ -18,6 +20,7 @@ Load hMinus.
  
 Theorem divP_is_not_order :
  forall a b : Term A n, divP A A0 eqA multA divA n a b -> ~ ltT ltM a b.
+Proof using plusA os minusA ltM_dec invA cs A1.
 intros a b H'; inversion H'.
 case
  (ltT_dec A n ltM ltM_dec (T1 A1 n)
@@ -54,12 +57,14 @@ apply (eqT_trans A n) with (y := multTerm (A:=A) multA (n:=n) (T1 A1 n) b);
 apply (eqT_sym A n); auto.
 apply (eqT_sym A n); apply (eqTerm_imp_eqT A eqA); auto.
 Qed.
+
 Local Hint Resolve divP_is_not_order : core.
- 
+
 Theorem divP_ltT_comp :
  forall (a b : Term A n) (p : list (Term A n)),
  canonical A0 eqA ltM (pX b p) ->
  divP A A0 eqA multA divA n a b -> canonical A0 eqA ltM (pX a p).
+Proof using plusA os minusA ltM_dec invA cs A1.
 intros a b p; case p; auto.
 intros H' H'0.
 change (canonical A0 eqA ltM (pX a (pO A n))) in |- *; apply canonicalp1;
@@ -79,7 +84,7 @@ apply (canonical_pX_order _ A0 eqA) with (l := l); auto.
 apply divP_inv1 with (1 := H'0); auto.
 apply canonical_imp_canonical with (a := b); auto.
 Qed.
- 
+
 Definition spminusf (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
   (p q : list (Term A n)) :=
   minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p
@@ -89,7 +94,7 @@ Definition spminusf (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
 Theorem sp_rew :
  forall (a b : Term A n) (nZ1 nZ2 : ~ zeroP (A:=A) A0 eqA (n:=n) b)
    (p q : list (Term A n)), spminusf a b nZ1 p q = spminusf a b nZ2 p q.
-auto; auto.
+Proof using plusA cs.
 intros a b nZ1 nZ2 p q; unfold spminusf in |- *.
 change
   (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p
@@ -111,6 +116,7 @@ Theorem rew_spminusf :
  minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p
    (mults (A:=A) multA (n:=n)
       (divTerm (A:=A) (A0:=A0) (eqA:=eqA) divA (n:=n) a (b:=b) nZb) q).
+Proof.
 simpl in |- *; auto.
 Qed.
 
@@ -121,9 +127,11 @@ Theorem canonical_spminusf :
  canonical A0 eqA ltM q ->
  divP A A0 eqA multA divA n a b ->
  canonical A0 eqA ltM (spminusf a b nZb p q).
+Proof using plusA os cs.
 unfold spminusf in |- *.
 intros a b nZb p q H' H'0 H'1; apply canonical_minuspf with (1 := cs); auto.
 Qed.
+
 Local Hint Resolve canonical_spminusf : core.
  
 Theorem spminusf_extend :
@@ -133,6 +141,7 @@ Theorem spminusf_extend :
  canonical A0 eqA ltM (pX a p) ->
  canonical A0 eqA ltM (pX b q) ->
  eqP A eqA n (spminusf a b nZb p q) (spminusf a b nZb (pX a p) (pX b q)).
+Proof using plusA os cs.
 intros a b nZb p q H'; unfold spminusf in |- *; simpl in |- *; inversion H'.
 intros H'0 H'1;
  apply
@@ -162,7 +171,7 @@ change
      (mults (A:=A) multA (n:=n) (divTerm divA a nZb) (pX b q))) 
  in |- *; auto.
 Qed.
- 
+
 Theorem canonical_spminusf_full :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
    (p q : list (Term A n)),
@@ -170,10 +179,12 @@ Theorem canonical_spminusf_full :
  canonical A0 eqA ltM (pX b q) ->
  divP A A0 eqA multA divA n a b ->
  canonical A0 eqA ltM (spminusf a b nZb p q).
+Proof using plusA os cs.
 intros a b nZb p q H' H'0 H'1; apply canonical_spminusf; auto.
 apply canonical_imp_canonical with (a := a); auto.
 apply canonical_imp_canonical with (a := b); auto.
 Qed.
+
 Local Hint Resolve canonical_spminusf_full : core.
  
 Theorem canonical_spminusf_full_t :
@@ -183,6 +194,7 @@ Theorem canonical_spminusf_full_t :
  canonical A0 eqA ltM (pX b q) ->
  divP A A0 eqA multA divA n a b ->
  canonical A0 eqA ltM (pX a (spminusf a b nZb p q)).
+Proof using plusA os cs.
 unfold spminusf in |- *.
 intros a b nZb p q H' H'0 H'1; try assumption.
 inversion H'1.
@@ -199,8 +211,9 @@ change
  in |- *; auto.
 apply (eqT_sym A n); apply (eqTerm_imp_eqT A eqA n); auto.
 Qed.
+
 Local Hint Resolve canonical_spminusf_full_t : core.
- 
+
 Theorem spminusf_pluspf :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
    (p q r : list (Term A n)),
@@ -214,6 +227,7 @@ Theorem spminusf_pluspf :
          q) r)
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
       (spminusf a b nZb p r) q).
+Proof using os cs.
 intros a b nZb p q r H' H'0 H'1 H'2; unfold spminusf in |- *.
 inversion H'2.
 apply
@@ -265,8 +279,9 @@ apply
  auto.
 apply eqp_pluspf_com with (1 := cs); auto.
 Qed.
+
 Local Hint Resolve spminusf_pluspf : core.
- 
+
 Theorem eqptail_spminusf_com :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
    (p q r : list (Term A n)),
@@ -276,6 +291,7 @@ Theorem eqptail_spminusf_com :
  eqP A eqA n p q ->
  divP A A0 eqA multA divA n a b ->
  eqP A eqA n (spminusf a b nZb p r) (spminusf a b nZb q r).
+Proof using plusA os cs.
 unfold spminusf in |- *; auto.
 Qed.
  
@@ -287,6 +303,7 @@ Theorem eqTerm_spminusf_com :
  eqTerm (A:=A) eqA (n:=n) a b ->
  divP A A0 eqA multA divA n a c ->
  eqP A eqA n (spminusf a c nZc p q) (spminusf b c nZc p q).
+Proof using plusA os cs.
 intros a b c nZc p q H' H'0 H'1 H'2.
 cut (divP A A0 eqA multA divA n b c); [ intros H'3 | auto ].
 unfold spminusf in |- *; auto.
@@ -303,6 +320,7 @@ Theorem eqp_spminusf_com :
  eqTerm (A:=A) eqA (n:=n) a b ->
  divP A A0 eqA multA divA n a c ->
  eqP A eqA n (spminusf a c nZc p r) (spminusf b c nZc q r).
+Proof using plusA os cs.
 intros a b c nZc p q r H' H'0 H'1 H'2 H'3 H'4.
 apply (eqp_trans _ _ _ _ _ _ _ _ _ cs n) with (y := spminusf b c nZc p r);
  auto.
@@ -310,6 +328,7 @@ apply eqTerm_spminusf_com; auto.
 apply eqptail_spminusf_com; auto.
 apply divP_eqTerm_comp with (1 := cs) (a := a); auto.
 Qed.
+
 Local Hint Resolve eqTerm_spminusf_com eqp_spminusf_com eqp_spminusf_com : core.
  
 Theorem spminusf_minuspf :
@@ -324,6 +343,7 @@ Theorem spminusf_minuspf :
       (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p q) r)
    (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec
       (spminusf a b nZb p r) q).
+Proof using plusA os cs.
 intros a b nZb p q r H' H'0 H'1 H'2; try assumption.
 apply
  (eqp_trans _ _ _ _ _ _ _ _ _ cs n)
@@ -343,7 +363,7 @@ apply
                q)); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Theorem spminusf_plusTerm :
  forall (a b c : Term A n) (nZc : ~ zeroP (A:=A) A0 eqA (n:=n) c)
    (p q r : list (Term A n)),
@@ -360,6 +380,7 @@ Theorem spminusf_plusTerm :
          q) r)
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
       (spminusf a c nZc p r) (spminusf b c nZc q r)).
+Proof using os cs.
 intros a b c nZc p q r H' H'0 H'1 H'2 H'3 H'4 H'5; unfold spminusf in |- *.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n);
  apply
@@ -532,7 +553,7 @@ apply
 apply eqT_divTerm_plusTerm with (1 := cs); auto.
 inversion H'2; inversion H'3; auto.
 Qed.
- 
+
 Theorem spminusf_multTerm :
  forall (a b c : Term A n) (nZc : ~ zeroP (A:=A) A0 eqA (n:=n) c)
    (p q : list (Term A n)),
@@ -544,6 +565,7 @@ Theorem spminusf_multTerm :
    (spminusf (multTerm (A:=A) multA (n:=n) a b) c nZc
       (mults (A:=A) multA (n:=n) a p) q)
    (mults (A:=A) multA (n:=n) a (spminusf b c nZc p q)).
+Proof using plusA os cs.
 intros a b c nZc p q H' H'0 H'1 H'2; unfold spminusf in |- *.
 apply
  (eqp_trans _ _ _ _ _ _ _ _ _ cs n)
@@ -578,8 +600,9 @@ apply
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n);
  apply mults_dist_minuspf with (1 := cs); auto.
 Qed.
+
 Local Hint Resolve spminusf_plusTerm spminusf_multTerm : core.
- 
+
 Theorem spminusf_minusTerm_l :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
    (p q r : list (Term A n)),
@@ -592,6 +615,7 @@ Theorem spminusf_minusTerm_l :
       (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p q) r)
    (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec
       (spminusf a b nZb p r) q).
+Proof using plusA os cs.
 intros a b nZb p q r H' H'0 H'1 H'2.
 apply
  (eqp_trans _ _ _ _ _ _ _ _ _ cs n)
@@ -611,7 +635,7 @@ apply
                q)); [ auto | idtac ].
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Theorem spminusf_plusTerm_l :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
    (p q r : list (Term A n)),
@@ -625,6 +649,7 @@ Theorem spminusf_plusTerm_l :
          q) r)
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
       (spminusf a b nZb p r) q).
+Proof using os cs.
 intros a b nZb p q r H' H'0 H'1 H'2.
 apply
  (eqp_trans _ _ _ _ _ _ _ _ _ cs n)
@@ -633,7 +658,7 @@ apply
             (spminusf a b nZb p r) q); [ auto | idtac ].
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
- 
+
 Theorem spminusf_minusTerm_r :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
    (p q r : list (Term A n)),
@@ -646,6 +671,7 @@ Theorem spminusf_minusTerm_r :
       (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p q) r)
    (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p
       (spminusf (invTerm (A:=A) invA (n:=n) a) b nZb q r)).
+Proof using plusA os cs.
 intros a b nZb p q r H' H'0 H'1 H'2; try assumption.
 apply
  (eqp_trans _ _ _ _ _ _ _ _ _ cs n)
@@ -734,8 +760,9 @@ apply divP_eqTerm_comp with (a := invTerm (A:=A) invA (n:=n) a) (1 := cs);
 apply eqTerm_spminusf_com; auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
+
 Local Hint Resolve spminusf_minusTerm_r : core.
- 
+
 Theorem spminusf_plusTerm_r :
  forall (a b : Term A n) (nZb : ~ zeroP (A:=A) A0 eqA (n:=n) b)
    (p q r : list (Term A n)),
@@ -749,6 +776,7 @@ Theorem spminusf_plusTerm_r :
          q) r)
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec p
       (spminusf a b nZb q r)).
+Proof using os cs.
 intros a b nZb p q r H' H'0 H'1 H'2; try assumption.
 apply
  (eqp_trans _ _ _ _ _ _ _ _ _ cs n)
@@ -763,6 +791,7 @@ apply
             (spminusf a b nZb q r) p); [ auto | idtac ].
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
+
 Local Hint Resolve spminusf_plusTerm_r : core.
  
 Theorem divP_minusTerm_comp :
@@ -772,6 +801,7 @@ Theorem divP_minusTerm_comp :
  eqT a b ->
  ~ zeroP (A:=A) A0 eqA (n:=n) (minusTerm (A:=A) minusA (n:=n) a b) ->
  divP A A0 eqA multA divA n (minusTerm (A:=A) minusA (n:=n) a b) c.
+Proof using plusA invA cs A1.
 intros a b c H' H'0 H'1 H'2.
 apply
  divP_eqTerm_comp
@@ -785,6 +815,7 @@ apply
  auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
+
 Local Hint Resolve divP_minusTerm_comp : core.
  
 Theorem spminusf_minusTerm :
@@ -802,6 +833,7 @@ Theorem spminusf_minusTerm :
       (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p q) r)
    (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec
       (spminusf a c nZc p r) (spminusf b c nZc q r)).
+Proof using plusA os cs.
 intros a b c nZc p q r H' H'0 H'1 H'2 H'3 H'4 H'5.
 apply
  (eqp_trans _ _ _ _ _ _ _ _ _ cs n)
@@ -876,7 +908,7 @@ apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply (divP_trans _ _ _ _ _ _ _ _ _ cs n) with (y := b); auto.
 inversion H'3; auto.
 Qed.
- 
+
 Theorem spminusf_minusTerm_z :
  forall (a b c : Term A n) (nZc : ~ zeroP (A:=A) A0 eqA (n:=n) c)
    (p q r : list (Term A n)),
@@ -891,6 +923,7 @@ Theorem spminusf_minusTerm_z :
    (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec p q)
    (minuspf A A0 A1 eqA invA minusA multA eqA_dec n ltM ltM_dec
       (spminusf a c nZc p r) (spminusf b c nZc q r)).
+Proof using plusA os cs.
 intros a b c nZc p q r H' H'0 H'1 H'2 H'3 H'4 H'5.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n);
  apply
@@ -1217,6 +1250,7 @@ apply
 apply divTerm_invTerm_l with (1 := cs); auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 Qed.
+
 Local Hint Resolve spminusf_minusTerm : core.
  
 Theorem spminusf_plusTerm_z :
@@ -1233,6 +1267,7 @@ Theorem spminusf_plusTerm_z :
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec p q)
    (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
       (spminusf a c nZc p r) (spminusf b c nZc q r)).
+Proof using os cs.
 intros a b c nZc p q r H' H'0 H'1 H'2 H'3 H'4 H'5.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n);
  apply
@@ -1523,6 +1558,7 @@ apply (eqTerm_imp_eqT A eqA); auto.
 apply (eqTerm_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply divTerm_invTerm_l with (1 := cs); auto.
 Qed.
+
 Local Hint Resolve spminusf_minusTerm : core.
 
 Theorem ltP_divP_pX :
@@ -1530,6 +1566,7 @@ Theorem ltP_divP_pX :
  canonical A0 eqA ltM (pX a p) ->
  canonical A0 eqA ltM (pX b q) ->
  divP A A0 eqA multA divA n a b -> ltP (A:=A) (n:=n) ltM q (pX a p).
+Proof using plusA os minusA ltM_dec invA cs A1.
 intros a b p; case p; auto.
 intros q H' H'0 H'1; try assumption.
 change (ltP (A:=A) (n:=n) ltM q (pX a (pO A n))) in |- *; auto.
@@ -1538,4 +1575,5 @@ intros a0 l q H' H'0 H'1; apply ltP_trans with (y := pX a (pO A n)); auto.
 apply (canonical_pX_ltP A A0 eqA); apply divP_ltT_comp with (b := b); auto.
 change (ltP (A:=A) (n:=n) ltM (pX a (pO A n)) (pX a (pX a0 l))) in |- *; auto.
 Qed.
+
 End Pspminus.
