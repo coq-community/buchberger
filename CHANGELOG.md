@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [8.13.0] - 2021-08-01
+
 ### Added
 - Proof using annotations
 
@@ -27,5 +29,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Reorganize files into subdirectories
 - Generalize definitions and results from Set to Type
 
-[Unreleased]: https://github.com/coq-community/chapar/compare/v8.11.0...master
+[Unreleased]: https://github.com/coq-community/chapar/compare/v8.13.0...master
+[8.13.0]: https://github.com/coq-community/chapar/releases/tag/v8.13.0
 [8.11.0]: https://github.com/coq-community/chapar/releases/tag/v8.11.0
