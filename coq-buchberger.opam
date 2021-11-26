@@ -16,10 +16,11 @@ A verified implementation of Buchberger's algorithm in Coq,
 which computes the Gröbner basis associated with a polynomial ideal.
 Also includes a constructive proof of Dickson's lemma."""
 
-build: [make "-j%{jobs}%" ]
+build: [make "-j%{jobs}%"]
 install: [make "install"]
 depends: [
   "coq" {(>= "8.12" & < "8.15~") | (= "dev")}
+  "coq-equations" {>= "1.2"}
 ]
 
 tags: [

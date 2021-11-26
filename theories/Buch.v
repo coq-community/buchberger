@@ -542,7 +542,7 @@ apply well_founded_induction_type with (A := list (poly A0 eqA ltM)) (R := Tl);
 try exact wf_Tl.
 intros aP; case aP.
 intros H' R; exists R; auto.
-intros a L1 Rec L; generalize (refl_equal (slice i a L1));
+intros a L1 Rec L; generalize (@refl_equal _ (slice i a L1));
  pattern (slice i a L1) at 2 in |- *; case (slice i a L1).
 intros L2 H'.
 lapply (Rec L2); [ intros H'1; elim (H'1 L); intros L3 E | idtac ]; auto.
@@ -1249,9 +1249,9 @@ Proof.
 unfold FPset in |- *; simpl in |- *.
 intros x; generalize wf_Tl; auto.
 Qed.
- 
+
 Let Co :=
-  lexprod (list (poly A0 eqA ltM)) FPset
+  @lexprod (list (poly A0 eqA ltM)) FPset
     (RO A A0 A1 eqA plusA invA minusA multA divA cs eqA_dec n ltM ltM_dec os)
     Fl.
 

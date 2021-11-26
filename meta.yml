@@ -45,6 +45,13 @@ supported_coq_versions:
   text: 8.12 or later
   opam: '{(>= "8.12" & < "8.15~") | (= "dev")}'
 
+dependencies:
+- opam:
+    name: coq-equations
+    version: '{>= "1.2"}'
+  description: |-
+    [Equations](https://github.com/mattam82/Coq-Equations) 1.2 or later
+
 tested_coq_nix_versions:
 - coq_version: 'master'
 
