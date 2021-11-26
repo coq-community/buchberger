@@ -41,6 +41,7 @@ Also includes a constructive proof of Dickson's lemma.
 - Related publication(s):
   - [A machine checked implementation of Buchberger's algorithm](https://link.springer.com/article/10.1023/A:1026518331905) doi:[10.1023/A:1026518331905](https://doi.org/10.1023/A:1026518331905)
   - [An Integrated Development of Buchberger's Algorithm in Coq](https://hal.inria.fr/inria-00072316/) 
+  - [Gröbner Bases in Type Theory](https://link.springer.com/chapter/10.1007/3-540-48167-2_3) doi:[10.1007/3-540-48167-2_3](https://doi.org/10.1007/3-540-48167-2_3)
 
 ## Building and installation instructions
 
