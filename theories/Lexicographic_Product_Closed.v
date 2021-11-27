@@ -8,31 +8,37 @@
 (*         *     (see LICENSE file for the text of the license)         *)
 (************************************************************************)
 
+(** Authors: Bruno Barras, Cristina Cornes *)
+
+Require Import EqdepFacts.
 Require Import Relation_Operators.
 Require Import Transitive_Closure.
-From Equations Require Import Equations.
+Require Import Inclusion.
+Require Import Inverse_Image.
 
-Derive Signature for Relation_Operators.lexprod.
+(**  From : Constructing Recursion Operators in Type Theory
+     L. Paulson  JSC (1986) 2, 325-355 *)
 
-Section WfLexicographic_Product_Closed.
+Section WfLexicographic_Product.
+
   Variable A : Type.
   Variable B : A -> Type.
   Variable leA : A -> A -> Prop.
-  Variable leB : forall x:A, B x -> B x -> Prop.
+  Variable leB : forall x : A, B x -> B x -> Prop.
 
-  Notation LexProd := (@Relation_Operators.lexprod A B leA leB).
+  Notation LexProd := (lexprod A B leA leB).
 
   Lemma acc_A_B_lexprod_closed :
-    forall x:A,
+    forall x : A,
       Acc leA x ->
-      (forall x0:A, clos_trans A leA x0 x -> well_founded (leB x0)) ->
-      forall y:B x, Acc (leB x) y -> Acc LexProd (existT B x y).
+      (forall x0 : A, clos_trans A leA x0 x -> well_founded (leB x0)) ->
+      forall y : B x, Acc (leB x) y -> Acc LexProd (existT B x y).
   Proof.
     induction 1 as [x _ IHAcc]; intros H2 y.
     induction 1 as [x0 H IHAcc0]; intros.
     apply Acc_intro.
     destruct y as [x2 y1]; intro H6.
-    depelim H6.
+    simple inversion H6; intro.
     - cut (leA x2 x); intros.
       + apply IHAcc; auto with sets.
         * intros.
@@ -43,15 +49,19 @@ Section WfLexicographic_Product_Closed.
           apply H2.
           auto with sets.
 
-      + assumption.
+      + injection H1 as [= <- _].
+        injection H3 as [= <- _]; auto with sets.
 
-    - apply IHAcc0.
+    - rewrite <- H1.
+      apply eq_sigT_eq_dep in H3.
+      destruct H3.
+      apply IHAcc0.
       assumption.
   Defined.
 
   Theorem wf_lexprod_closed :
     well_founded leA ->
-    (forall x:A, well_founded (leB x)) -> well_founded LexProd.
+    (forall x : A, well_founded (leB x)) -> well_founded LexProd.
   Proof.
     intros wfA wfB; unfold well_founded.
     destruct a.
@@ -60,4 +70,5 @@ Section WfLexicographic_Product_Closed.
     auto with sets.
   Defined.
 
-End WfLexicographic_Product_Closed.
+
+End WfLexicographic_Product.
