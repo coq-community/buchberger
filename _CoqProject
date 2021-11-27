@@ -2,6 +2,7 @@
 
 -arg -w -arg -fragile-hint-constr
 
+theories/Lexicographic_Product_Closed.v
 theories/Relation_Operators_compat.v
 theories/Bar.v
 theories/BuchAux.v
