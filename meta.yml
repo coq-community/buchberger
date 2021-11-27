@@ -19,6 +19,9 @@ publications:
   pub_doi: 10.1023/A:1026518331905
 - pub_url: https://hal.inria.fr/inria-00072316/
   pub_title: An Integrated Development of Buchberger's Algorithm in Coq
+- pub_url: https://link.springer.com/chapter/10.1007/3-540-48167-2_3
+  pub_title: Gröbner Bases in Type Theory
+  pub_doi: 10.1007/3-540-48167-2_3
 
 authors:
 - name: Laurent Théry

@@ -13,3 +13,4 @@ _build
 *.vos
 *.vok
 *.v.d
+.coq-native/

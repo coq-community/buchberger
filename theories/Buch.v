@@ -857,8 +857,8 @@ rewrite H'3 in H'2; elim H'2; auto.
 intros H'5; rewrite H'5 in H'4; auto.
 intros P Q0 R0 a0 b0 c H'2 H'3 H'4 H'5 H'6 H'7 c0 Q1 H'8 H'9.
 apply redIn2 with (c := c); auto.
-apply H'4 with (c0 := c0); auto.
-apply H'6 with (c0 := c0); auto.
+apply (H'4 c0); auto.
+apply (H'6 c0); auto.
 Qed.
  
 Theorem redln_cons :
