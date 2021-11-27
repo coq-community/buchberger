@@ -36,8 +36,7 @@ Also includes a constructive proof of Dickson's lemma.
   - Karl Palmskog ([**@palmskog**](https://github.com/palmskog))
 - License: [GNU Lesser General Public License v2.1 or later](LICENSE)
 - Compatible Coq versions: 8.12 or later
-- Additional dependencies:
-  - [Equations](https://github.com/mattam82/Coq-Equations) 1.2 or later
+- Additional dependencies: none
 - Coq namespace: `Buchberger`
 - Related publication(s):
   - [A machine checked implementation of Buchberger's algorithm](https://link.springer.com/article/10.1023/A:1026518331905) doi:[10.1023/A:1026518331905](https://doi.org/10.1023/A:1026518331905)

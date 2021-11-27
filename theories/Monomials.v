@@ -10,8 +10,7 @@
    ************************************************************************ *)
 
 From Coq Require Import Arith Compare Compare_dec Peano_dec.
-From Coq Require Import Relation_Definitions Max.
-From Equations Require Import Equations.
+From Coq Require Import Relation_Definitions EqdepFacts Eqdep_dec Max.
 
 Set Default Proof Using "Type".
 
@@ -20,8 +19,6 @@ Section Monomials.
 Inductive mon : nat -> Set :=
   | n_0 : mon 0
   | c_n : forall d : nat, nat -> mon d -> mon (S d).
-
-Derive Signature NoConfusion NoConfusionHom for mon.
 
 (*
 Realizer [d: nat][m:(mon d)](Cases  m of n_0 => O | (c_n _ n _) => n end).
@@ -142,8 +139,6 @@ Inductive mdiv : forall d : nat, mon d -> mon d -> Prop :=
       forall (d : nat) (v v' : mon d) (n n' : nat),
       n <= n' -> mdiv d v v' -> mdiv (S d) (c_n d n v) (c_n d n' v').
 
-Derive Signature for mdiv.
-
 Local Hint Resolve mdiv_nil mdiv_cons : core.
 
 Lemma mdiv_proj :
@@ -155,19 +150,43 @@ intros d m m' H' H'0; rewrite <- (proj_ok d m); rewrite <- (proj_ok d m');
  auto.
 Qed.
 
+Lemma mdiv_inv : forall d x y,
+  mdiv d x y <->
+  match d return mon d -> mon d -> Prop with
+  | 0 => fun x y => n_0 = x /\ n_0 = y
+  | S d => fun x y => exists v v' n n', n <= n' /\ mdiv d v v' /\ c_n d n v = x /\ c_n d n' v' = y
+  end x y.
+Proof.
+intros d x y;split.
+- intros m;destruct m;eauto 8.
+- destruct d;intros m.
+  + destruct m as [[] []];constructor.
+  + destruct m as [? [? [? [? [? [? [[] []]]]]]]].
+    constructor;assumption.
+Defined.
+
 (* Division is transitive *)
 
 Lemma mdiv_trans : forall d : nat, transitive (mon d) (mdiv d).
 Proof.
 intros d; elim d; unfold transitive in |- *; auto.
-- intros x y z mdiv_xy.
-  depelim mdiv_xy; auto.
-- intros n Rec x y z mdiv_xy mdiv_yz.
-  depelim mdiv_xy.
-  depelim mdiv_yz.
+- intros x y z mxy myz.
+  apply mdiv_inv in mxy;apply mdiv_inv in myz.
+  apply mdiv_inv.
+  intuition.
+- intros n Rec x y z mxy myz.
+  apply mdiv_inv in mxy;apply mdiv_inv in myz.
+  destruct mxy as [vxy [vxy' [nxy [nxy' [Hnxy [Hdivxy [eq1 eq2]]]]]]].
+  destruct myz as [vyz [vyz' [nyz [nyz' [Hnyz [Hdivyz [eq3 eq4]]]]]]].
+  destruct eq1,eq2,eq4.
+  injection eq3;clear eq3;intros eqv eqn.
+  destruct eqn.
+  pose proof (eq_sigT_snd eqv) as eqv'.
+  rewrite (UIP_refl_nat n _) in eqv'.
+  simpl in eqv';destruct eqv';clear eqv.
   apply mdiv_cons.
-  * apply le_trans with (m := n'); auto.
-  * apply Rec with (y := v'); auto.
+  * apply le_trans with (m := nyz); assumption.
+  * apply Rec with (y := vyz); assumption.
 Qed.
 
 (* Division of monomials (total function!) *)
