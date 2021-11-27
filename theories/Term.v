@@ -52,7 +52,6 @@ Theorem eqTerm_sym : symmetric Term eqTerm.
 Proof using plusA multA minusA invA divA cs A1 A0.
 red in |- *.
 intros x y; case x; case y; simpl in |- *; intuition.
-apply (eqA_sym _ _ _ _ _ _ _ _ _ cs); auto.
 Qed.
  
 Theorem eqTerm_trans : transitive Term eqTerm.
@@ -218,8 +217,6 @@ Theorem plusTerm_assoc :
 Proof using multA minusA invA divA cs A1 A0.
 intros a b c; case a; case b; case c; simpl in |- *; auto.
 intuition.
-apply (eqA_sym _ _ _ _ _ _ _ _ _ cs).
-apply plusA_assoc with (1 := cs).
 Qed.
  
 Theorem eqTerm_plusTerm_comp :

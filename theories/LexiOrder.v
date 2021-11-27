@@ -9,7 +9,7 @@
 (*                                                                           *)
 (* ************************************************************************* *)
 
-From Coq Require Import Eqdep Arith Compare_dec.
+From Coq Require Import Arith Compare_dec.
 From Buchberger Require Import Monomials LetP.
 
 Set Default Proof Using "Type".

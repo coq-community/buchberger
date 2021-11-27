@@ -3,8 +3,8 @@
 
 From Coq Require Export List.
 From Coq Require Import Arith Inclusion Inverse_Image Wf_nat Relation_Definitions.
-From Coq Require Import Relation_Operators Lexicographic_Product.
-From Buchberger Require Import Relation_Operators_compat LetP.
+From Coq Require Import Relation_Operators.
+From Buchberger Require Import Relation_Operators_compat Lexicographic_Product_Closed LetP.
 From Buchberger Require Export WfR0.
 
 Set Default Proof Using "Type".
@@ -542,7 +542,7 @@ apply well_founded_induction_type with (A := list (poly A0 eqA ltM)) (R := Tl);
 try exact wf_Tl.
 intros aP; case aP.
 intros H' R; exists R; auto.
-intros a L1 Rec L; generalize (refl_equal (slice i a L1));
+intros a L1 Rec L; generalize (@refl_equal _ (slice i a L1));
  pattern (slice i a L1) at 2 in |- *; case (slice i a L1).
 intros L2 H'.
 lapply (Rec L2); [ intros H'1; elim (H'1 L); intros L3 E | idtac ]; auto.
@@ -1249,15 +1249,15 @@ Proof.
 unfold FPset in |- *; simpl in |- *.
 intros x; generalize wf_Tl; auto.
 Qed.
- 
+
 Let Co :=
-  lexprod (list (poly A0 eqA ltM)) FPset
+  @lexprod (list (poly A0 eqA ltM)) FPset
     (RO A A0 A1 eqA plusA invA minusA multA divA cs eqA_dec n ltM ltM_dec os)
     Fl.
 
 Theorem wf_Co : well_founded Co.
 Proof.
-unfold Co in |- *; apply wf_lexprod.
+unfold Co in |- *; apply wf_lexprod_closed.
 apply wf_incl.
 exact wf_Fl.
 Qed.

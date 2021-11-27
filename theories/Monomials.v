@@ -10,7 +10,8 @@
    ************************************************************************ *)
 
 From Coq Require Import Arith Compare Compare_dec Peano_dec.
-From Coq Require Import Relation_Definitions Eqdep Max.
+From Coq Require Import Relation_Definitions Max.
+From Equations Require Import Equations.
 
 Set Default Proof Using "Type".
 
@@ -19,6 +20,8 @@ Section Monomials.
 Inductive mon : nat -> Set :=
   | n_0 : mon 0
   | c_n : forall d : nat, nat -> mon d -> mon (S d).
+
+Derive Signature NoConfusion NoConfusionHom for mon.
 
 (*
 Realizer [d: nat][m:(mon d)](Cases  m of n_0 => O | (c_n _ n _) => n end).
@@ -139,6 +142,8 @@ Inductive mdiv : forall d : nat, mon d -> mon d -> Prop :=
       forall (d : nat) (v v' : mon d) (n n' : nat),
       n <= n' -> mdiv d v v' -> mdiv (S d) (c_n d n v) (c_n d n' v').
 
+Derive Signature for mdiv.
+
 Local Hint Resolve mdiv_nil mdiv_cons : core.
 
 Lemma mdiv_proj :
@@ -155,20 +160,14 @@ Qed.
 Lemma mdiv_trans : forall d : nat, transitive (mon d) (mdiv d).
 Proof.
 intros d; elim d; unfold transitive in |- *; auto.
-intros x y z mdiv_xy; inversion mdiv_xy.
-intros mdiv_yz; inversion mdiv_yz; auto.
-rewrite <- (inj_pair2 nat (fun x : nat => mon x) 0 n_0 z); auto.
-rewrite <- (inj_pair2 nat (fun x : nat => mon x) 0 n_0 x); auto.
-intros n Rec x y z mdiv_xy; inversion mdiv_xy.
-rewrite <- (inj_pair2 nat (fun x : nat => mon x) (S n) (c_n n n' v') y); auto.
-rewrite <- (inj_pair2 nat (fun x : nat => mon x) (S n) (c_n n n0 v) x); auto.
-intros mdiv_yz; inversion mdiv_yz; auto.
-rewrite <- (inj_pair2 nat (fun x : nat => mon x) (S n) (c_n n n'0 v'0) z);
- auto.
-apply mdiv_cons; auto.
-apply le_trans with (m := n'); auto.
-apply Rec with (y := v0); auto.
-rewrite (inj_pair2 nat (fun x : nat => mon x) n v0 v'); auto.
+- intros x y z mdiv_xy.
+  depelim mdiv_xy; auto.
+- intros n Rec x y z mdiv_xy mdiv_yz.
+  depelim mdiv_xy.
+  depelim mdiv_yz.
+  apply mdiv_cons.
+  * apply le_trans with (m := n'); auto.
+  * apply Rec with (y := v'); auto.
 Qed.
 
 (* Division of monomials (total function!) *)
