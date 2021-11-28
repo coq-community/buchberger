@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- Link to Persson and Coquand's TYPES 1998 paper on Gröbner bases in type theory
+
+### Changed
+- Change proofs to avoid depending on UIP, i.e., axiom `Coq.Logic.Eqdep.Eq_rect_eq.eq_rect_eq` (@SkySkimmer)
+
 ## [8.13.0] - 2021-08-01
 
 ### Added
