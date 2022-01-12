@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [8.14.0] - 2021-12-12
+
 ### Added
 - Link to Persson and Coquand's TYPES 1998 paper on Gröbner bases in type theory
 
@@ -35,6 +37,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Reorganize files into subdirectories
 - Generalize definitions and results from Set to Type
 
-[Unreleased]: https://github.com/coq-community/chapar/compare/v8.13.0...master
-[8.13.0]: https://github.com/coq-community/chapar/releases/tag/v8.13.0
-[8.11.0]: https://github.com/coq-community/chapar/releases/tag/v8.11.0
+[Unreleased]: https://github.com/coq-community/buchberger/compare/v8.14.0...master
+[8.14.0]: https://github.com/coq-community/buchberger/releases/tag/v8.14.0
+[8.13.0]: https://github.com/coq-community/buchberger/releases/tag/v8.13.0
+[8.11.0]: https://github.com/coq-community/buchberger/releases/tag/v8.11.0
