@@ -93,7 +93,7 @@ Proof.
 intros d; elim d; simpl in |- *; auto.
 intros n H' a b.
 rewrite (H' (pmon2 (S n) a) (pmon2 (S n) b)); auto.
-rewrite (plus_comm (pmon1 (S n) a) (pmon1 (S n) b)); auto.
+rewrite (Nat.add_comm (pmon1 (S n) a) (pmon1 (S n) b)); auto.
 Qed.
 
 Theorem mult_mon_assoc :
@@ -103,7 +103,7 @@ Proof.
 intros d; elim d; simpl in |- *; auto.
 intros n H' a b c.
 rewrite (H' (pmon2 (S n) a) (pmon2 (S n) b) (pmon2 (S n) c)); auto.
-rewrite (plus_assoc (pmon1 (S n) a) (pmon1 (S n) b) (pmon1 (S n) c)); auto.
+rewrite (Nat.add_assoc (pmon1 (S n) a) (pmon1 (S n) b) (pmon1 (S n) c)); auto.
 Qed.
 
 (* Zero *)
@@ -120,7 +120,7 @@ Proof.
 intros d a; elim a; auto.
 simpl in |- *.
 intros d0 n m H'; rewrite H'; auto.
-rewrite (plus_comm n 0); auto.
+rewrite (Nat.add_comm n 0); auto.
 Qed.
 
 Theorem mult_mon_zero_l :
@@ -185,7 +185,7 @@ intros d; elim d; unfold transitive in |- *; auto.
   rewrite (UIP_refl_nat n _) in eqv'.
   simpl in eqv';destruct eqv';clear eqv.
   apply mdiv_cons.
-  * apply le_trans with (m := nyz); assumption.
+  * apply Nat.le_trans with (m := nyz); assumption.
   * apply Rec with (y := vyz); assumption.
 Qed.
 
@@ -206,8 +206,7 @@ Theorem mdiv_div :
 Proof.
 intros d a b H'; elim H'; simpl in |- *; auto.
 intros d0 v v' n n' H'0 H'1 H'2.
-rewrite (plus_comm (n' - n) n).
-rewrite <- (le_plus_minus n n'); auto.
+rewrite Nat.sub_add; auto.
 rewrite H'2; auto.
 Qed.
 
@@ -270,8 +269,7 @@ Proof.
 intros d; elim d; simpl in |- *; auto.
 intros n H' a b.
 rewrite (H' (pmon2 (S n) a) (pmon2 (S n) b)); auto.
-rewrite (plus_comm (pmon1 (S n) a) (pmon1 (S n) b)).
-rewrite (minus_plus (pmon1 (S n) b) (pmon1 (S n) a)); auto.
+rewrite Nat.add_sub.
 apply proj_ok; auto.
 Qed.
 
@@ -280,7 +278,7 @@ Theorem mult_div_id :
 Proof.
 intros d a; elim a; simpl in |- *; auto.
 intros d0 n m H'; rewrite H'; auto.
-rewrite <- (minus_n_n n); auto.
+rewrite Nat.sub_diag; auto.
 Qed.
 
 Let gb : forall d : nat, mon d * bool -> bool.
@@ -329,7 +327,7 @@ intros H'0 H'1; red in |- *; intros H'2;
 2: rewrite H'2; auto.
 rewrite (minus_lt_0 (pmon1 (S n) b) (pmon1 (S n) a)); simpl in |- *; auto.
 red in |- *; intros H'3; absurd (pmon1 (S n) a < pmon1 (S n) b); auto.
-apply le_not_lt; auto.
+apply Nat.le_ngt; auto.
 rewrite H'3; auto.
 Qed.
 
@@ -348,10 +346,9 @@ case (div_mon_clean n (pmon2 (S n) a) (pmon2 (S n) b)); simpl in |- *; auto.
 intros m b' H1 H2.
 case (H1 H2); intros H3 H4; split; auto.
 rewrite H3; auto.
-rewrite (plus_comm (pmon1 (S n) a - pmon1 (S n) b) (pmon1 (S n) b)).
-rewrite <- (le_plus_minus (pmon1 (S n) b) (pmon1 (S n) a)); auto.
+rewrite Nat.sub_add; auto.
 rewrite H4; auto.
-try exact (proj_ok n a).
+exact (proj_ok n a).
 Qed.
 
 Definition ppcm_mon : forall d : nat, mon d -> mon d -> mon d.
@@ -359,7 +356,7 @@ intros d; elim d.
 intros m1 m2; exact n_0.
 intros n Rec S1 S2.
 exact
- (c_n n (max (pmon1 (S n) S1) (pmon1 (S n) S2))
+ (c_n n (Nat.max (pmon1 (S n) S1) (pmon1 (S n) S2))
     (Rec (pmon2 (S n) S1) (pmon2 (S n) S2))).
 Defined.
 
@@ -368,7 +365,7 @@ Theorem ppcm_com :
 Proof.
 intros d; elim d; simpl in |- *; auto.
 intros n H' a b; rewrite (H' (pmon2 (S n) a) (pmon2 (S n) b)).
-rewrite (max_comm (pmon1 (S n) a) (pmon1 (S n) b)); auto.
+rewrite (Nat.max_comm (pmon1 (S n) a) (pmon1 (S n) b)); auto.
 Qed.
 
 Theorem ppcm_prop_l :
@@ -379,15 +376,9 @@ intros d; elim d; simpl in |- *; auto.
 intros n H' a b;
  pattern (ppcm_mon n (pmon2 (S n) a) (pmon2 (S n) b)) at 1 in |- *;
  rewrite (H' (pmon2 (S n) a) (pmon2 (S n) b)).
-pattern (max (pmon1 (S n) a) (pmon1 (S n) b)) at 1 in |- *;
- rewrite
-  (le_plus_minus (pmon1 (S n) a) (max (pmon1 (S n) a) (pmon1 (S n) b)))
-  ; auto.
-rewrite
- (plus_comm (pmon1 (S n) a)
-    (max (pmon1 (S n) a) (pmon1 (S n) b) - pmon1 (S n) a))
- ; auto.
-apply le_max_l; auto.
+pattern (Nat.max (pmon1 (S n) a) (pmon1 (S n) b)) at 1 in |- *;
+rewrite Nat.sub_add; auto.
+apply Nat.le_max_l; auto.
 Qed.
 
 Theorem ppcm_prop_r :
@@ -398,15 +389,9 @@ intros d; elim d; simpl in |- *; auto.
 intros n H' a b;
  pattern (ppcm_mon n (pmon2 (S n) a) (pmon2 (S n) b)) at 1 in |- *;
  rewrite (H' (pmon2 (S n) a) (pmon2 (S n) b)).
-pattern (max (pmon1 (S n) a) (pmon1 (S n) b)) at 1 in |- *;
- rewrite
-  (le_plus_minus (pmon1 (S n) b) (max (pmon1 (S n) a) (pmon1 (S n) b)))
-  ; auto.
-rewrite
- (plus_comm (pmon1 (S n) b)
-    (max (pmon1 (S n) a) (pmon1 (S n) b) - pmon1 (S n) b))
- ; auto.
-apply le_max_r; auto.
+pattern (Nat.max (pmon1 (S n) a) (pmon1 (S n) b)) at 1 in |- *;
+ rewrite Nat.sub_add; auto.
+apply Nat.le_max_r; auto.
 Qed.
 
 Theorem plus_minus_le : forall a b : nat, a - b + b = a -> b <= a.
@@ -414,8 +399,8 @@ Proof.
 intros a; elim a; simpl in |- *; auto.
 intros b H'; rewrite H'; auto.
 intros n H' b; case b; simpl in |- *; auto with arith.
-intros n0; rewrite (plus_comm (n - n0) (S n0)); simpl in |- *; auto.
-rewrite (plus_comm n0 (n - n0)); auto with arith.
+intros n0; rewrite (Nat.add_comm (n - n0) (S n0)); simpl in |- *; auto.
+rewrite (Nat.add_comm n0 (n - n0)); auto with arith.
 Qed.
 
 Theorem ppcm_mom_is_ppcm :
@@ -441,14 +426,9 @@ rewrite <- (H' (pmon2 (S n) a) (pmon2 (S n) b) (pmon2 (S n) c)); auto.
            (mult_mon n (div_mon n (pmon2 (S n) c) (pmon2 (S n) b))
               (pmon2 (S n) b))) :>mon n) in |- *; auto.
 2: rewrite <- H'1; auto.
-rewrite
- (plus_comm (pmon1 (S n) c - max (pmon1 (S n) a) (pmon1 (S n) b))
-    (max (pmon1 (S n) a) (pmon1 (S n) b))).
-rewrite <-
- (le_plus_minus (max (pmon1 (S n) a) (pmon1 (S n) b)) (pmon1 (S n) c))
- ; auto.
+rewrite Nat.sub_add; auto.
 rewrite <- (proj_ok n c); auto.
-apply max_case2; auto.
+apply Nat.max_case; auto.
 apply plus_minus_le; auto.
 change
   (pmon1 (S n)

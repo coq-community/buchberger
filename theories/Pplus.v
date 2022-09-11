@@ -674,8 +674,8 @@ apply eqpP1; auto.
 rewrite (pluspf_inv2_eq a1 a0 l2 l1); auto.
 apply H' with (y := (pX a1 l2, (pX a0 l1, l0))); simpl in |- *; auto.
 red in |- *; red in |- *; simpl in |- *; auto with arith.
-repeat rewrite (fun a b : nat => plus_comm a (S b)); simpl in |- *.
-repeat rewrite (plus_comm (size A n l1)); auto.
+repeat rewrite (fun a b : nat => Nat.add_comm a (S b)); simpl in |- *.
+repeat rewrite (Nat.add_comm (size A n l1)); auto.
 rewrite <- (pluspf_inv1_eq a0 a l1 l0); auto.
 rewrite <- (pluspf_inv2_eq a1 a0 l2 l1); auto.
 rewrite <- (pluspf_inv2_eq a1 a0 l2 (pluspf l1 (pX a l0))); auto.
@@ -692,9 +692,9 @@ rewrite <- (pluspf_inv2_eq a1 a0 l2 l1); auto.
 rewrite <- (pluspf_inv3a_eq a0 a (pluspf (pX a1 l2) l1) l0); auto.
 apply H' with (y := (pX a1 l2, (l1, l0))); simpl in |- *; auto.
 red in |- *; red in |- *; simpl in |- *; auto with arith.
-repeat rewrite (fun a b : nat => plus_comm a (S b)); simpl in |- *.
-repeat rewrite (plus_comm (size A n l2)); auto.
-repeat rewrite (plus_comm (size A n l1)); auto.
+repeat rewrite (fun a b : nat => Nat.add_comm a (S b)); simpl in |- *.
+repeat rewrite (Nat.add_comm (size A n l2)); auto.
+repeat rewrite (Nat.add_comm (size A n l1)); auto.
 cut (ltT ltM a1 (plusTerm (A:=A) plusA (n:=n) a0 a));
  [ intros Ord1
  | apply eqT_compat_ltTr with (b := a0); auto; apply (eqT_sym A n);
@@ -708,9 +708,9 @@ rewrite <-
 apply eqpP1; auto.
 apply H' with (y := (pX a1 l2, (l1, l0))); simpl in |- *; auto.
 red in |- *; red in |- *; simpl in |- *; auto with arith.
-repeat rewrite (fun a b : nat => plus_comm a (S b)); simpl in |- *.
-repeat rewrite (plus_comm (size A n l2)); auto.
-repeat rewrite (plus_comm (size A n l1)); auto.
+repeat rewrite (fun a b : nat => Nat.add_comm a (S b)); simpl in |- *.
+repeat rewrite (Nat.add_comm (size A n l2)); auto.
+repeat rewrite (Nat.add_comm (size A n l1)); auto.
 rewrite <- (pluspf_inv1_eq a1 a0 l2 l1); auto.
 case (ltT_dec A n ltM ltM_dec a0 a); [ intros H1; case H1; clear H1 | idtac ];
  intros H1.
@@ -723,8 +723,8 @@ apply eqpP1; auto.
 rewrite (pluspf_inv1_eq a1 a0 l2 l1); auto.
 apply H' with (y := (pX a1 l2, (pX a0 l1, l0))); simpl in |- *; auto.
 red in |- *; red in |- *; simpl in |- *; auto with arith.
-repeat rewrite (fun a b : nat => plus_comm a (S b)); simpl in |- *.
-repeat rewrite (plus_comm (size A n l1)); auto.
+repeat rewrite (fun a b : nat => Nat.add_comm a (S b)); simpl in |- *.
+repeat rewrite (Nat.add_comm (size A n l1)); auto.
 rewrite <- (pluspf_inv1_eq a1 a l2 (pluspf (pX a0 l1) l0)); auto.
 rewrite <- (pluspf_inv1_eq a1 a (pluspf l2 (pX a0 l1)) l0); auto.
 apply eqpP1; auto.
@@ -813,8 +813,8 @@ apply canonical_skip_fst with (b := a0); auto.
 apply eqpP1; auto.
 apply H' with (y := (pX a1 l2, (pX a0 l1, l0))); simpl in |- *; auto.
 red in |- *; red in |- *; simpl in |- *; auto with arith.
-repeat rewrite (fun a b : nat => plus_comm a (S b)); simpl in |- *.
-repeat rewrite (plus_comm (size A n l1)); auto.
+repeat rewrite (fun a b : nat => Nat.add_comm a (S b)); simpl in |- *.
+repeat rewrite (Nat.add_comm (size A n l1)); auto.
 cut (ltT ltM a a0); [ intros Ord0 | apply eqT_compat_ltTr with (b := a1) ];
  auto.
 rewrite <- (pluspf_inv1_eq a0 a l1 l0); auto.
@@ -981,8 +981,8 @@ apply
 rewrite <- (pluspf_inv3b_eq a1 a0 l2 l1); auto.
 apply H' with (y := (pX a1 l2, (pX a0 l1, l0))); simpl in |- *; auto.
 red in |- *; red in |- *; simpl in |- *; auto with arith.
-repeat rewrite (fun a b : nat => plus_comm a (S b)); simpl in |- *.
-repeat rewrite (plus_comm (size A n l1)); auto.
+repeat rewrite (fun a b : nat => Nat.add_comm a (S b)); simpl in |- *.
+repeat rewrite (Nat.add_comm (size A n l1)); auto.
 cut (ltT ltM a a1);
  [ intros Ord0
  | apply eqT_compat_ltTr with (b := a0); auto; apply (eqT_sym A n) ]; 
