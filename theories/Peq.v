@@ -42,7 +42,7 @@ intros m H' a H'0.
 apply Acc_intro.
 intros y H'1; apply H'.
 unfold lessP in H'1.
-apply lt_le_trans with (sizel a); auto with arith.
+apply Nat.lt_le_trans with (sizel a); auto with arith.
 Qed.
 
 Local Hint Resolve wf_lessP : core.
@@ -234,7 +234,7 @@ intros m; elim m; clear m.
 intros a H; inversion H.
 intros p H' a H'0; apply Acc_intro.
 intros y H'1; apply H'.
-unfold lessP in H'1; apply lt_le_trans with (sizel3 a); auto with arith.
+unfold lessP in H'1; apply Nat.lt_le_trans with (sizel3 a); auto with arith.
 Qed.
 
 Local Hint Resolve wf_lessP3 : core.
