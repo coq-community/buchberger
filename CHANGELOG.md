@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [8.16.0] - 2022-09-11
+
 ### Changed
 - Use axiom-free lexical product from Stdlib
 - Restrict to Coq 8.16 and later
@@ -44,7 +46,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Reorganize files into subdirectories
 - Generalize definitions and results from Set to Type
 
-[Unreleased]: https://github.com/coq-community/buchberger/compare/v8.14.0...master
+[Unreleased]: https://github.com/coq-community/buchberger/compare/v8.16.0...master
+[8.16.0]: https://github.com/coq-community/buchberger/releases/tag/v8.16.0
 [8.14.0]: https://github.com/coq-community/buchberger/releases/tag/v8.14.0
 [8.13.0]: https://github.com/coq-community/buchberger/releases/tag/v8.13.0
 [8.11.0]: https://github.com/coq-community/buchberger/releases/tag/v8.11.0
