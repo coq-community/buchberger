@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Changed
-- Mark as compatible with Coq 8.16
+- Use axiom-free lexical product from Stdlib
+- Restrict to Coq 8.16 and later
 
 ### Fixed
 - Deprecation warnings for Nat module in Coq 8.16
