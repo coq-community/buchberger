@@ -138,7 +138,7 @@ End Dickson.
 Lemma leq2le : forall a b : nat, leq nat lt a b -> a <= b.
 Proof.
 intros.
-destruct (Compare_dec.le_lt_dec a b) as [Hlt|Hlt].
+destruct (Nat.le_gt_cases a b) as [Hlt|Hlt].
 auto.
 unfold leq in H.
 unfold not in H.

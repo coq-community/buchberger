@@ -3,8 +3,8 @@
 
 From Coq Require Export List.
 From Coq Require Import Arith Inclusion Inverse_Image Wf_nat Relation_Definitions.
-From Coq Require Import Relation_Operators.
-From Buchberger Require Import Relation_Operators_compat Lexicographic_Product_Closed LetP.
+From Coq Require Import Relation_Operators Lexicographic_Product.
+From Buchberger Require Import Relation_Operators_compat LetP.
 From Buchberger Require Export WfR0.
 
 Set Default Proof Using "Type".
@@ -1257,7 +1257,7 @@ Let Co :=
 
 Theorem wf_Co : well_founded Co.
 Proof.
-unfold Co in |- *; apply wf_lexprod_closed.
+unfold Co in |- *; apply wf_lexprod.
 apply wf_incl.
 exact wf_Fl.
 Qed.
