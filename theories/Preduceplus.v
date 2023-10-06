@@ -884,17 +884,6 @@ apply
 apply reduce_imp_reduceplus; auto.
 apply reducetop with (b := b) (nZb := nZb) (q := q); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
-change
-  (eqP A eqA n
-     (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
-        (pX a p) (pO A n)) (pX a p)) in |- *; auto.
-change
-  (reduceplus Q
-     (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
-        (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a
-           b nZb p q) (pO A n))
-     (spminusf A A0 A1 eqA invA minusA multA divA eqA_dec n ltM ltM_dec a b
-        nZb p q)) in |- *; auto.
 clear r; intros c r H' H'0 a b nZb p q H'1 H'2 H'3.
 cut (canonical A0 eqA ltM p);
  [ intros C0 | apply canonical_imp_canonical with (a := a); auto ].
@@ -956,10 +945,6 @@ apply eqp_imp_canonical with (1 := cs) (p := pX c r); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 apply (eqp_trans _ _ _ _ _ _ _ _ _ cs n) with (y := pX c r); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
-change
-  (eqP A eqA n
-     (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
-        (pO A n) (pX c r)) (pX c r)) in |- *; auto.
 intros t l H' H'5.
 change
   (reduceplus Q
@@ -1142,17 +1127,9 @@ elim r; auto.
 intros H'4; exists (pX a q); split; auto.
 apply reduceplus_eqp_com with (p := pX a p) (q := pX a q); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
-change
-  (eqP A eqA n
-     (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
-        (pX a p) (pO A n)) (pX a p)) in |- *; auto.
 apply reduceplus_eqp_com with (p := pX a q) (q := pX a q); auto.
 apply (eqp_trans _ _ _ _ _ _ _ _ _ cs n) with (y := pX b q); auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
-change
-  (eqP A eqA n
-     (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
-        (pX b q) (pO A n)) (pX b q)) in |- *; auto.
 clear r; intros c r H'4 H'5.
 cut (canonical A0 eqA ltM r);
  [ intros C3 | apply canonical_imp_canonical with (a := c); auto ].

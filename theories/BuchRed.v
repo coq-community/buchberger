@@ -709,7 +709,7 @@ Proof.
 unfold Red in |- *.
 intros L p H'.
 generalize (redacc_cb L nil); simpl in |- *; auto.
-rewrite <- app_nil_end; auto.
+rewrite app_nil_r; auto.
 Qed.
  
 Theorem cb_redacc :
@@ -784,7 +784,7 @@ Proof.
 intros L p H'.
 lapply (cb_redacc L nil p); [ intros H'3; generalize H'3 | idtac ];
  simpl in |- *; auto.
-rewrite <- app_nil_end; auto.
+rewrite app_nil_r; auto.
 Qed.
 
 Theorem cb_Red_cb1 :
@@ -923,8 +923,8 @@ Proof.
 intros L p H' H'0.
 lapply (redacc_divp L nil p); auto.
 simpl in |- *; auto.
-rewrite <- app_nil_end; auto.
-rewrite <- app_nil_end; auto.
+rewrite app_nil_r; auto.
+rewrite app_nil_r; auto.
 Qed.
  
 Theorem Red_grobner :

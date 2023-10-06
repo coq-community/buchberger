@@ -120,7 +120,7 @@ case H'2; auto.
 intros l H' H'0 bs Heq Hnz H'1; auto.
 apply Acc_intro; auto.
 intros y H'2; inversion H'2; auto.
-rewrite <- ass_app.
+rewrite <- app_assoc.
 change
   (Acc RO
      (cs1 ++
