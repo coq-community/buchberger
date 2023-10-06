@@ -4,7 +4,7 @@ shortname: buchberger
 organization: coq-community
 community: true
 action: true
-nix: true
+nix: false
 coqdoc: false
 
 synopsis: Verified implementation in Coq of Buchberger's algorithm for computing Gröbner bases
