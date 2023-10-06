@@ -185,7 +185,6 @@ Local Hint Resolve olistOne : core.
 Theorem olistO : olist pO.
 Proof.
 unfold olist, ltT in |- *; simpl in |- *; auto.
-red in |- *; unfold nilA in |- *; apply d_nil.
 Qed.
  
 Lemma app2_inv :
@@ -249,7 +248,7 @@ intros H'2 H'3 H'4;
 generalize (olist_ltT (pX b0 (pX b l2))); unfold olist, ltT in |- *;
  intros H'5; apply H'5.
 rewrite (fP_app (pX b0 (pX b l2)) (pX x1 (pX x pO))); simpl in |- *; auto.
-generalize (app_ass (fP l2) (consA (T2M x1) nilA) (consA (T2M x) nilA));
+generalize (sym_eq (app_assoc (fP l2) (consA (T2M x1) nilA) (consA (T2M x) nilA)));
  simpl in |- *; auto; unfold consA in |- *.
 intros H'6; rewrite <- H'6; simpl in |- *; auto.
 simpl in |- *; apply H'3; auto; apply (desc_prefix _ ltM) with (a := T2M x);

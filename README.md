@@ -39,7 +39,7 @@ Also includes a constructive proof of Dickson's lemma.
 - Coq-community maintainer(s):
   - Karl Palmskog ([**@palmskog**](https://github.com/palmskog))
 - License: [GNU Lesser General Public License v2.1 or later](LICENSE)
-- Compatible Coq versions: 8.16 or later
+- Compatible Coq versions: 8.17 or later
 - Additional dependencies: none
 - Coq namespace: `Buchberger`
 - Related publication(s):

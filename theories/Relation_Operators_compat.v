@@ -197,7 +197,7 @@ Section Wf_Lexicographic_Exponentiation.
           Descl x0 /\ Descl y0).
 
     intro.
-    generalize (app_nil_end x1); simple induction 1; simple induction 1.
+    generalize (sym_eq (app_nil_r x1)); simple induction 1; simple induction 1.
     split. apply d_conc; auto with sets.
 
     apply d_nil.
@@ -219,15 +219,15 @@ Section Wf_Lexicographic_Exponentiation.
 
     apply d_one.
     do 5 intro.
-    generalize (app_ass x4 (l1 ++ Cons x2 Nil) (Cons x3 Nil)).
+    generalize (sym_eq (app_assoc x4 (l1 ++ Cons x2 Nil) (Cons x3 Nil))).
     simple induction 1.
-    generalize (app_ass x4 l1 (Cons x2 Nil)); simple induction 1.
+    generalize (sym_eq (app_assoc x4 l1 (Cons x2 Nil))); simple induction 1.
     intro E.
     generalize (app_inj_tail _ _ _ _ E).
     simple induction 1; intros.
     generalize (app_inj_tail _ _ _ _ H6); simple induction 1; intros.
     rewrite <- H7; rewrite <- H10; generalize H6.
-    generalize (app_ass x4 l1 (Cons x2 Nil)); intro E1.
+    generalize (sym_eq (app_assoc x4 l1 (Cons x2 Nil))); intro E1.
     rewrite E1.
     intro.
     generalize (Hind x4 (l1 ++ Cons x2 Nil) H11).
@@ -344,7 +344,7 @@ Section Wf_Lexicographic_Exponentiation.
         forall y1:Descl (l ++ x3),
           ltl x3 (Cons x1 Nil) -> Acc Lex_Exp << l ++ x3, y1 >>).
     intros.
-    generalize (app_nil_end l); intros Heq.
+    generalize (sym_eq (app_nil_r l)); intros Heq.
     generalize y1.
     clear y1.
     rewrite <- Heq.
@@ -361,7 +361,7 @@ Section Wf_Lexicographic_Exponentiation.
     intros.
     generalize (desc_end x4 x1 l0 (conj H8 H5)); intros.
     generalize y1.
-    rewrite <- (app_ass l l0 (Cons x4 Nil)); intro.
+    rewrite (app_assoc l l0 (Cons x4 Nil)); intro.
     generalize (HInd x4 H9 (l ++ l0)); intros HInd2.
     generalize (ltl_unit l0 x4 x1 H8 H5); intro.
     generalize (dist_Desc_concat (l ++ l0) (Cons x4 Nil) y2).

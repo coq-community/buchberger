@@ -428,24 +428,12 @@ intros p0; case p0; simpl in |- *; auto.
 intros q0 H' a H'0 H'1 H'2.
 apply (eqp_trans _ _ _ _ _ _ _ _ _ cs n) with (y := mults a q0); auto.
 apply mults_comp; auto.
-change
-  (eqP A eqA n
-     (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
-        (pO A n) q0) q0) in |- *; auto.
-change
-  (eqP A eqA n (mults a q0)
-     (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
-        (pO A n) (mults a q0))) in |- *; auto.
 apply (eqp_sym _ _ _ _ _ _ _ _ _ cs n); auto.
 intros a l q0.
 case q0; simpl in |- *; auto.
 intros H' a0 H'0 H'1 H'2.
 apply (eqp_trans _ _ _ _ _ _ _ _ _ cs n) with (y := mults a0 (pX a l)); auto.
 apply mults_comp; auto.
-change
-  (eqP A eqA n
-     (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
-        (pX a l) (pO A n)) (pX a l)) in |- *; auto.
 change
   (eqP A eqA n (mults a0 (pX a l))
      (pluspf (A:=A) A0 (eqA:=eqA) plusA eqA_dec (n:=n) (ltM:=ltM) ltM_dec
