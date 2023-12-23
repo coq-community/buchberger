@@ -1,7 +1,7 @@
 (* This code is copyrighted by its authors; it is distributed under  *)
 (* the terms of the LGPL license (see LICENSE and description files) *)
 
-From Coq Require Import List Lt Wf_nat Inverse_Image.
+From Coq Require Import List PeanoNat Wf_nat Inverse_Image.
 From Buchberger Require Import Bar OpenIndGoodRel Monomials.
 
 Set Default Proof Using "Type".

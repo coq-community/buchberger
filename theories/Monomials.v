@@ -10,7 +10,7 @@
    ************************************************************************ *)
 
 From Coq Require Import Arith Compare Compare_dec Peano_dec.
-From Coq Require Import Relation_Definitions EqdepFacts Eqdep_dec Max.
+From Coq Require Import Relation_Definitions EqdepFacts Eqdep_dec.
 
 Set Default Proof Using "Type".
 
